@@ -11,8 +11,10 @@ import { Analytics } from "@vercel/analytics/react";
 
 import Navbar from "./components/navbar";
 import Footer from "@/app/components/footer";
-import CookiesAlert from "./components/custom/cookieAlerts";
+import CookiesAlert from "./components/custom/cookieAlerts"; 
 import GoogleAnalitics from "./components/custom/googleAnalitics";
+
+export const dynamic = 'force-static'
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -132,7 +134,7 @@ export default async function RootLayout({
           <Footer layout={footerLayout} />
         </div>
         <Analytics />
-        <CookiesAlert cookiePolicy={cookiePolicy}></CookiesAlert>
+         <CookiesAlert cookiePolicy={cookiePolicy}></CookiesAlert>
       </body>
     </html>
   );
