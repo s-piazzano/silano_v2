@@ -53,7 +53,6 @@ const query = gql`
               linkName: name
               url
               icon
-              alt
             }
           }
         }
@@ -76,7 +75,6 @@ const query = gql`
               links {
                 name
                 url
-                alt
               }
             }
           }
