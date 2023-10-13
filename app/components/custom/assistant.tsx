@@ -51,10 +51,10 @@ export default function Assistant({ component }) {
             -phase >0 show steps question
             -phase -100 show result */}
             {phase == -1 && (
-              <Remark className="w-full">{component.description}</Remark>
+              <Remark >{component.description}</Remark>
             )}
             {phase >= 0 && (
-              <Remark className="w-full">
+              <Remark >
                 {
                   component.assistan_option.data.attributes.steps[phase]
                     .question
@@ -63,7 +63,7 @@ export default function Assistant({ component }) {
             )}
             {phase === -100 && (
               <div className="flex justify-between">
-                <Remark className="w-full">
+                <Remark >
                   {component.assistan_option.data.attributes.result.message}
                 </Remark>
                 <button className="w-8 h-8 text-forest" onClick={() => undo()}>
