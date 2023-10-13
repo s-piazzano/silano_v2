@@ -1,9 +1,9 @@
 "use client";
-import { Remark } from "react-remark";
 
 import Link from "next/link";
 
 import { Layout } from "@/interfaces/layout";
+import DocumentToHtmlString from "./custom/documentToHtmlString";
 
 interface FooterProps {
   layout: Array<Layout>;
@@ -18,15 +18,7 @@ export default function Footer({ layout }: FooterProps) {
             return (
               <div key={x.id} className="flex flex-col">
                 <h2 className="mb-4">{x.name}</h2>
-                <Remark
-                  rehypeReactOptions={{
-                    components: {
-                      p: (props) => <p className="font-light" {...props} />,
-                    },
-                  }}
-                >
-                  {x.description}
-                </Remark>
+                <DocumentToHtmlString description={`${x.description}`} />
               </div>
             );
           }
@@ -34,13 +26,14 @@ export default function Footer({ layout }: FooterProps) {
             return (
               <div key={x.id} className="flex flex-col space-y-2">
                 <h2 className="mb-2">{x.name}</h2>
-                {x.links && x.links.map((link, index) => {
-                  return (
-                    <Link key={index} href={link.url} className="font-light">
-                      {link.name}
-                    </Link>
-                  );
-                })}
+                {x.links &&
+                  x.links.map((link, index) => {
+                    return (
+                      <Link key={index} href={link.url} className="font-light">
+                        {link.name}
+                      </Link>
+                    );
+                  })}
               </div>
             );
           }
