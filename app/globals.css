@@ -2,26 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+html {
+  -webkit-tap-highlight-color: transparent;
+  @apply font-inter;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+h2 {
+  @apply text-xl font-thin mb-1;
+}
+h3 {
+  @apply text-lg font-semibold;
+}
+strong {
+  @apply font-semibold;
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+li {
+  @apply ml-2;
+}
+
+.lock-scroll {
+  overflow: hidden;
+}
+
+.documentToHtml p {
+  @apply font-light mt-2;
+}
+.documentToHtml h2 {
+  @apply mt-2;
+}
+
+.documentToHtml h4 {
+  @apply mt-2;
+}
+
+.documentToHtml ul {
+  @apply mt-3;
+}
+.documentToHtml li {
+  @apply mt-1 ml-2;
 }
