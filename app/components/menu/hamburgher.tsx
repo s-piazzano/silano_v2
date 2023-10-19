@@ -118,6 +118,7 @@ export default function HamburgerMenu({
                                 <Link
                                   key={index}
                                   href={page.attributes.slug}
+                                  as={page.attributes.slug}
                                   onClick={() => setIsOpen(false)}
                                 >
                                   {page.attributes.title}
