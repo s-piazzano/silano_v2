@@ -9,7 +9,7 @@ export default function GoogleAnalitics({ ga_id }: GoogleAnaliticsProps) {
     <>
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-7JB23TDQ7L"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
       />
       <Script id="google-analytics" strategy="afterInteractive">
         {`

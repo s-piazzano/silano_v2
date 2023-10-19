@@ -1,3 +1,5 @@
+"use client"
+
 interface MapsProps {
   width?: number;
   height: number;
