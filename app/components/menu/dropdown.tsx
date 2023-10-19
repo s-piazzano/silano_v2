@@ -40,6 +40,7 @@ export default function DropdownMenu({ name, url, type, sections }: Layout) {
                     onClick={() => setIsHover(!isHover)}
                     key={"page-" + indexPage}
                     href={"/" + page.attributes.slug}
+                    as={"/" + page.attributes.slug}
                     className="font-extralight mb-3"
                   >
                     {page.attributes.title}
