@@ -1,7 +1,9 @@
+import dynamic from 'next/dynamic'
+
 import "./globals.css";
 
 import { Metadata } from "next";
-import { cookies } from "next/headers";
+/* import { cookies } from "next/headers"; */
 import { Inter } from "next/font/google";
 
 import { getClient } from "@/lib/client";
@@ -11,10 +13,9 @@ import { Analytics } from "@vercel/analytics/react";
 
 import Navbar from "./components/navbar";
 import Footer from "@/app/components/footer";
-import CookiesAlert from "./components/custom/cookieAlerts"; 
-import GoogleAnalitics from "./components/custom/googleAnalitics";
+import CookiesAlert from "./components/custom/cookieAlerts";
 
-export const dynamic = 'force-static'
+const GoogleAnalitics = dynamic(()=>import("./components/custom/googleAnalitics"))
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -87,6 +88,7 @@ const query = gql`
 `;
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.silanosrl.it'),
   title: {
     template: "%s | Silano SRL",
     default: "Silano SRL",
@@ -98,8 +100,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const cookieStore = cookies();
-  const cookiePolicy = cookieStore.has("cookiePolicy");
 
   const { data } = await getClient().query({
     query,
@@ -120,7 +120,7 @@ export default async function RootLayout({
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
         <GoogleAnalitics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
       )}
-      <body className={` relative flex flex-col ${inter.className}`}>
+      <body className={` relative flex flex-col min-h-screen ${inter.className}`}>
         {/* NAVIGATION BAR */}
         <Navbar
           imageUrl={menu.imageUrl}
@@ -128,13 +128,13 @@ export default async function RootLayout({
           contact={menu.contact}
           layout={menu.layout}
         />
-        <div className="w-full">{children}</div>
+        <div className="w-full grow">{children}</div>
         {/* FOOTER */}
         <div className="mt-8">
           <Footer layout={footerLayout} />
         </div>
         <Analytics />
-         <CookiesAlert cookiePolicy={cookiePolicy}></CookiesAlert>
+          <CookiesAlert></CookiesAlert> 
       </body>
     </html>
   );

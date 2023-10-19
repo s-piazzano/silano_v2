@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from 'next/navigation'
 
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
@@ -129,7 +130,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
     variables: { slug },
   });
 
-  const seo = data.pages.data[0].attributes.seo;
+  const seo = data.pages.data[0]?.attributes?.seo;
 
   return {
     title: seo?.title,
@@ -161,6 +162,12 @@ export default async function Page({ params }: Params) {
     query,
     variables: { slug: params.slug },
   });
+
+  console.log(data)
+
+  if(data.pages.data.length === 0){
+    notFound()
+  }
 
   const page = data.pages.data[0].attributes;
 

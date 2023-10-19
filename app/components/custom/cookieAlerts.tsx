@@ -1,13 +1,14 @@
 "use client";
 import Link from "next/link";
 
-import { setCookiePolicy } from "@/app/actions";
+/* import { setCookiePolicy } from "@/app/actions"; */
+import { hasCookie, setCookie } from "cookies-next";
 
 import { useState, useEffect } from "react";
 
 interface CookiesAlertProps {
   className?: string;
-  cookiePolicy: boolean;
+  cookiePolicy?: boolean;
 }
 
 export default function CookiesAlert({
@@ -17,15 +18,22 @@ export default function CookiesAlert({
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    setIsVisible(hasCookie("cookiePolicy"));
+
     setTimeout(() => {
       setIsVisible(true);
     }, 2000);
-  });
+  }, []);
+
+  const acceptCookie = ()=>{
+    setIsVisible(true);
+    setCookie("cookiePolicy", "true", {});
+  }
 
   return (
     <div
       className={
-        cookiePolicy || !isVisible
+         isVisible
           ? "hidden"
           : "fixed bottom-0 w-full flex justify-center"
       }
@@ -42,7 +50,7 @@ export default function CookiesAlert({
           <Link className="text-forest" href="/cookie-policy">
             Scopri di più
           </Link>
-          <form action={setCookiePolicy}>
+          <form action={acceptCookie}>
             <button
               type="submit"
               className="p-2 bg-forest text-white rounded-sm"

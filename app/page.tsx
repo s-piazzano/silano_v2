@@ -6,7 +6,6 @@ import { gql } from "@apollo/client";
 import Header from "./components/header";
 import Activities from "./components/custom/activities";
 import Maps from "./components/custom/maps";
-import { QueryDocumentKeys } from "graphql/language/ast";
 
 const querySEO = gql`
   query {
