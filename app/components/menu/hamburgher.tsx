@@ -22,7 +22,7 @@ export default function HamburgerMenu({
   imageUrl,
 }: hamburgerMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
- /*  useEffect(() => {
+  /*  useEffect(() => {
     const html = document.getElementsByTagName("html")[0];
 
     if (isOpen) {
