@@ -41,6 +41,7 @@ export default function DropdownMenu({ name, url, type, sections }: Layout) {
                     key={"page-" + indexPage}
                     href={`/${page.attributes.slug}`}
                     className="font-extralight mb-3"
+                    prefetch={false}
                   >
                     {page.attributes.title}
                   </Link>
