@@ -1,11 +1,12 @@
 import { Metadata } from "next";
+import dynamic from "next/dynamic";
 
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
 
 import Header from "./components/header";
 import Activities from "./components/custom/activities";
-/* import Maps from "./components/custom/maps"; */
+const Maps = dynamic(() => import("./components/custom/maps"));
 
 const querySEO = gql`
   query {
@@ -125,7 +126,7 @@ export default async function Home() {
         {/* Attività dell'azienda */}
         <Activities activities={activities} />
         {/* Mappa Google */}
-        {/* <Maps className="px-4 md:px-16 -mt-80" height={400} /> */}
+        <Maps className="px-4 md:px-16 -mt-80" height={400} />
       </div>
     </>
   );
