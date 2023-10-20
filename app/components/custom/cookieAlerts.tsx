@@ -15,27 +15,24 @@ export default function CookiesAlert({
   className,
   cookiePolicy,
 }: CookiesAlertProps) {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    setIsVisible(hasCookie("cookiePolicy"));
-
+    console.log("effect: " + isVisible);
     setTimeout(() => {
-      setIsVisible(true);
+      setIsVisible(hasCookie("cookiePolicy"));
     }, 2000);
   }, []);
 
-  const acceptCookie = ()=>{
+  const acceptCookie = () => {
     setIsVisible(true);
     setCookie("cookiePolicy", "true", {});
-  }
+  };
 
   return (
     <div
       className={
-         isVisible
-          ? "hidden"
-          : "fixed bottom-0 w-full flex justify-center"
+        isVisible ? "hidden" : "fixed bottom-0 w-full flex justify-center"
       }
     >
       <div className="left-0 z-50  bg-white border-forest border  mb-4 mx-4 p-4 flex flex-col">
