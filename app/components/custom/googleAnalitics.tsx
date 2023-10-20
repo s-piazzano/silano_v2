@@ -1,3 +1,4 @@
+
 import Script from "next/script";
 
 interface GoogleAnaliticsProps {
@@ -5,11 +6,13 @@ interface GoogleAnaliticsProps {
 }
 
 export default function GoogleAnalitics({ ga_id }: GoogleAnaliticsProps) {
+   
   return (
     <>
       <Script
         src="https://www.googletagmanager.com/gtag/js?id=G-7JB23TDQ7L"
-        strategy="lazyOnload"
+        strategy="afterInteractive"
+   
       />
       <Script id="google-analytics" strategy="afterInteractive">
         {`

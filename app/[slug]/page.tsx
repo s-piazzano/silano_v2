@@ -163,8 +163,6 @@ export default async function Page({ params }: Params) {
     variables: { slug: params.slug },
   });
 
-  console.log(data)
-
   if(data.pages.data.length === 0){
     notFound()
   }

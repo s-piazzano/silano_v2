@@ -75,9 +75,9 @@ export default function Header({
           >
             {title}
           </h1>
-          <h4 id="homepageSlogan" className="opacity-0 font-thin">
+          <p id="homepageSlogan" className="opacity-0 font-thin">
             {slogan}
-          </h4>
+          </p>
         </div>
       </div>
       {/* <Activities className="" activities={activities} /> */}

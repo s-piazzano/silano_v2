@@ -18,7 +18,6 @@ export default function CookiesAlert({
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    console.log("effect: " + isVisible);
     setTimeout(() => {
       setIsVisible(hasCookie("cookiePolicy"));
     }, 2000);

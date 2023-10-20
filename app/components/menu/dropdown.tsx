@@ -15,7 +15,7 @@ export default function DropdownMenu({ name, url, type, sections }: Layout) {
       <Link
         onClick={() => setIsHover(!isHover)}
         href={url ? url : "#"}
-        className="h-[74px] flex justify-center items-center px-4 text-lg font-extralight"
+        className="h-[74px] flex justify-center items-center px-8 text-lg font-extralight"
       >
         {name}
       </Link>
@@ -39,8 +39,7 @@ export default function DropdownMenu({ name, url, type, sections }: Layout) {
                   <Link
                     onClick={() => setIsHover(!isHover)}
                     key={"page-" + indexPage}
-                    href={"/" + page.attributes.slug}
-                    as={"/" + page.attributes.slug}
+                    href={`/${page.attributes.slug}`}
                     className="font-extralight mb-3"
                   >
                     {page.attributes.title}

@@ -1,9 +1,8 @@
-import dynamic from 'next/dynamic'
+import dynamic from "next/dynamic";
 
 import "./globals.css";
 
 import { Metadata } from "next";
-/* import { cookies } from "next/headers"; */
 import { Inter } from "next/font/google";
 
 import { getClient } from "@/lib/client";
@@ -13,9 +12,11 @@ import { Analytics } from "@vercel/analytics/react";
 
 import Navbar from "./components/navbar";
 import Footer from "@/app/components/footer";
-import CookiesAlert from "./components/custom/cookieAlerts";
+const CookiesAlert = dynamic(() => import("./components/custom/cookieAlerts"));
 
-const GoogleAnalitics = dynamic(()=>import("./components/custom/googleAnalitics"))
+const GoogleAnalitics = dynamic(
+  () => import("./components/custom/googleAnalitics")
+);
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -88,7 +89,7 @@ const query = gql`
 `;
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://www.silanosrl.it'),
+  metadataBase: new URL("https://www.silanosrl.it"),
   title: {
     template: "%s | Silano SRL",
     default: "Silano SRL",
@@ -100,7 +101,6 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
   const { data } = await getClient().query({
     query,
     variables: { menu: "default" },
@@ -120,7 +120,9 @@ export default async function RootLayout({
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
         <GoogleAnalitics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
       )}
-      <body className={` relative flex flex-col min-h-screen ${inter.className}`}>
+      <body
+        className={` relative flex flex-col min-h-screen ${inter.className}`}
+      >
         {/* NAVIGATION BAR */}
         <Navbar
           imageUrl={menu.imageUrl}
@@ -134,7 +136,7 @@ export default async function RootLayout({
           <Footer layout={footerLayout} />
         </div>
         <Analytics />
-          <CookiesAlert></CookiesAlert> 
+        <CookiesAlert></CookiesAlert>
       </body>
     </html>
   );
