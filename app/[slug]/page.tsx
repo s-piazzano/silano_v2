@@ -10,6 +10,10 @@ import Assistant from "@/app/components/custom/assistant";
 import Card from "@/app/components/ui/card";
 import DocumentToHtmlString from "@/app/components/custom/documentToHtmlString";
 
+
+export const runtime = 'edge';
+
+
 interface Slug {
   slug: string;
 }
