@@ -8,8 +8,6 @@ import { gql } from "@apollo/client";
 import Gallery from "@/app/components/ui/gallery";
 import Collapse from "@/app/components/ui/collapse";
 
-export const runtime = 'edge';
-
 
 interface Slug {
   slug: string;

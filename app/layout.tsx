@@ -88,6 +88,8 @@ const query = gql`
   }
 `;
 
+
+
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.silanosrl.it"),
   title: {
@@ -141,3 +143,4 @@ export default async function RootLayout({
     </html>
   );
 }
+
