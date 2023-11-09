@@ -8,7 +8,6 @@ import { Inter } from "next/font/google";
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
 
-import { Analytics } from "@vercel/analytics/react";
 
 import Navbar from "./components/navbar";
 import Footer from "@/app/components/footer";
@@ -137,7 +136,7 @@ export default async function RootLayout({
         <div className="mt-8">
           <Footer layout={footerLayout} />
         </div>
-        <Analytics />
+      
         <CookiesAlert></CookiesAlert>
       </body>
     </html>

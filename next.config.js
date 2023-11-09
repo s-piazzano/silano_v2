@@ -9,15 +9,7 @@ const nextConfig = {
     domains: ["silano-3r.fra1.digitaloceanspaces.com"],
     unoptimized: true,
   },
-  experimental: {
-    serverActions: true,
-  },
 };
 
 module.exports = nextConfig;
 
-/* const withBundleAnalyzer = require("@next/bundle-analyzer")({
-  enabled: process.env.ANALYZE === "true",
-});
-
-module.exports = withBundleAnalyzer({}); */
