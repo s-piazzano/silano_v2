@@ -24,6 +24,7 @@ export interface Layout {
   name: string;
   description?: string;
   url: URL;
+  linkName?: string;
   type: string;
   sections: Array<Section>;
   links?: Array<LinkInt>;

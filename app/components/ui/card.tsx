@@ -47,7 +47,7 @@ export default function Card({
           {description}
         </p>
       </div>
-      <div className="`pt-4 pb-2 ${linkClass}`">
+      <div className="`pt-4 pb-2 pl-2 ${linkClass}`">
         <Link href={link.url} className="inline-block font-medium text-forest">
           {link.name}
         </Link>

@@ -46,14 +46,14 @@ export default function CookiesAlert({
           <Link className="text-forest" href="/cookie-policy">
             Scopri di più
           </Link>
-          <form action={acceptCookie}>
-            <button
-              type="submit"
-              className="p-2 bg-forest text-white rounded-sm"
-            >
-              ACCETTA
-            </button>
-          </form>
+
+          <button
+            type="submit"
+            className="p-2 bg-forest text-white rounded-sm"
+            onClick={acceptCookie}
+          >
+            ACCETTA
+          </button>
         </div>
       </div>
     </div>

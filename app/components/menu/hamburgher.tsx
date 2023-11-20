@@ -35,6 +35,8 @@ export default function HamburgerMenu({
     };
   }, [isOpen]); */
 
+  console.log(layout);
+
   return (
     <div className="">
       {/* HamburgerButton */}
@@ -138,9 +140,10 @@ export default function HamburgerMenu({
                 <Link
                   key={"link-" + x.id}
                   href={x.url}
-                  className="py-4 text-stone-600 uppercase font-extralight"
+                  className="py-4 pl-4 text-stone-600 uppercase font-extralight"
+                  onClick={()=>setIsOpen(false)}
                 >
-                  {x.name}
+                  {x.linkName}
                 </Link>
               );
           })}

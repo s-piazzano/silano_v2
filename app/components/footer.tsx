@@ -12,7 +12,7 @@ interface FooterProps {
 export default function Footer({ layout }: FooterProps) {
   return (
     <div className="flex flex-col bg-base-200">
-      <div className="w-full  mt-8 px-4 md:px-16 py-8 flex flex-col space-y-8 md:space-y-0 md:flex-row md:justify-between">
+      <div className="w-full px-4 md:px-16 py-12 flex flex-col space-y-8 md:space-y-0 md:flex-row md:justify-between">
         {layout.map((x) => {
           if (x.__typename === "ComponentFooterCard") {
             return (

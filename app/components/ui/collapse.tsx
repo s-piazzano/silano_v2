@@ -4,6 +4,7 @@ import { ReactNode, useState } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Remark } from "react-remark";
 
+
 interface CollapseProps {
   title: String;
   isRemakable?: Boolean;
