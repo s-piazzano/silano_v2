@@ -35,8 +35,6 @@ export default function HamburgerMenu({
     };
   }, [isOpen]); */
 
-  console.log(layout);
-
   return (
     <div className="">
       {/* HamburgerButton */}
@@ -114,7 +112,7 @@ export default function HamburgerMenu({
                       return (
                         <div key={index} className="pl-2 pt-2 text-black ">
                           <h2 className="">{section.title}</h2>
-                          <div className="text-stone-600 flex flex-col space-y-2 mx-2 my-4">
+                          <div className="text-stone-600 flex flex-col space-y-4 mx-2 my-4">
                             {section.pages.data.map((page, index) => {
                               return (
                                 <Link
@@ -122,6 +120,7 @@ export default function HamburgerMenu({
                                   href={page.attributes.slug}
                                   as={page.attributes.slug}
                                   onClick={() => setIsOpen(false)}
+                            
                                 >
                                   {page.attributes.title}
                                 </Link>
