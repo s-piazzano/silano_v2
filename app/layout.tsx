@@ -8,7 +8,6 @@ import { Inter } from "next/font/google";
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
 
-
 import Navbar from "./components/navbar";
 import Footer from "@/app/components/footer";
 const CookiesAlert = dynamic(() => import("./components/custom/cookieAlerts"));
@@ -27,7 +26,8 @@ const query = gql`
           logo {
             data {
               attributes {
-                url
+                url,
+                formats
               }
             }
           }
@@ -87,8 +87,6 @@ const query = gql`
   }
 `;
 
-
-
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.silanosrl.it"),
   title: {
@@ -110,7 +108,8 @@ export default async function RootLayout({
   const footerLayout = data.footer.data.attributes.body;
 
   const menu = {
-    imageUrl: data.menus.data[0].attributes.logo.data.attributes.url,
+    imageUrl:
+      data.menus.data[0].attributes.logo.data.attributes.formats.thumbnail.url,
     hours: data.menus.data[0].attributes.hours,
     contact: data.menus.data[0].attributes.contact,
     layout: data.menus.data[0].attributes.layout,
@@ -136,10 +135,9 @@ export default async function RootLayout({
         <div className="mt-8">
           <Footer layout={footerLayout} />
         </div>
-      
+
         <CookiesAlert></CookiesAlert>
       </body>
     </html>
   );
 }
-

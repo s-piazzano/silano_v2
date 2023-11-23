@@ -2,6 +2,13 @@ export interface Image {
   data: {
     attributes: {
       url: string;
+      formats: {
+        thumbnail: { url: string };
+        small: { url: string };
+        medium: {
+          url: string;
+        };
+      };
     };
   };
 }

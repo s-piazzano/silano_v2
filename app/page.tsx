@@ -8,6 +8,7 @@ import Header from "./components/header";
 import Activities from "./components/custom/activities";
 const Maps = dynamic(() => import("./components/custom/maps"));
 
+export const revalidate = 5;
 const querySEO = gql`
   query {
     homepage {

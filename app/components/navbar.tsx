@@ -78,6 +78,7 @@ export default function Navbar({
             height={96}
             quality={100}
             alt="logo"
+            priority
           />
           <p
             id="companyName"

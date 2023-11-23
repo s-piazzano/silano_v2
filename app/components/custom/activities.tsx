@@ -26,7 +26,7 @@ export default function Activities({ className, activities }: ActivitiesProps) {
           title={activity.title}
           description={activity.description}
           link={activity.link}
-          imageUrl={activity.image?.data?.attributes?.url}
+          imageUrl={activity.image?.data?.attributes?.formats?.medium.url}
         ></Card>
       ))}
     </div>
