@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import Script from "next/script";
+import { notFound } from "next/navigation";
 
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
@@ -286,6 +287,11 @@ export default async function Ricambi({ params }: Params) {
     query,
     variables: { slug: params.slug },
   });
+
+  // Se non esiste uan marca passato dallo slug restituisco 404
+  if (data.products.data.length === 0) {
+    notFound();
+  }
 
   const product = data.products.data[0];
 
