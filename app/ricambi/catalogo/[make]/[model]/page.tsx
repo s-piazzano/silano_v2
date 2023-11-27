@@ -137,10 +137,6 @@ export default async function Subcategory({
       label: make.name,
       link: `/ricambi/catalogo/${make.slug}`,
     },
-    {
-      label: model.name,
-      link: `/ricambi/catalogo/${make.slug}/${modelSlug}`,
-    },
   ];
 
   return (

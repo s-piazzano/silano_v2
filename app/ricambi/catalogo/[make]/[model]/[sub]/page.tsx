@@ -181,10 +181,6 @@ export default async function Subcategory({ params }: Params) {
       label: data.models.data[0]?.attributes?.name,
       link: `/ricambi/catalogo/${params.make}/${params.model}`,
     },
-    {
-      label: data.subCategories?.data[0]?.attributes?.name,
-      link: `/ricambi/catalogo/${params.make}/${params.model}/${params.sub}`,
-    },
   ];
 
   const generateTitle = (subs) => {
@@ -198,7 +194,7 @@ export default async function Subcategory({ params }: Params) {
         <h1 className=" uppercase text-2xl mb-4">{`${makeName} ${modelName} - ${subName}`}</h1>
         <Breadcrumbs crumbs={crumbs} />
         <h3 className="my-2"></h3>
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4  gap-4">
+        <div className="w-full grid grid-cols-1 min-[470px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4  gap-4  ">
           {products.map((prod) => {
             return (
               <CardProduct
