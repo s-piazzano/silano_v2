@@ -85,7 +85,7 @@ export default async function Models({ params }: Params) {
     variables: { slug },
   });
 
-  // Se non esiste uan marca passato dallo slug restituisco 404
+  // Se non esiste una marca passato dallo slug restituisco 404
   if (data.makes.data.length === 0) {
     notFound();
   }

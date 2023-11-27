@@ -228,19 +228,8 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 
   const product = data.products.data[0];
 
-  return {
-    title: generateTitle(
-      product.attributes.sub_category.data,
-      product.attributes.compatibilities,
-      product.attributes.OE,
-      product.attributes.motorType
-    ),
-    description: generateDescription(
-      product.attributes.sub_category.data,
-      product.attributes.compatibilities,
-      product.attributes.description
-    ),
-    openGraph: {
+  if (product) {
+    return {
       title: generateTitle(
         product.attributes.sub_category.data,
         product.attributes.compatibilities,
@@ -252,9 +241,24 @@ export async function generateMetadata({ params }): Promise<Metadata> {
         product.attributes.compatibilities,
         product.attributes.description
       ),
-      images: [{ url: product.attributes.image?.data?.attributes?.url }],
-    },
-  };
+      openGraph: {
+        title: generateTitle(
+          product.attributes.sub_category.data,
+          product.attributes.compatibilities,
+          product.attributes.OE,
+          product.attributes.motorType
+        ),
+        description: generateDescription(
+          product.attributes.sub_category.data,
+          product.attributes.compatibilities,
+          product.attributes.description
+        ),
+        images: [{ url: product.attributes.image?.data?.attributes?.url }],
+      },
+    };
+  } else {
+    return {};
+  }
 }
 
 // Genero i path per la build
@@ -288,7 +292,7 @@ export default async function Ricambi({ params }: Params) {
     variables: { slug: params.slug },
   });
 
-  // Se non esiste uan marca passato dallo slug restituisco 404
+  // Se non esiste il prodotto passato dallo slug restituisco 404
   if (data.products.data.length === 0) {
     notFound();
   }
