@@ -204,7 +204,9 @@ export default async function Subcategory({ params }: Params) {
               <CardProduct
                 key={prod.id}
                 id={prod.id}
-                imageUrl={prod.attributes.images?.data[0]?.attributes?.url}
+                imageUrl={
+                  prod.attributes.images?.data[0]?.attributes?.formats.small.url
+                }
                 slug={prod.attributes.slug}
               >
                 <div className="px-1">
