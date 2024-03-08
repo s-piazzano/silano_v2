@@ -13,11 +13,9 @@
     "@apollo/experimental-nextjs-app-support": "^0.4.3",
     "@heroicons/react": "^2.0.18",
     "@next/bundle-analyzer": "^13.5.4",
-    "@stripe/stripe-js": "^3.0.7",
     "@types/node": "20.6.5",
     "@types/react": "18.2.22",
     "@types/react-dom": "18.2.7",
-    "@vercel/analytics": "^1.1.1",
     "animejs": "^3.2.1",
     "autoprefixer": "10.4.16",
     "cookies-next": "^4.0.0",
@@ -31,7 +29,6 @@
     "react-medium-image-zoom": "^5.1.8",
     "react-remark": "^2.1.0",
     "react-use": "^17.4.0",
-    "stripe": "^14.19.0",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2"
   }
