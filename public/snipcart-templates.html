@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Templates</title>
+  </head>
+
+  <body>
+    <!-- Insert template overrides here -->
+    <div id="snipcart-templates">
+      <address-fields section="top">
+        <div>
+          <snipcart-label for="company">Ragione sociale </snipcart-label>
+          <snipcart-input name="company"> </snipcart-input>
+        </div>
+      </address-fields>
+      <billing section="bottom">
+        <fieldset class="snipcart-form__set">
+          <div class="snipcart-form__field">
+            <snipcart-label class="snipcart__font--tiny" for="vatNumber">
+              Partita IVA e Codice Fiscale 
+            </snipcart-label>
+            <snipcart-input name="vatNumber"></snipcart-input>
+          </div>
+          <div class="snipcart-form__field">
+            <snipcart-label class="snipcart__font--tiny" for="sdi">
+              SDI
+            </snipcart-label>
+            <snipcart-input name="sdi"></snipcart-input>
+          </div>
+        </fieldset>
+      </billing>
+    </div>
+  </body>
+</html>

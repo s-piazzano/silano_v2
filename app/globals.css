@@ -5,6 +5,10 @@
 html {
   -webkit-tap-highlight-color: transparent;
   @apply font-inter;
+
+  --color-buttonPrimary: #1a4db3;
+  --borderColor-buttonPrimary: #1a4db3;
+  --bgColor-buttonPrimary: #1a4db3;
 }
 
 h2 {

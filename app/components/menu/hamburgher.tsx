@@ -75,20 +75,21 @@ export default function HamburgerMenu({
             {/* LOGO */}
             <Link
               href="/"
-              className="w-[65px] flex flex-col items-center  mr-6 -ml-1"
+              className="w-[65px] flex flex-col items-center  mr-6 -ml-[10px]"
             >
               <Image
-                className="w-[45px] h-[45px] mt-[7px]"
+                className="w-[45px] h-[45px] mt-[7px] "
                 src={imageUrl}
                 width={96}
                 height={96}
                 quality={100}
                 alt="logo"
               />
-              <p className="w-full uppercase text-xxs text-forest font-light ml-[25px] -mt-[7px]">
+              <p className="w-full uppercase text-xxs text-forest font-light ml-[20.4px] -mt-[7px]">
                 silano srl
               </p>
             </Link>
+
             {/* HAMBURGER MENU BUTTON */}
             <button
               className="-mt-[6px]"
@@ -98,29 +99,24 @@ export default function HamburgerMenu({
               <Bars2Icon className="w-[42px] h-[42px]  text-stone-600 font-thin focus:outline-none" />
             </button>
           </div>
-          {layout.map((x) => {
-            /* Check DropdownMenu type */
-            if (x.__typename === "ComponentDropdownMenu") {
-              return (
-                <Collapse
-                  className="px-4"
-                  key="x.id"
-                  title={x.name.toUpperCase()}
-                >
-                  <div className=" flex flex-col ">
+          <div className="my-4">
+            {layout.map((x) => {
+              /* Check DropdownMenu type */
+              if (x.__typename === "ComponentDropdownMenu") {
+                return (
+                  <div className=" flex flex-col" key={x.id}>
                     {x.sections.map((section, index) => {
                       return (
-                        <div key={index} className="pl-2 pt-2 text-black ">
+                        <div key={index} className="pl-4 pt-2 text-black ">
                           <h2 className="">{section.title}</h2>
                           <div className="text-stone-600 flex flex-col space-y-4 mx-2 my-4">
                             {section.pages.data.map((page, index) => {
                               return (
                                 <Link
                                   key={index}
-                                  href={page.attributes.slug}
-                                  as={page.attributes.slug}
+                                  href={`/${page.attributes.slug}`}
+                                  as={`/${page.attributes.slug}`}
                                   onClick={() => setIsOpen(false)}
-                            
                                 >
                                   {page.attributes.title}
                                 </Link>
@@ -131,21 +127,21 @@ export default function HamburgerMenu({
                       );
                     })}
                   </div>
-                </Collapse>
-              );
-            }
-            if (x.__typename === "ComponentCommonLink")
-              return (
-                <Link
-                  key={"link-" + x.id}
-                  href={x.url}
-                  className="py-4 pl-4 text-stone-600 uppercase font-extralight"
-                  onClick={()=>setIsOpen(false)}
-                >
-                  {x.linkName}
-                </Link>
-              );
-          })}
+                );
+              }
+              if (x.__typename === "ComponentCommonLink")
+                return (
+                  <Link
+                    key={"link-" + x.id}
+                    href={x.url}
+                    className="py-2 pl-4 text-stone-600 font-extralight text-xl"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    {x.linkName}
+                  </Link>
+                );
+            })}
+          </div>
         </div>
       )}
     </div>

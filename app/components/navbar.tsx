@@ -36,9 +36,7 @@ export default function Navbar({
     });
   });
 
-  const menuStatus = (status) => {
-  
-  };
+  const menuStatus = (status) => {};
 
   return (
     <div className="w-full">
@@ -65,11 +63,11 @@ export default function Navbar({
         </div>
       </div>
       {/* MENU */}
-      <div className="relative w-full h-[74px] bg-base-200 border-b border-gray-200 px-4 md:px-16 flex justify-between items-center ">
+      <div className="relative w-full h-[74px] bg-base-200 border-b border-gray-200 px-4 md:px-16 flex justify-between lg:justify-normal items-center ">
         {/* LOGO */}
         <Link
           href="/"
-          className="w-[65px] flex flex-col items-center  mr-6 -ml-1"
+          className="w-[80px] flex flex-col items-start shrink-0"
         >
           <Image
             className="w-[45px] h-[45px]"
@@ -82,12 +80,14 @@ export default function Navbar({
           />
           <p
             id="companyName"
-            className="uppercase text-xxs text-forest opacity-0 font-light"
+            className="uppercase text-xxs text-forest opacity-0 font-light -ml-2"
           >
             silano srl
           </p>
         </Link>
-        <Menu layout={layout} />
+        <div className="w-full flex space-between">
+          <Menu layout={layout} />
+        </div>
         <div className="block lg:hidden">
           <HamburgerMenu layout={layout} imageUrl={imageUrl} />
         </div>

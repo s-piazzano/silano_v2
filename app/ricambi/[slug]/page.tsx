@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import Script from "next/script";
+
 import { notFound } from "next/navigation";
 
 import { getClient } from "@/lib/client";
@@ -10,11 +10,14 @@ import Breadcrumbs from "@/app/components/ui/breadcrumbs";
 import Gallery from "@/app/components/ui/gallery";
 import Collapse from "@/app/components/ui/collapse";
 
+import { toInteger, extractDecimal } from "@/lib/common";
+
 export const revalidate = 5;
 
 interface Slug {
   slug: string;
 }
+
 interface Params {
   params: Slug;
 }
@@ -95,6 +98,7 @@ const queryStaticPath = gql`
     }
   }
 `;
+
 const query = gql`
   query ($slug: String) {
     products(filters: { slug: { eq: $slug } }) {
@@ -107,6 +111,7 @@ const query = gql`
           description
           price
           title
+          quantity
           sub_category {
             data {
               attributes {
@@ -286,7 +291,6 @@ export async function generateStaticParams({ params }: Params) {
 }
 
 export default async function Ricambi({ params }: Params) {
-  const snip_id = process.env.SNIPCART_ID;
   const { data } = await getClient().query({
     query,
     variables: { slug: params.slug },
@@ -334,17 +338,6 @@ export default async function Ricambi({ params }: Params) {
 
   return (
     <div className="">
-      <Script id="gateway_payament" strategy="afterInteractive">
-        {`
-         window.SnipcartSettings = {
-          publicApiKey: "${snip_id}",
-          loadStrategy: "on-user-interaction",
-        };
-      
-        (function(){var c,d;(d=(c=window.SnipcartSettings).version)!=null||(c.version="3.0");var s,S;(S=(s=window.SnipcartSettings).timeoutDuration)!=null||(s.timeoutDuration=2750);var l,p;(p=(l=window.SnipcartSettings).domain)!=null||(l.domain="cdn.snipcart.com");var w,u;(u=(w=window.SnipcartSettings).protocol)!=null||(w.protocol="https");var m,g;(g=(m=window.SnipcartSettings).loadCSS)!=null||(m.loadCSS=!0);var y=window.SnipcartSettings.version.includes("v3.0.0-ci")||window.SnipcartSettings.version!="3.0"&&window.SnipcartSettings.version.localeCompare("3.4.0",void 0,{numeric:!0,sensitivity:"base"})===-1,f=["focus","mouseover","touchmove","scroll","keydown"];window.LoadSnipcart=o;document.readyState==="loading"?document.addEventListener("DOMContentLoaded",r):r();function r(){window.SnipcartSettings.loadStrategy?window.SnipcartSettings.loadStrategy==="on-user-interaction"&&(f.forEach(function(t){return document.addEventListener(t,o)}),setTimeout(o,window.SnipcartSettings.timeoutDuration)):o()}var a=!1;function o(){if(a)return;a=!0;let t=document.getElementsByTagName("head")[0],n=document.querySelector("#snipcart"),i=document.querySelector('src[src^="'.concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,'"][src$="snipcart.js"]')),e=document.querySelector('link[href^="'.concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,'"][href$="snipcart.css"]'));n||(n=document.createElement("div"),n.id="snipcart",n.setAttribute("hidden","true"),document.body.appendChild(n)),h(n),i||(i=document.createElement("script"),i.src="".concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,"/themes/v").concat(window.SnipcartSettings.version,"/default/snipcart.js"),i.async=!0,t.appendChild(i)),!e&&window.SnipcartSettings.loadCSS&&(e=document.createElement("link"),e.rel="stylesheet",e.type="text/css",e.href="".concat(window.SnipcartSettings.protocol,"://").concat(window.SnipcartSettings.domain,"/themes/v").concat(window.SnipcartSettings.version,"/default/snipcart.css"),t.prepend(e)),f.forEach(function(v){return document.removeEventListener(v,o)})}function h(t){!y||(t.dataset.apiKey=window.SnipcartSettings.publicApiKey,window.SnipcartSettings.addProductBehavior&&(t.dataset.configAddProductBehavior=window.SnipcartSettings.addProductBehavior),window.SnipcartSettings.modalStyle&&(t.dataset.configModalStyle=window.SnipcartSettings.modalStyle),window.SnipcartSettings.currency&&(t.dataset.currency=window.SnipcartSettings.currency),window.SnipcartSettings.templatesUrl&&(t.dataset.templatesUrl=window.SnipcartSettings.templatesUrl))}})();
-        `}
-      </Script>
-
       {product && (
         <div className="px-4 md:px-16 py-8 flex flex-col">
           <Breadcrumbs crumbs={crumbs} />
@@ -359,9 +352,10 @@ export default async function Ricambi({ params }: Params) {
                     product.attributes.motorType
                   )}
             </h1>
+            {/*Galleria immagini prodotto*/}
             <Gallery images={product.attributes.images}></Gallery>
 
-            <div className=" flex flex-col pt-8 md:pl-8 md:pt-0">
+            <div className=" flex flex-col md:pl-8">
               <h1 className="hidden md:block text-lg font-semibold">
                 {product.attributes.title
                   ? product.attributes.title
@@ -379,6 +373,25 @@ export default async function Ricambi({ params }: Params) {
                   product.attributes.description
                 )}
               </div>
+              {/* Giacenza */}
+              <div className="py-4 font-semibold text-lg">
+                {" "}
+                {product.attributes.quantity ? (
+                  <div className="flex items-end space-x-2 font-normal">
+                    <p className="">Ultimi pezzi rimasti </p>
+                    {product.attributes.price && (
+                      <p className=" text-2xl">
+                        € {toInteger(product.attributes.price)}
+                        <span className="text-sm">
+                          {extractDecimal(product.attributes.price)}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <p className="text-red-500">Non disponibile</p>
+                )}
+              </div>
               {/* Collapse */}
               {!product.attributes.price && (
                 <Collapse
@@ -393,7 +406,7 @@ export default async function Ricambi({ params }: Params) {
                 </Collapse>
               )}
               {/* Button */}
-              {!product.price && (
+              {!product.attributes.price && (
                 <Link
                   href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${
                     "https://www.silanosrl.it/ricambi/" + params.slug
@@ -406,6 +419,30 @@ export default async function Ricambi({ params }: Params) {
                   </span>
                 </Link>
               )}
+              {/* Snipchart button */}
+               {product.attributes.price && product.attributes.quantity > 0 && (
+                <button
+                  className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white"
+                  data-item-id={product.id}
+                  data-item-price={product.attributes.price}
+                  data-item-image={
+                    product.attributes.images.data[0].attributes.formats
+                      .thumbnail.url
+                  }
+                  data-item-name={generateTitle(
+                    product.attributes.sub_category.data,
+                    product.attributes.compatibilities,
+                    product.attributes.OE,
+                    product.attributes.motorType
+                  )}
+                  data-item-max-quantity={product.attributes.quantity}
+                >
+                  Aggiungi al carrello
+                </button>
+              )} 
+
+
+
               <div className="flex flex-col mt-8">
                 <h2 className="font-semibold">
                   Non sei sicuro della compatibilità o hai bisogno di maggiori

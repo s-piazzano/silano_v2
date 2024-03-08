@@ -1,37 +1,27 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+
+import ImageZoom from "../custom/imageZoom";
+
+const DEFAULT_IMAGE =
+  "https://silano-3r.fra1.digitaloceanspaces.com/3r/689fcb145515c189ba09482d4a33ebde.webp";
 
 export default function Gallery({ images }) {
-  const [imageUrl, setImageUrl] = useState(
-    images.data.length
-      ? images.data[0].attributes.formats.small.url
-      : "https://silano-3r.fra1.digitaloceanspaces.com/3r/2d8db009212b92d9f9e336072b312ce6.jpg?updated_at=2023-04-27T09:22:12.184Z"
-  );
+  const [image, setImage] = useState(images.data[0]);
 
   return (
-    <div className="flex flex-col w-full md:w-1/2 lg:w-[500px]">
-      <Image
-        src={imageUrl}
-        alt="Picture of the author"
-        width={800}
-        height={400}
-        className="cursor-pointer "
-      />
-      <div className="flex pt-2 overflow-y-auto">
+    <div className="flex flex-col w-full lg:w-[600px] max-h-3/6">
+      <ImageZoom image={image}></ImageZoom>
+
+      <div className="flex pt-2 overflow-y-auto border-b pb-2">
         {images.data.map((x) => {
           return (
             <div
               key={x.id}
               className="cursor-pointer pr-2"
-              onClick={() =>
-                setImageUrl(
-                  x.attributes.formats.small?.url
-                    ? x.attributes.formats.small.url
-                    : x.attributes.url
-                )
-              }
+              onClick={() => setImage(x)}
             >
               <Image
                 src={
