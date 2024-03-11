@@ -379,14 +379,15 @@ export default async function Ricambi({ params }: Params) {
                 {product.attributes.quantity ? (
                   <div className="flex items-end space-x-2 font-normal">
                     <p className="">Ultimi pezzi rimasti </p>
-                    {product.attributes.price && (
-                      <p className=" text-2xl">
-                        € {toInteger(product.attributes.price)}
-                        <span className="text-sm">
-                          {extractDecimal(product.attributes.price)}
-                        </span>
-                      </p>
-                    )}
+                    {product.attributes.price &&
+                      product.attributes.price > 0 && (
+                        <p className=" text-2xl">
+                          € {toInteger(product.attributes.price)}
+                          <span className="text-sm">
+                            {extractDecimal(product.attributes.price)}
+                          </span>
+                        </p>
+                      )}
                   </div>
                 ) : (
                   <p className="text-red-500">Non disponibile</p>
@@ -420,28 +421,27 @@ export default async function Ricambi({ params }: Params) {
                 </Link>
               )}
               {/* Snipchart button */}
-               {product.attributes.price && product.attributes.quantity > 0 && (
-                <button
-                  className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white"
-                  data-item-id={product.id}
-                  data-item-price={product.attributes.price}
-                  data-item-image={
-                    product.attributes.images.data[0].attributes.formats
-                      .thumbnail.url
-                  }
-                  data-item-name={generateTitle(
-                    product.attributes.sub_category.data,
-                    product.attributes.compatibilities,
-                    product.attributes.OE,
-                    product.attributes.motorType
-                  )}
-                  data-item-max-quantity={product.attributes.quantity}
-                >
-                  Aggiungi al carrello
-                </button>
-              )} 
-
-
+              {product.attributes.price &&
+                product.attributes.price > 0 &&
+                product.attributes.quantity > 0 && (
+                  <button
+                    className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white"
+                    data-item-id={product.id}
+                    data-item-price={product.attributes.price}
+                    data-item-image={
+                      product.attributes.images?.data[0]?.attributes?.formats?.thumbnail?.url
+                    }
+                    data-item-name={generateTitle(
+                      product.attributes.sub_category.data,
+                      product.attributes.compatibilities,
+                      product.attributes.OE,
+                      product.attributes.motorType
+                    )}
+                    data-item-max-quantity={product.attributes.quantity}
+                  >
+                    Aggiungi al carrello
+                  </button>
+                )}
 
               <div className="flex flex-col mt-8">
                 <h2 className="font-semibold">
