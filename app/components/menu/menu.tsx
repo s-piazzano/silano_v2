@@ -10,7 +10,7 @@ interface MenuProps {
 
 export default function Menu({ layout }: MenuProps) {
   return (
-    <div className="hidden w-full h-[74px] lg:flex text-stone-900 font-light uppercase text-sm tracking-widest justify-between">
+    <div className="hidden w-full h-[74px] lg:flex text-stone-900 font-light uppercase text-sm tracking-widest justify-between items-center">
       <div className="flex">
         {layout.map((x: any) => {
           /* Dropdown Menu */
