@@ -1,11 +1,11 @@
 
 import Script from "next/script";
 
-interface GoogleAnaliticsProps {
+interface GoogleTagManagerProps {
   ga_id: string;
 }
 
-export default function GoogleAnalitics({ ga_id }: GoogleAnaliticsProps) {
+export default function GoogleTagManager({ ga_id }: GoogleTagManagerProps) {
    
   return (
     <>

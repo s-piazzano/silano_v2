@@ -16,6 +16,9 @@ const CookiesAlert = dynamic(() => import("./components/custom/cookieAlerts"));
 const GoogleAnalitics = dynamic(
   () => import("./components/custom/googleAnalitics")
 );
+const GoogleTagManager = dynamic(
+  () => import("./components/custom/googleTagManager")
+);
 
 const inter = Inter({ subsets: ["latin"] });
 // Snipcart ID
@@ -121,7 +124,10 @@ export default async function RootLayout({
   return (
     <html lang="it">
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
-        <GoogleAnalitics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+        <div>
+          <GoogleAnalitics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+          <GoogleTagManager ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+        </div>
       )}
       <body
         className={` relative flex flex-col min-h-screen ${inter.className}`}
