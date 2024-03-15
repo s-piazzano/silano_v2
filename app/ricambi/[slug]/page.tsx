@@ -369,26 +369,69 @@ export default async function Ricambi({ params }: Params) {
                     )}
               </h1>
               <div className="border border-b-0 "></div>
-              {/* Giacenza */}
-              <div className="py-4 text-lg">
-                {" "}
-                {product.attributes.quantity ? (
-                  <div className="flex flex-col space-y-2 font-bold">
-                    {product.attributes.price &&
-                      product.attributes.price > 0 && (
-                        <p className=" text-2xl">
-                          € {toInteger(product.attributes.price)}
-                          <span className="text-sm">
-                            {extractDecimal(product.attributes.price)}
-                          </span>
-                        </p>
-                      )}
-                    <p className="text-sm font-normal">Ultimi pezzi rimasti </p>
-                  </div>
-                ) : (
-                  <p className="text-red-500">Non disponibile</p>
+              <div className="flex flex-col space-y-4 my-4">
+                {/* Giacenza */}
+                <div className="text-lg">
+                  {" "}
+                  {product.attributes.quantity ? (
+                    <div className="flex flex-col space-y-2 font-bold">
+                      {product.attributes.price &&
+                        product.attributes.price > 0 && (
+                          <p className=" text-2xl">
+                            € {toInteger(product.attributes.price)}
+                            <span className="text-sm">
+                              {extractDecimal(product.attributes.price)}
+                            </span>
+                          </p>
+                        )}
+                      <p className="text-sm font-normal">
+                        Ultimi pezzi rimasti{" "}
+                      </p>
+                    </div>
+                  ) : (
+                    <p className="text-red-500">Non disponibile</p>
+                  )}
+                </div>
+                {/* Button */}
+                {/* Richiedi uan quatozione - visibile se non è definito un prezzo */}
+                {!product.attributes.price && (
+                  <Link
+                    href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${
+                      "https://www.silanosrl.it/ricambi/" + params.slug
+                    } (non modificare). Avrei bisogno di informazioni ...`}
+                    className="w-64 h-12 bg-forest text-white rounded-sm uppercase flex justify-center items-center px-4"
+                  >
+                    <span className="flex flex-col items-center">
+                      <span className="">richiedi una quotazione</span>
+                      <span className="font-light text-xs">whatsapp</span>
+                    </span>
+                  </Link>
                 )}
+                {/* Snipchart button */}
+                {product.attributes.price &&
+                  product.attributes.price > 0 &&
+                  product.attributes.quantity > 0 && (
+                    <button
+                      className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white"
+                      data-item-id={product.id}
+                      data-item-price={product.attributes.price}
+                      data-item-image={
+                        product.attributes.images?.data[0]?.attributes?.formats
+                          ?.thumbnail?.url
+                      }
+                      data-item-name={generateTitle(
+                        product.attributes.sub_category.data,
+                        product.attributes.compatibilities,
+                        product.attributes.OE,
+                        product.attributes.motorType
+                      )}
+                      data-item-max-quantity={product.attributes.quantity}
+                    >
+                      Aggiungi al carrello
+                    </button>
+                  )}
               </div>
+
               <div className="whitespace-pre-wrap">
                 {generateDescription(
                   product.attributes.sub_category.data,
@@ -410,45 +453,8 @@ export default async function Ricambi({ params }: Params) {
                   </p>
                 </Collapse>
               )}
-              {/* Button */}
-              {!product.attributes.price && (
-                <Link
-                  href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${
-                    "https://www.silanosrl.it/ricambi/" + params.slug
-                  } (non modificare). Avrei bisogno di informazioni ...`}
-                  className="w-64 h-12 bg-forest text-white rounded-sm uppercase mt-4 flex justify-center items-center px-4"
-                >
-                  <span className="flex flex-col items-center">
-                    <span className="">richiedi una quotazione</span>
-                    <span className="font-light text-xs">whatsapp</span>
-                  </span>
-                </Link>
-              )}
-              {/* Snipchart button */}
-              {product.attributes.price &&
-                product.attributes.price > 0 &&
-                product.attributes.quantity > 0 && (
-                  <button
-                    className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white"
-                    data-item-id={product.id}
-                    data-item-price={product.attributes.price}
-                    data-item-image={
-                      product.attributes.images?.data[0]?.attributes?.formats
-                        ?.thumbnail?.url
-                    }
-                    data-item-name={generateTitle(
-                      product.attributes.sub_category.data,
-                      product.attributes.compatibilities,
-                      product.attributes.OE,
-                      product.attributes.motorType
-                    )}
-                    data-item-max-quantity={product.attributes.quantity}
-                  >
-                    Aggiungi al carrello
-                  </button>
-                )}
 
-              <div className="flex flex-col mt-8">
+              <div className="flex flex-col">
                 <h2 className="font-semibold">
                   Non sei sicuro della compatibilità o hai bisogno di maggiori
                   informazioni?
