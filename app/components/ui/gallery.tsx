@@ -15,7 +15,7 @@ export default function Gallery({ images }) {
     <div className="flex flex-col w-full lg:w-[600px] max-h-3/6">
       <ImageZoom image={image}></ImageZoom>
 
-      <div className="flex pt-2 overflow-y-auto border-b pb-2">
+      <div className="flex pt-2 overflow-y-auto  pb-2">
         {images.data.map((x) => {
           return (
             <div
