@@ -126,6 +126,13 @@ export default async function RootLayout({
       <body
         className={` relative flex flex-col min-h-screen ${inter.className}`}
       >
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-KC23B962"
+            height="0"
+            width="0"
+          ></iframe>
+        </noscript>
         {/* Navigation Bar */}
         <Navbar
           imageUrl={menu.imageUrl}
