@@ -356,7 +356,7 @@ export default async function Ricambi({ params }: Params) {
             {/*Galleria immagini prodotto*/}
             <Gallery images={product.attributes.images}></Gallery>
 
-            <div className=" flex flex-col md:pl-8">
+            <div className=" flex flex-col md:pl-8 md:w-5/6">
               {/* Titolo del prodotto - versione desktop*/}
               <h1 className="hidden md:block text-lg font-semibold">
                 {product.attributes.title
