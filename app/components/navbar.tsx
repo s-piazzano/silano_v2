@@ -11,6 +11,8 @@ import anime from "animejs";
 
 import { Layout } from "@/interfaces/layout";
 
+import ButtonCart from "./ui/buttonCart";
+
 interface NavbarProps {
   imageUrl: string;
   hours: String;
@@ -88,7 +90,9 @@ export default function Navbar({
         <div className="w-full flex space-between">
           <Menu layout={layout} />
         </div>
-        <div className="block lg:hidden">
+        <div className="flex space-x-8 items-center lg:hidden ">
+          {/* Bottone carrello - visibile solo nella sezione ricambi */}
+          <ButtonCart />
           <HamburgerMenu layout={layout} imageUrl={imageUrl} />
         </div>
       </div>

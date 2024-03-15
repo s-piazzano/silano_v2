@@ -342,6 +342,7 @@ export default async function Ricambi({ params }: Params) {
         <div className="px-4 md:px-16 py-8 flex flex-col">
           <Breadcrumbs crumbs={crumbs} />
           <div className="flex flex-col md:flex-row ">
+            {/* Titolo del prodotto - versione mobile*/}
             <h1 className="md:hidden text-lg font-semibold mb-4">
               {product.attributes.title
                 ? product.attributes.title
@@ -356,6 +357,7 @@ export default async function Ricambi({ params }: Params) {
             <Gallery images={product.attributes.images}></Gallery>
 
             <div className=" flex flex-col md:pl-8">
+              {/* Titolo del prodotto - versione desktop*/}
               <h1 className="hidden md:block text-lg font-semibold">
                 {product.attributes.title
                   ? product.attributes.title
@@ -366,19 +368,12 @@ export default async function Ricambi({ params }: Params) {
                       product.attributes.motorType
                     )}
               </h1>
-              <div className="whitespace-pre-wrap">
-                {generateDescription(
-                  product.attributes.sub_category.data,
-                  product.attributes.compatibilities,
-                  product.attributes.description
-                )}
-              </div>
+              <div className="border border-b-0 "></div>
               {/* Giacenza */}
-              <div className="py-4 font-semibold text-lg">
+              <div className="py-4 text-lg">
                 {" "}
                 {product.attributes.quantity ? (
-                  <div className="flex items-end space-x-2 font-normal">
-                    <p className="">Ultimi pezzi rimasti </p>
+                  <div className="flex flex-col space-y-2 font-bold">
                     {product.attributes.price &&
                       product.attributes.price > 0 && (
                         <p className=" text-2xl">
@@ -388,11 +383,20 @@ export default async function Ricambi({ params }: Params) {
                           </span>
                         </p>
                       )}
+                    <p className="text-sm font-normal">Ultimi pezzi rimasti </p>
                   </div>
                 ) : (
                   <p className="text-red-500">Non disponibile</p>
                 )}
               </div>
+              <div className="whitespace-pre-wrap">
+                {generateDescription(
+                  product.attributes.sub_category.data,
+                  product.attributes.compatibilities,
+                  product.attributes.description
+                )}
+              </div>
+
               {/* Collapse */}
               {!product.attributes.price && (
                 <Collapse
@@ -429,7 +433,8 @@ export default async function Ricambi({ params }: Params) {
                     data-item-id={product.id}
                     data-item-price={product.attributes.price}
                     data-item-image={
-                      product.attributes.images?.data[0]?.attributes?.formats?.thumbnail?.url
+                      product.attributes.images?.data[0]?.attributes?.formats
+                        ?.thumbnail?.url
                     }
                     data-item-name={generateTitle(
                       product.attributes.sub_category.data,
