@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Bars2Icon } from "@heroicons/react/24/outline";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 import Collapse from "../ui/collapse";
 
 import Link from "next/link";
@@ -16,90 +16,46 @@ interface hamburgerMenuProps {
   layout: Array<Layout>;
   imageUrl: string;
 }
+type menu = HTMLElement;
 
 export default function HamburgerMenu({
   layout,
   imageUrl,
 }: hamburgerMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  /*  useEffect(() => {
-    const html = document.getElementsByTagName("html")[0];
+
+  //Altezza del menu in pixel
+  const HEIGHTMENU = 106;
+
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+    const setWS = Math.max(HEIGHTMENU - window.scrollY, 0);
+    const menu: menu = document.getElementById("menu")!;
 
     if (isOpen) {
-      html.classList.add("lock-scroll");
-    } else {
-      html.classList.remove("lock-scroll");
+      menu.style["top"] = setWS + "px";
     }
-    return (): void => {
-      html.classList.remove("lock-scroll");
-    };
-  }, [isOpen]); */
+  }, [isOpen]);
 
   return (
-    <div className="">
+    <div className="w-[48px] h-[48px]">
       {/* HamburgerButton */}
       <button
         className=""
         aria-label="hamburger menu"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Bars2Icon className="w-[42px] h-[42px]  text-stone-600 font-thin focus:outline-none" />
+        <Bars3Icon className="w-full h-full text-stone-600 font-thin focus:outline-none" />
       </button>
       {/* menu container */}
       {isOpen && (
-        <div className="fixed z-[1000] left-0 top-0 w-full h-screen bg-base-200 flex flex-col  text-lg overflow-y-auto">
-          {/* BANNER */}
-          <div className=" w-full h-[32px] flex px-4 md:px-16 bg-forest justify-center md:justify-between items-center text-white text-sm font-thin">
-            <h6 className="hidden md:block"></h6>
-            <div className="flex divide-x">
-              <a
-                target="_blank"
-                rel="noreferrer"
-                className="px-2"
-                href="tel:+390161930380"
-              >
-                Tel: 0161 930380
-              </a>
-              <a
-                target="_blank"
-                rel="noreferrer"
-                className="px-2"
-                href="https://wa.me/+393929898074"
-              >
-                Whatsapp: 392 989 8074
-              </a>
-            </div>
-          </div>
-          {/* MENU */}
-          <div className="relative w-full h-[74px] bg-base-200 border-b border-gray-200 px-4 md:px-16 flex justify-between items-center ">
-            {/* LOGO */}
-            <Link
-              href="/"
-              className="w-[65px] flex flex-col items-center  mr-6 -ml-[10px]"
-            >
-              <Image
-                className="w-[45px] h-[45px] mt-[7px] "
-                src={imageUrl}
-                width={96}
-                height={96}
-                quality={100}
-                alt="logo"
-              />
-              <p className="w-full uppercase text-xxs text-forest font-light ml-[20.4px] -mt-[7px]">
-                silano srl
-              </p>
-            </Link>
-
-            {/* HAMBURGER MENU BUTTON */}
-            <button
-              className="-mt-[6px]"
-              aria-label="hamburger menu"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <Bars2Icon className="w-[42px] h-[42px]  text-stone-600 font-thin focus:outline-none" />
-            </button>
-          </div>
-          <div className="my-4">
+        <div
+          id="menu"
+          className={`fixed z-10 right-0 top-0 w-full h-screen bg-base-100 overflow-y-auto`}
+        >
+          <div
+            className="py-4"
+          >
             {layout.map((x) => {
               /* Check DropdownMenu type */
               if (x.__typename === "ComponentDropdownMenu") {
