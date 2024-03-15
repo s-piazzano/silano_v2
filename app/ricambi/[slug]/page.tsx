@@ -258,7 +258,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
           product.attributes.compatibilities,
           product.attributes.description
         ),
-        images: [{ url: product.attributes.image?.data?.attributes?.url }],
+        images: [{ url: product.attributes.image?.data[0]?.attributes?.url }],
       },
     };
   } else {
