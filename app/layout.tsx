@@ -129,6 +129,7 @@ export default async function RootLayout({
           <GoogleTagManager ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
         </div>
       )}
+      <meta name="google-site-verification" content="dKg0O37YholKbK6vayeM0LF4yw3vcveeUnQ340egghw" />
       <body
         className={` relative flex flex-col min-h-screen ${inter.className}`}
       >
