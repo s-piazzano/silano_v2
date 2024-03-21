@@ -124,12 +124,12 @@ export default async function RootLayout({
   return (
     <html lang="it">
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
-        <div>
+        <>
           <GoogleAnalitics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
           <GoogleTagManager ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
-        </div>
+        </>
       )}
-      <meta name="google-site-verification" content="dKg0O37YholKbK6vayeM0LF4yw3vcveeUnQ340egghw" />
+
       <body
         className={` relative flex flex-col min-h-screen ${inter.className}`}
       >
@@ -152,7 +152,6 @@ export default async function RootLayout({
         <div className="mt-8">
           <Footer layout={footerLayout} />
         </div>
-
         <CookiesAlert></CookiesAlert>
       </body>
       {/* Script di inizializzazione snipcart */}

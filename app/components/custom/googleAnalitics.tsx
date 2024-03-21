@@ -16,6 +16,7 @@ export default function GoogleAnalitics({ ga_id }: GoogleAnaliticsProps) {
       />
       <Script id="google-analytics" strategy="afterInteractive">
         {`
+        
           window.dataLayer = window.dataLayer || [];
           function gtag(){window.dataLayer.push(arguments);}
           gtag('js', new Date());
