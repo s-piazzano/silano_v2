@@ -16,17 +16,19 @@ const ImageZoom = ({ image }) => {
     : DEFAULT_IMAGE;
 
   return (
-    <div className="relative">
-      <Zoom zoomImg={{ src: largeImage }}>
+    <div className="">
+      <Zoom  zoomImg={{ src: largeImage }}>
         {" "}
+      
         <Image
           src={imageUrl}
           width={800}
           height={400}
-          className="w-full cursor-pointer max-h-[400px]"
+          className="max-h-[500px]"
           style={{ objectFit: "contain" }}
-          alt="product-image"
+          alt="product image"
         />
+    
       </Zoom>
     </div>
   );

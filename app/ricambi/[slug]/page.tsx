@@ -6,11 +6,17 @@ import { notFound } from "next/navigation";
 import { getClient } from "@/lib/client";
 import { gql } from "@apollo/client";
 
+import Image from "next/image";
+
 import Breadcrumbs from "@/app/components/ui/breadcrumbs";
 import Gallery from "@/app/components/ui/gallery";
 import Collapse from "@/app/components/ui/collapse";
 
 import { toInteger, extractDecimal } from "@/lib/common";
+
+import CartButton from "@/app/components/ui/cartButton";
+
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
 
 export const revalidate = 5;
 
@@ -198,7 +204,6 @@ const generateDescription = (sub, comps, description) => {
     description
       ? description
       : `
-Autodemolizione specializzata nella vendita ricambi usati. 
 Offriamo come ricambio usato funzionante ${sub[0].attributes.name} per:
       ${comps
         .map(
@@ -208,15 +213,8 @@ Offriamo come ricambio usato funzionante ${sub[0].attributes.name} per:
             }`
         )
         .join("")}
-
-Disponiamo di ricambi per carrozzeria, meccanica, parti elettriche ed elettroniche, selleria...
-I ricambi sono accuratamente smontati e catalogati in magazzino da personale qualificato.
    `
   }
-
-Rispondiamo quotidianamente alle vostre e-mail e Whatsapp.
-  
-Possibilità di spedizione in tutta Italia
     `;
 };
 
@@ -258,7 +256,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
           product.attributes.compatibilities,
           product.attributes.description
         ),
-        images: [{ url: product.attributes.image?.data[0]?.attributes?.url }],
+        images: [product.attributes.images?.data[0]?.attributes?.url],
       },
     };
   } else {
@@ -354,9 +352,11 @@ export default async function Ricambi({ params }: Params) {
                   )}
             </h1>
             {/*Galleria immagini prodotto*/}
-            <Gallery images={product.attributes.images}></Gallery>
+            <div className="md:w-7/12 flex-none lg:pr-4">
+              <Gallery images={product.attributes.images}></Gallery>
+            </div>
 
-            <div className=" flex flex-col md:pl-8 md:w-5/6">
+            <div className=" flex flex-col  border-t md:border-t-0 md:pl-8 ">
               {/* Titolo del prodotto - versione desktop*/}
               <h1 className="hidden md:block text-lg font-semibold">
                 {product.attributes.title
@@ -368,7 +368,7 @@ export default async function Ricambi({ params }: Params) {
                       product.attributes.motorType
                     )}
               </h1>
-              <div className="border border-b-0 "></div>
+              <div className="hidden md:block border border-b-0 "></div>
               <div className="flex flex-col space-y-4 my-4">
                 {/* Giacenza */}
                 <div className="text-lg">
@@ -429,19 +429,63 @@ export default async function Ricambi({ params }: Params) {
                     >
                       Aggiungi al carrello
                     </button>
+                    /*  <CartButton productID={product.id} /> */
                   )}
               </div>
-
-              <div className="whitespace-pre-wrap">
+              {/* link per i contatti */}
+              <div className="mt-4 flex flex-col space-y-2 text-md">
+                <Link
+                  href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${
+                    "https://www.silanosrl.it/ricambi/" + params.slug
+                  } (non modificare). Avrei bisogno di informazioni ...`}
+                  className="flex items-center"
+                >
+                  <Image
+                    src="/whatsapp.svg"
+                    alt="Whatsapp"
+                    width={32}
+                    height={32}
+                    className="mr-2"
+                  />{" "}
+                  Richiedi assistenza
+                </Link>
+                <Link
+                  href={`mailto:ricambisilano@gmail.com`}
+                  className="flex items-center"
+                >
+                  <EnvelopeIcon className="w-[32px] h-[32px] mr-2"></EnvelopeIcon>
+                  Scrivici: ricambisilano@gmail.com
+                </Link>
+              </div>
+              {/* metodi di pagamento */}
+              <div className="flex flex-col space-y-2 mt-8">
+                <h3>Metodi di pagamento accettati:</h3>
+                <Image
+                  src="/carte.webp"
+                  width={220}
+                  height={95}
+                  alt="metodi di pagamento"
+                />
+              </div>
+            </div>
+          </div>
+          <div className="mt-12">
+            <div className="">
+              <div className=" p-0">
+                <h3 className="bg-forest w-32 text-base-100 font-extralight p-1 text-center">
+                  Descrizione
+                </h3>
+                <div className="border-forest border-b"></div>
+              </div>
+              <div className="whitespace-pre-wrap mt-2">
                 {generateDescription(
                   product.attributes.sub_category.data,
                   product.attributes.compatibilities,
                   product.attributes.description
                 )}
               </div>
-
               {/* Collapse */}
-              {!product.attributes.price && (
+              {/*  {!product.attributes.price && (
                 <Collapse
                   className="w-full md:w-96"
                   title="Perché il prezzo non è definito?"
@@ -452,9 +496,8 @@ export default async function Ricambi({ params }: Params) {
                     per conoscere il prezzo.
                   </p>
                 </Collapse>
-              )}
-
-              <div className="flex flex-col">
+              )} */}
+              {/* <div className="flex flex-col">
                 <h2 className="font-semibold">
                   Non sei sicuro della compatibilità o hai bisogno di maggiori
                   informazioni?
@@ -481,7 +524,7 @@ export default async function Ricambi({ params }: Params) {
                     ricambisilano@gmail.com
                   </a>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

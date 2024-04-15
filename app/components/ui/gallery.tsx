@@ -12,15 +12,13 @@ export default function Gallery({ images }) {
   const [image, setImage] = useState(images.data[0]);
 
   return (
-    <div className="flex flex-col w-full lg:w-[600px] max-h-3/6">
-      <ImageZoom image={image}></ImageZoom>
-
-      <div className="flex pt-2 overflow-y-auto  pb-2">
+    <div className="flex flex-col md:flex-row  w-full max-h-4/6">
+      <div className="flex md:flex-col mt-3 md:mt-0 overflow-x-auto md:overflow-y-auto space-x-2 md:space-x-0 md:space-y-2 order-last md:order-first">
         {images.data.map((x) => {
           return (
             <div
               key={x.id}
-              className="cursor-pointer pr-2"
+              className="cursor-pointer pr-2 flex-none"
               onClick={() => setImage(x)}
             >
               <Image
@@ -36,6 +34,9 @@ export default function Gallery({ images }) {
             </div>
           );
         })}
+      </div>
+      <div className="w-full flex justify-start max-h-[500px]">
+        <ImageZoom image={image}></ImageZoom>
       </div>
     </div>
   );
