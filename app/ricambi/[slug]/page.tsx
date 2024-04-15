@@ -14,8 +14,8 @@ import Collapse from "@/app/components/ui/collapse";
 
 import { toInteger, extractDecimal } from "@/lib/common";
 
-import CartButton from "@/app/components/ui/cartButton";
-
+/* import CartButton from "@/app/components/ui/cartButton";
+ */
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 
 export const revalidate = 5;
