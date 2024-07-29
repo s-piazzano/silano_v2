@@ -446,6 +446,7 @@ export default async function Ricambi({ params }: Params) {
                     width={32}
                     height={32}
                     className="mr-2"
+                    unoptimized
                   />{" "}
                   Richiedi assistenza
                 </Link>
@@ -465,6 +466,7 @@ export default async function Ricambi({ params }: Params) {
                   width={220}
                   height={95}
                   alt="metodi di pagamento"
+                  unoptimized
                 />
               </div>
             </div>
