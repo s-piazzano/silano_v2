@@ -25,7 +25,7 @@ interface Slug {
 }
 
 interface Params {
-  params: { slug: Promise<Slug> };
+  params: Promise<Slug>;
 }
 
 const querySEO = gql`
@@ -269,10 +269,11 @@ export async function generateStaticParams() {
     variables: {},
   });
 
-const products = data.products?.data ?? [];
-return products.map((product) => ({
-  params: { slug: product.attributes?.slug ?? "" },
-}));
+  const products = data.products?.data ?? [];
+  return products.map((product) => ({
+    params: { slug: product.attributes?.slug ?? "" },
+    fallback: 'blocking'
+  }));
 }
 
 export default async function Ricambi(props: Params) {

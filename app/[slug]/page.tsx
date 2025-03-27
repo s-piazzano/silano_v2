@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from 'next/navigation'
 
-import { getClient } from "@/lib/client";
+import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
 import Collapse from "@/app/components/ui/collapse";
@@ -127,7 +127,7 @@ export async function generateMetadata(props): Promise<Metadata> {
   const slug = params.slug;
 
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: querySEO,
     variables: { slug },
   });
@@ -148,20 +148,20 @@ export async function generateMetadata(props): Promise<Metadata> {
 // Genero i path per la build
 export async function generateStaticParams() {
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: queryStaticPath,
   });
+  console.log("entrato")
 
   const pages = data.pages.data;
-
   return pages.map((page) => ({
-    slug: page.slug,
+    slug: page.attributes.slug,
   }));
 }
 
 export default async function Page(props: Params) {
   const params = await props.params;
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query,
     variables: { slug: params.slug },
   });
