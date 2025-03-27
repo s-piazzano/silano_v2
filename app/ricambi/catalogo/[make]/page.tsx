@@ -2,7 +2,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getClient } from "@/lib/client";
+import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
 import Classifier from "@/app/components/custom/classifier";
@@ -16,7 +16,7 @@ interface Make {
   make: string;
 }
 interface Params {
-  params: Make;
+  params: Promise<Make>;
 }
 
 const queryStaticPath = gql`
@@ -53,10 +53,11 @@ const query = gql`
 
 // Genero i path per la build
 export async function generateStaticParams({ params }: Params) {
+  const resolvedParams = await params;
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: queryStaticPath,
-    variables: { slug: params.make },
+    variables: { slug: resolvedParams.make },
   });
 
   const makes = data.makes.data;
@@ -75,12 +76,13 @@ export async function generateStaticParams({ params }: Params) {
   }));
 }
 
-export default async function Models({ params }: Params) {
+export default async function Models(props: Params) {
+  const params = await props.params;
   // Leggo lo slug dai parametri di route
   const slug = params.make;
 
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: query,
     variables: { slug },
   });

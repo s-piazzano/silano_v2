@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 import { notFound } from "next/navigation";
 
-import { getClient } from "@/lib/client";
+import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
 import Image from "next/image";
@@ -25,7 +25,7 @@ interface Slug {
 }
 
 interface Params {
-  params: Slug;
+  params: { slug: Promise<Slug> };
 }
 
 const querySEO = gql`
@@ -184,47 +184,43 @@ const generateTitle = (subs, comps, oe = "", motorType = "") => {
   return ` ${subs[0].attributes.name} ${comps
     .map(
       (comp) =>
-        `${comp.make.data ? comp.make.data.attributes.name : ""} ${
-          comp.model.data ? comp.model.data.attributes.name : ""
-        } ${
-          comp.engine_capacity.data && comp.engine_capacity.data.id != 5
-            ? comp.engine_capacity.data.attributes.capacity
-            : ""
-        } ${
-          comp.fuel_system.data && comp.fuel_system.data.id != 8
-            ? comp.fuel_system.data.attributes.name
-            : ""
+        `${comp.make.data ? comp.make.data.attributes.name : ""} ${comp.model.data ? comp.model.data.attributes.name : ""
+        } ${comp.engine_capacity.data && comp.engine_capacity.data.id != 5
+          ? comp.engine_capacity.data.attributes.capacity
+          : ""
+        } ${comp.fuel_system.data && comp.fuel_system.data.id != 8
+          ? comp.fuel_system.data.attributes.name
+          : ""
         }`
     )
     .join(" / ")} ${oe ? oe : ""} ${motorType ? motorType : ""}`;
 };
 
 const generateDescription = (sub, comps, description) => {
-  return `${
-    description
-      ? description
-      : `
+  return `${description
+    ? description
+    : `
 Offriamo come ricambio usato funzionante ${sub[0].attributes.name} per:
       ${comps
-        .map(
-          (comp) =>
-            `- ${comp.make.data ? comp.make.data.attributes.name : ""} ${
-              comp.model.data ? comp.model.data.attributes.name : ""
-            }`
-        )
-        .join("")}
+      .map(
+        (comp) =>
+          `- ${comp.make.data ? comp.make.data.attributes.name : ""} ${comp.model.data ? comp.model.data.attributes.name : ""
+          }`
+      )
+      .join("")}
    `
-  }
+    }
     `;
 };
 
 // Genero i metadata per il SEO
-export async function generateMetadata({ params }): Promise<Metadata> {
+export async function generateMetadata(props): Promise<Metadata> {
+  const params = await props.params;
   // Leggo lo slug dai parametri di route
   const slug = params.slug;
 
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: querySEO,
     variables: { slug },
   });
@@ -265,31 +261,23 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 }
 
 // Genero i path per la build
-export async function generateStaticParams({ params }: Params) {
+export async function generateStaticParams() {
+
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: queryStaticPath,
-    variables: { slug: params.slug },
+    variables: {},
   });
 
-  const products = data.products.data;
-
-  // Automatic generation of paths
-  const slugs = products.map(
-    (x) =>
-      new Object({
-        params: x.attributes,
-      })
-  );
-
-  return products.map((page) => ({
-    slug: page.slug,
-    fallback: true,
-  }));
+const products = data.products?.data ?? [];
+return products.map((product) => ({
+  params: { slug: product.attributes?.slug ?? "" },
+}));
 }
 
-export default async function Ricambi({ params }: Params) {
-  const { data } = await getClient().query({
+export default async function Ricambi(props: Params) {
+  const params = await props.params;
+  const { data } = await createApolloClient().query({
     query,
     variables: { slug: params.slug },
   });
@@ -345,11 +333,11 @@ export default async function Ricambi({ params }: Params) {
               {product.attributes.title
                 ? product.attributes.title
                 : generateTitle(
-                    product.attributes.sub_category.data,
-                    product.attributes.compatibilities,
-                    product.attributes.OE,
-                    product.attributes.motorType
-                  )}
+                  product.attributes.sub_category.data,
+                  product.attributes.compatibilities,
+                  product.attributes.OE,
+                  product.attributes.motorType
+                )}
             </h1>
             {/*Galleria immagini prodotto*/}
             <div className="md:w-7/12 flex-none lg:pr-4">
@@ -362,11 +350,11 @@ export default async function Ricambi({ params }: Params) {
                 {product.attributes.title
                   ? product.attributes.title
                   : generateTitle(
-                      product.attributes.sub_category.data,
-                      product.attributes.compatibilities,
-                      product.attributes.OE,
-                      product.attributes.motorType
-                    )}
+                    product.attributes.sub_category.data,
+                    product.attributes.compatibilities,
+                    product.attributes.OE,
+                    product.attributes.motorType
+                  )}
               </h1>
               <div className="hidden md:block border border-b-0 "></div>
               <div className="flex flex-col space-y-4 my-4">
@@ -396,9 +384,8 @@ export default async function Ricambi({ params }: Params) {
                 {/* Richiedi uan quatozione - visibile se non è definito un prezzo */}
                 {!product.attributes.price && (
                   <Link
-                    href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${
-                      "https://www.silanosrl.it/ricambi/" + params.slug
-                    } (non modificare). Avrei bisogno di informazioni ...`}
+                    href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${"https://www.silanosrl.it/ricambi/" + params.slug
+                      } (non modificare). Avrei bisogno di informazioni ...`}
                     className="w-64 h-12 bg-forest text-white rounded-sm uppercase flex justify-center items-center px-4"
                   >
                     <span className="flex flex-col items-center">
@@ -411,7 +398,7 @@ export default async function Ricambi({ params }: Params) {
                 {product.attributes.price &&
                   product.attributes.price > 0 &&
                   product.attributes.quantity > 0 && (
-                    <button
+                    (<button
                       className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white"
                       data-item-id={product.id}
                       data-item-price={product.attributes.price}
@@ -426,18 +413,16 @@ export default async function Ricambi({ params }: Params) {
                         product.attributes.motorType
                       )}
                       data-item-max-quantity={product.attributes.quantity}
-                    >
-                      Aggiungi al carrello
-                    </button>
+                    >Aggiungi al carrello
+                    </button>)
                     /*  <CartButton productID={product.id} /> */
                   )}
               </div>
               {/* link per i contatti */}
               <div className="mt-4 flex flex-col space-y-2 text-md">
                 <Link
-                  href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${
-                    "https://www.silanosrl.it/ricambi/" + params.slug
-                  } (non modificare). Avrei bisogno di informazioni ...`}
+                  href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${"https://www.silanosrl.it/ricambi/" + params.slug
+                    } (non modificare). Avrei bisogno di informazioni ...`}
                   className="flex items-center"
                 >
                   <Image

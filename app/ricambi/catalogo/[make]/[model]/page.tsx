@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { getClient } from "@/lib/client";
+import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
 import Breadcrumbs from "@/app/components/ui/breadcrumbs";
@@ -83,7 +83,7 @@ export async function generateStaticParams({
   params: { model: string };
 }) {
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: queryStaticPath,
     variables: { slug: params.model },
   });
@@ -103,16 +103,17 @@ export async function generateStaticParams({
   }));
 }
 
-export default async function Subcategory({
-  params,
-}: {
-  params: { model: string };
-}) {
+export default async function Subcategory(
+  props: {
+    params: Promise<{ model: string }>;
+  }
+) {
+  const params = await props.params;
   // Leggo lo slug dai parametri di route
   const modelSlug = params.model;
 
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: query,
     variables: { model: modelSlug },
   });

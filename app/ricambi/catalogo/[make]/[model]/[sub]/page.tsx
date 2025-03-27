@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
-import { getClient } from "@/lib/client";
+import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
 import Breadcrumbs from "@/app/components/ui/breadcrumbs";
@@ -19,7 +19,7 @@ interface Props {
 }
 
 interface Params {
-  params: Props;
+  params: Promise<Props>;
 }
 
 const query = gql`
@@ -151,9 +151,10 @@ const query = gql`
   }
 `;
 
-export default async function Subcategory({ params }: Params) {
+export default async function Subcategory(props: Params) {
+  const params = await props.params;
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: query,
     variables: { sub: params.sub, make: params.make, model: params.model },
   });

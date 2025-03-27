@@ -1,9 +1,5 @@
-import { useRef, useEffect } from "react";
 
 import Card from "../ui/card";
-
-import { Image } from "@/interfaces/common";
-
 import { LinkInt, Activity } from "@/interfaces/common";
 
 interface ActivitiesProps {

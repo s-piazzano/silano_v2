@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 
-import { getClient } from "@/lib/client";
+import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
 import { reduceSameInitialString } from "@/lib/common";
@@ -60,7 +60,7 @@ const query = gql`
 // Genero i metadata per il SEO
 export async function generateMetadata(): Promise<Metadata> {
   // Fetch data
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query: querySEO,
     variables: { page: "ricambi" },
   });
@@ -79,7 +79,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Ricambi() {
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query,
     variables: { page: "ricambi" },
   });

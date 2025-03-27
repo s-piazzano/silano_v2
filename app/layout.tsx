@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Script from "next/script";
 
-import { getClient } from "@/lib/client";
+import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
 import Navbar from "./components/navbar";
@@ -106,7 +106,7 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data } = await getClient().query({
+  const { data } = await createApolloClient().query({
     query,
     variables: { menu: "default" },
   });

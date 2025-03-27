@@ -15,7 +15,7 @@ interface Slug {
   slug: string;
 }
 interface Params {
-  params: Slug;
+  params: Promise<Slug>;
 }
 
 const querySEO = gql`
@@ -121,7 +121,8 @@ const query = gql`
 `;
 
 // Genero i metadata per il SEO
-export async function generateMetadata({ params }): Promise<Metadata> {
+export async function generateMetadata(props): Promise<Metadata> {
+  const params = await props.params;
   // Leggo lo slug dai parametri di route
   const slug = params.slug;
 
@@ -158,7 +159,8 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function Page({ params }: Params) {
+export default async function Page(props: Params) {
+  const params = await props.params;
   const { data } = await getClient().query({
     query,
     variables: { slug: params.slug },
