@@ -43,7 +43,7 @@ export default function Navbar({
   return (
     <div className="w-full">
       {/* BANNER */}
-      <div className=" w-full h-[32px] flex px-4 md:px-16 bg-forest justify-center md:justify-between items-center text-white text-sm font-thin">
+      <div className=" w-full h-[32px] flex px-4 md:px-16 bg-forest justify-center md:justify-between items-center text-white text-sm">
         <h6 className="hidden md:block"></h6>
         <div className="flex divide-x">
           <a

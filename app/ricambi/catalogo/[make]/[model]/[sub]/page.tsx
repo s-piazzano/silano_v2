@@ -205,6 +205,12 @@ export default async function Subcategory(props: Params) {
                   prod.attributes.images?.data[0]?.attributes?.formats.small.url
                 }
                 slug={prod.attributes.slug}
+                price={prod.attributes.price}
+                quantity={prod.attributes.quantity}
+                sub_category={prod.attributes.sub_category}
+                compatibilities={prod.attributes.compatibilities}
+                OE={prod.attributes.OE}
+                motorType={prod.attributes.motorType}
               >
                 <div className="px-1">
                   <h3 className="text-sm">
@@ -218,14 +224,13 @@ export default async function Subcategory(props: Params) {
                   </p>
                   {/* Quantità */}
                   <p
-                    className={
-                      prod.attributes.quantity
-                        ? "font-light text-green-600"
+                    className={ prod.attributes.quantity
+                        ? "font-light text-green-600 mt-2"
                         : "text-red-500"
                     }
                   >
                     {prod.attributes.quantity
-                      ? "Disponibile per la spedizione"
+                      ? "✅ Disponibile "
                       : "Non disponibile"}
                   </p>
                   {/* Compatibilità */}
@@ -240,6 +245,7 @@ export default async function Subcategory(props: Params) {
                       </ul>
                     ))}
                   </div>
+                 {prod.attributes.price && (<div className="mt-2">{"€ " +prod.attributes.price}</div>)}
                 </div>
               </CardProduct>
             );

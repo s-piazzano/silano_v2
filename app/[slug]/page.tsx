@@ -151,7 +151,6 @@ export async function generateStaticParams() {
   const { data } = await createApolloClient().query({
     query: queryStaticPath,
   });
-  console.log("entrato")
 
   const pages = data.pages.data;
   return pages.map((page) => ({

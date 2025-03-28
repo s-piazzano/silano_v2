@@ -24,8 +24,8 @@ export default function Header({
   activities,
 }: HeaderProps) {
   useEffect(() => {
-    let translateY = -180;
-    let traslateYActivities = -400;
+    let translateY = -260;
+    let traslateYActivities = -500;
 
     var tl = anime.timeline({
       easing: "easeOutExpo",
