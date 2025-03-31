@@ -165,7 +165,7 @@ export default async function Page(props: Params) {
     variables: { slug: params.slug },
   });
 
-  if(data.pages.data.length === 0){
+  if (data.pages.data.length === 0) {
     notFound()
   }
 
@@ -186,7 +186,7 @@ export default async function Page(props: Params) {
         <h1 className=" uppercase text-2xl mb-8">{page.title}</h1>
         {/* Page description */}
         {page.description && (
-          <div className="mt-8 text-xl break-words ">
+          <div className="mt-8 text-xl break-words description">
             <DocumentToHtmlString description={page.description} />
           </div>
         )}
@@ -234,7 +234,7 @@ export default async function Page(props: Params) {
           {componentCommonAssistant && (
             <Assistant component={componentCommonAssistant} />
           )}
-          {}
+          { }
           {/* Download Area */}
           {componentPageDownload && (
             <DownloadArea component={componentPageDownload} />

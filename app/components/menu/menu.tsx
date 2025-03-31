@@ -12,7 +12,8 @@ export default function Menu({ layout }: MenuProps) {
   return (
     <div className="hidden w-full h-[74px] lg:flex text-stone-900 font-light uppercase text-sm tracking-widest justify-between items-center">
       <div className="flex">
-        {layout.map((x: any) => {
+        {layout.map((x, index) => {
+          console.log(index)
           /* Dropdown Menu */
           if (x.__typename === "ComponentDropdownMenu")
             return (
@@ -27,9 +28,9 @@ export default function Menu({ layout }: MenuProps) {
           if (x.__typename === "ComponentCommonLink")
             return (
               <Link
-                key={"link-" + x.id}
+                key={"link-" + index}
                 href={x.url}
-                className="flex items-center justify-center px-4 text-lg font-extralight"
+                className="flex items-center justify-center px-4 text-lg font-extralight pointer"
               >
                 {x.linkName}
               </Link>

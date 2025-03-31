@@ -56,14 +56,14 @@ export default function HamburgerMenu({
           <div
             className="py-4"
           >
-            {layout.map((x) => {
+            {layout.map((x, index) => {
               /* Check DropdownMenu type */
               if (x.__typename === "ComponentDropdownMenu") {
                 return (
                   <div className=" flex flex-col" key={x.id}>
                     {x.sections.map((section, index) => {
                       return (
-                        <div key={index} className="pl-4 pt-2 text-black ">
+                        <div key={index} className="pl-4 pt-4 text-black ">
                           <h2 className="">{section.title}</h2>
                           <div className="text-stone-600 flex flex-col space-y-4 mx-2 my-4">
                             {section.pages.data.map((page, index) => {
@@ -88,9 +88,9 @@ export default function HamburgerMenu({
               if (x.__typename === "ComponentCommonLink")
                 return (
                   <Link
-                    key={"link-" + x.id}
+                    key={"link-" + index}
                     href={x.url}
-                    className="py-2 pl-4 text-stone-600 font-extralight text-xl"
+                    className=" mb-4 pl-4 text-stone-600 font-extralight text-xl"
                     onClick={() => setIsOpen(false)}
                   >
                     {x.linkName}
