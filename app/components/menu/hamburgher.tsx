@@ -54,7 +54,7 @@ export default function HamburgerMenu({
           className={`fixed z-10 right-0 top-0 w-full h-screen bg-base-100 overflow-y-auto`}
         >
           <div
-            className="py-4"
+            className="py-4 flex flex-col"
           >
             {layout.map((x, index) => {
               /* Check DropdownMenu type */
@@ -63,9 +63,9 @@ export default function HamburgerMenu({
                   <div className=" flex flex-col" key={x.id}>
                     {x.sections.map((section, index) => {
                       return (
-                        <div key={index} className="pl-4 pt-4 text-black ">
+                        <div key={index} className="pl-4 text-black">
                           <h2 className="">{section.title}</h2>
-                          <div className="text-stone-600 flex flex-col space-y-4 mx-2 my-4">
+                          <div className="text-stone-600 flex flex-col space-y-4 mx-2 my-3">
                             {section.pages.data.map((page, index) => {
                               return (
                                 <Link
@@ -90,7 +90,7 @@ export default function HamburgerMenu({
                   <Link
                     key={"link-" + index}
                     href={x.url}
-                    className=" mb-4 pl-4 text-stone-600 font-extralight text-xl"
+                    className=" my-3 pl-4 text-stone-600 font-extralight text-xl"
                     onClick={() => setIsOpen(false)}
                   >
                     {x.linkName}
