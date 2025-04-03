@@ -54,7 +54,7 @@ export default function HamburgerMenu({
           className={`fixed z-10 right-0 top-0 w-full h-screen bg-base-100 overflow-y-auto`}
         >
           <div
-            className="py-4 flex flex-col"
+            className="py-4 flex flex-col mb-24"
           >
             {layout.map((x, index) => {
               /* Check DropdownMenu type */
