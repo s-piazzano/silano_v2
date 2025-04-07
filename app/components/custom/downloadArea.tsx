@@ -1,6 +1,6 @@
 export default function DownloadArea({ component }) {
   return (
-    <div className="bg-base-200 p-4 shadow">
+    <div className="bg-base-200 p-4 shadow-sm">
       <h1 className="mb-4">{component.title}</h1>
       <ul className="mt-2 ml-2">
         {component.links &&

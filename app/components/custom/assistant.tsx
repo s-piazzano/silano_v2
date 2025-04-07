@@ -33,7 +33,7 @@ export default function Assistant({ component }) {
   };
 
   return (
-    <div className="border border-forest rounded p-4 relative">
+    <div className="border border-forest rounded-sm p-4 relative">
       <div className="flex flex-col space-y-2">
         <div className="flex space-x-2">
           <div className="flex flex-col items-center w-[80px]">
@@ -75,7 +75,7 @@ export default function Assistant({ component }) {
         </div>
         {phase === -1 && (
           <button
-            className="bg-forest p-2 rounded text-base-100"
+            className="bg-forest p-2 rounded-sm text-base-100"
             onClick={() => redirect(1, [])}
           >
             {component.button}
@@ -89,7 +89,7 @@ export default function Assistant({ component }) {
             ]?.options.map((option, index) => {
               return (
                 <button
-                  className="bg-forest p-2 rounded text-base-100"
+                  className="bg-forest p-2 rounded-sm text-base-100"
                   key={`option-${index}`}
                   onClick={() => redirect(option.redirect, option.answer)}
                 >

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import Menu from "./menu/menu";
 import HamburgerMenu from "./menu/hamburgher";
 
-import anime from "animejs";
+import { createTimeline } from 'animejs';
 
 import { Layout } from "@/interfaces/layout";
 
@@ -27,18 +27,18 @@ export default function Navbar({
   layout,
 }: NavbarProps) {
   useEffect(() => {
-    var tl = anime.timeline({
-      easing: "easeOutExpo",
-      duration: 3000,
-    });
-    tl.add({
-      targets: "#companyName",
-      translateX: 8,
-      opacity: 1,
-    });
+    const tl = createTimeline({ defaults: { ease: "out(3)", duration: 450 } });
+
+    tl.add(
+      "#companyName",
+      {
+        x: 8,
+        opacity: 1,
+      }
+    );
   });
 
-  const menuStatus = (status) => {};
+  const menuStatus = (status) => { };
 
   return (
     <div className="w-full">

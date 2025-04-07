@@ -46,7 +46,7 @@ const query = gql`
     subCategories(filters: { slug: { eqi: $sub } }) {
       data {
         attributes {
-          name
+          name,
         }
       }
     }
@@ -114,6 +114,7 @@ const query = gql`
               attributes {
                 name
                 slug
+                defaultShippingCost
                 category {
                   data {
                     attributes {
@@ -197,6 +198,7 @@ export default async function Subcategory(props: Params) {
         <h3 className="my-2"></h3>
         <div className="w-full grid grid-cols-1 min-[470px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4  gap-4  ">
           {products.map((prod) => {
+            const price = prod.attributes.price + prod.attributes.sub_category.data[0].attributes.defaultShippingCost
             return (
               <CardProduct
                 key={prod.id}
@@ -205,7 +207,7 @@ export default async function Subcategory(props: Params) {
                   prod.attributes.images?.data[0]?.attributes?.formats.small.url
                 }
                 slug={prod.attributes.slug}
-                price={prod.attributes.price}
+                price={price}
                 quantity={prod.attributes.quantity}
                 sub_category={prod.attributes.sub_category}
                 compatibilities={prod.attributes.compatibilities}
@@ -224,9 +226,9 @@ export default async function Subcategory(props: Params) {
                   </p>
                   {/* Quantità */}
                   <p
-                    className={ prod.attributes.quantity
-                        ? "font-light text-green-600 mt-2"
-                        : "text-red-500"
+                    className={prod.attributes.quantity
+                      ? "font-light text-green-600 mt-2"
+                      : "text-red-500"
                     }
                   >
                     {prod.attributes.quantity
@@ -245,7 +247,7 @@ export default async function Subcategory(props: Params) {
                       </ul>
                     ))}
                   </div>
-                 {prod.attributes.price && (<div className="mt-2">{"€ " +prod.attributes.price}</div>)}
+                  {prod.attributes.price && (<div className="mt-2">{"€ " + (price)}</div>)}
                 </div>
               </CardProduct>
             );

@@ -13,7 +13,6 @@ export default function Menu({ layout }: MenuProps) {
     <div className="hidden w-full h-[74px] lg:flex text-stone-900 font-light uppercase text-sm tracking-widest justify-between items-center">
       <div className="flex">
         {layout.map((x, index) => {
-          console.log(index)
           /* Dropdown Menu */
           if (x.__typename === "ComponentDropdownMenu")
             return (

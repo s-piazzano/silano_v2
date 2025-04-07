@@ -49,7 +49,7 @@ export default function CookiesAlert({
 
           <button
             type="submit"
-            className="p-2 bg-forest text-white rounded-sm"
+            className="p-2 bg-forest text-white rounded-xs"
             onClick={acceptCookie}
           >
             ACCETTA

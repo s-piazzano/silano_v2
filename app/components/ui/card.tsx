@@ -31,7 +31,7 @@ export default function Card({
   return (
     <div
       id={id}
-      className={`bg-neutral-100 w-full md:max-w-sm  rounded overflow-hidden shadow-lg flex flex-col ${className} `}
+      className={`bg-neutral-100 w-full min-h-0 h-auto md:max-w-sm  rounded-sm overflow-hidden shadow-lg flex flex-col  ${className} `}
     >
       <Image
         className="w-full"
@@ -48,7 +48,7 @@ export default function Card({
         </p>
       </div>
       <div className="`pt-4 pb-2 pl-2 ${linkClass}`">
-        <Link href={link.url} className="inline-block font-medium text-forest">
+        <Link href={link.url} className="inline-block font-medium text-forest underline">
           {link.name}
         </Link>
       </div>

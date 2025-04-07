@@ -21,7 +21,7 @@ export default function DropdownMenu({ name, url, type, sections }: Layout) {
       </Link>
 
       <div
-        className={`absolute z-[1000] left-0 w-full bg-base-200 bg-opacity-70 backdrop-blur-sm -mt-1 focus:outline-none ${
+        className={`absolute z-1000 left-0 w-full bg-base-200 bg-opacity-70 backdrop-blur-xs -mt-1 focus:outline-hidden ${
           isHover ? `block` : `hidden`
         }`}
       >

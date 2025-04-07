@@ -46,6 +46,7 @@ const querySEO = gql`
             data {
               attributes {
                 name
+                defaultShippingCost
               }
             }
           }
@@ -125,6 +126,7 @@ const query = gql`
               attributes {
                 name
                 slug
+                defaultShippingCost
               }
             }
           }
@@ -353,7 +355,7 @@ export default async function Ricambi(props: Params) {
                       {product.attributes.price &&
                         product.attributes.price > 0 && (
                           <p className=" text-2xl">
-                            € {toInteger(product.attributes.price)}
+                            € {toInteger(product.attributes.price) + product.attributes.sub_category.data[0].attributes.defaultShippingCost}
                             <span className="text-sm">
                               {extractDecimal(product.attributes.price)}
                             </span>
@@ -373,7 +375,7 @@ export default async function Ricambi(props: Params) {
                   <Link
                     href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${"https://www.silanosrl.it/ricambi/" + params.slug
                       } (non modificare). Avrei bisogno di informazioni ...`}
-                    className="w-64 h-12 bg-forest text-white rounded-sm uppercase flex justify-center items-center px-4"
+                    className="w-64 h-12 bg-forest text-white rounded-xs uppercase flex justify-center items-center px-4"
                   >
                     <span className="flex flex-col items-center">
                       <span className="">richiedi una quotazione</span>
@@ -386,9 +388,9 @@ export default async function Ricambi(props: Params) {
                   product.attributes.price > 0 &&
                   product.attributes.quantity > 0 && (
                     (<button
-                      className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white"
+                      className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white cursor-pointer"
                       data-item-id={product.id}
-                      data-item-price={product.attributes.price}
+                      data-item-price={product.attributes.price+product.attributes.sub_category.data[0].attributes.defaultShippingCost}
                       data-item-image={
                         product.attributes.images?.data[0]?.attributes?.formats
                           ?.thumbnail?.url

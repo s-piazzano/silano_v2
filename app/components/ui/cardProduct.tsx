@@ -15,6 +15,7 @@ interface CardProps {
     data: {
       attributes: {
         name: string;
+        defaultShippingCost: number;
       };
     };
   },
@@ -71,7 +72,7 @@ export default function CardProduct({
   return (
     <div
       id={id}
-      className={`bg-neutral-100 w-full md:max-w-sm  rounded overflow-hidden shadow-lg flex flex-col`}
+      className={`bg-neutral-100 w-full md:max-w-sm  rounded-sm overflow-hidden shadow-lg flex flex-col`}
     >
       <Image
         className="w-full h-[220px] "
@@ -92,7 +93,7 @@ export default function CardProduct({
           price > 0 &&
           quantity > 0 && (
             (<button
-              className="snipcart-add-item p-2 text-white bg-forest font-light uppercase rounded-sm"
+              className="snipcart-add-item p-2 text-white bg-forest font-light uppercase rounded-xs"
               data-item-id={id}
               data-item-price={price}
               data-item-image={
@@ -111,7 +112,7 @@ export default function CardProduct({
           )}
         <Link
           href={`/ricambi/${slug}`}
-          className="p-2 font-light uppercase rounded-sm"
+          className="p-2 font-light uppercase rounded-xs"
         >
           Vedi il prodotto
         </Link>

@@ -4,9 +4,7 @@ import { useEffect } from "react";
 
 import styles from "./header.module.css";
 
-import anime from "animejs";
-
-import Activities from "./custom/activities";
+import { createTimeline } from 'animejs';
 
 import { Activity } from "@/interfaces/common";
 
@@ -23,37 +21,38 @@ export default function Header({
   slogan,
   activities,
 }: HeaderProps) {
+  const tl = createTimeline({ defaults: { ease: "out(3)", duration: 450 } });
   useEffect(() => {
     let translateY = -230;
     let traslateYActivities = -470;
 
-    var tl = anime.timeline({
-      easing: "easeOutExpo",
-      duration: 400,
-    });
-    tl.add({
-      targets: "#homepageSubtitle",
-      translateY,
-      opacity: 1,
-    });
-    tl.add({
-      targets: "#homepageTitle",
-      translateY,
-      opacity: 1,
-    });
-    tl.add({
-      targets: "#homepageSlogan",
-      translateY,
-      opacity: 1,
-    });
+    tl.add(
+      "#homepageSubtitle",
+      { y: translateY, opacity: 1, },
+    );
+    tl.add(
+      "#homepageTitle",
+      {
+        y: translateY,
+        opacity: 1
+      }
+    );
+    tl.add(
+      "#homepageSlogan",
+      {
+        y: translateY,
+        opacity: 1,
+      }
+    );
 
     if (activities && activities.length)
       activities.map((x) =>
-        tl.add({
-          targets: `#card-${x.id}`,
-          translateY: traslateYActivities,
-          opacity: 1,
-        })
+        tl.add(
+          `#card-${x.id}`,
+          {
+            y: traslateYActivities,
+            opacity: 1,
+          })
       );
   });
 

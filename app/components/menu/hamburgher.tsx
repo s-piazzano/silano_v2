@@ -45,7 +45,7 @@ export default function HamburgerMenu({
         aria-label="hamburger menu"
         onClick={() => setIsOpen(!isOpen)}
       >
-        <Bars3Icon className="w-full h-full text-stone-600 font-thin focus:outline-none" />
+        <Bars3Icon className="w-full h-full text-stone-600 font-thin focus:outline-hidden" />
       </button>
       {/* menu container */}
       {isOpen && (
