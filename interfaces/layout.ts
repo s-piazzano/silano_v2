@@ -1,6 +1,7 @@
 import { LinkInt } from "@/interfaces/common";
 
 interface Data {
+  id?: string;
   attributes: {
     title: string;
     slug: URL;
@@ -14,6 +15,7 @@ interface Page {
 
 interface Section {
   __typename: string;
+  id?: string;
   title: string;
   pages: Page;
 }
