@@ -282,8 +282,8 @@ export default async function Ricambi(props: Params) {
     slug: product.attributes.compatibilities[0].make.data.attributes.slug,
   };
   const model = {
-    name: product.attributes.compatibilities[0].model.data.attributes.name,
-    slug: product.attributes.compatibilities[0].model.data.attributes.slug,
+    name: product.attributes.compatibilities[0].model.data?.attributes?.name || "",
+    slug: product.attributes.compatibilities[0].model.data?.attributes?.slug || "",
   };
   const sub = {
     name: product.attributes.sub_category.data[0].attributes.name,
