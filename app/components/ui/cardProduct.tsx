@@ -10,6 +10,7 @@ interface CardProps {
   children: React.ReactNode;
   slug: string;
   price: number;
+  shippingCost?: number;
   quantity: number;
   sub_category: {
     data: {
@@ -63,6 +64,7 @@ export default function CardProduct({
   children,
   slug,
   price,
+  shippingCost = 15, // Default shipping cost if not provided
   quantity,
   sub_category,
   compatibilities,
@@ -95,7 +97,7 @@ export default function CardProduct({
             (<button
               className="snipcart-add-item p-2 text-white bg-forest font-light uppercase rounded-xs"
               data-item-id={id}
-              data-item-price={price}
+              data-item-price={price + shippingCost}
               data-item-image={
                 imageUrl
               }

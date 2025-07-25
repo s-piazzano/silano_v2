@@ -198,7 +198,7 @@ export default async function Subcategory(props: Params) {
         <h3 className="my-2"></h3>
         <div className="w-full grid grid-cols-1 min-[470px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4  gap-4  ">
           {products.map((prod) => {
-            const price = prod.attributes.price + prod.attributes.sub_category.data[0].attributes.defaultShippingCost
+            const price = prod.attributes.price
             return (
               <CardProduct
                 key={prod.id}
@@ -208,6 +208,7 @@ export default async function Subcategory(props: Params) {
                 }
                 slug={prod.attributes.slug}
                 price={price}
+                shippingCost={prod.attributes.sub_category.data[0].attributes.defaultShippingCost}
                 quantity={prod.attributes.quantity}
                 sub_category={prod.attributes.sub_category}
                 compatibilities={prod.attributes.compatibilities}
