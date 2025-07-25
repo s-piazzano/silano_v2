@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
@@ -57,23 +56,25 @@ const query = gql`
   }
 `;
 
-// Genero i metadata per il SEO
+// Metadata SEO
 export async function generateMetadata(): Promise<Metadata> {
-  // Fetch data
   const { data } = await createApolloClient().query({
     query: querySEO,
     variables: { page: "ricambi" },
   });
 
-  const seo = data.pages.data[0].attributes.seo;
+  const pageData = data?.pages?.data?.[0];
+  const seo = pageData?.attributes?.seo;
 
   return {
-    title: seo?.title,
-    description: seo?.title,
+    title: seo?.title || "Ricambi",
+    description: seo?.description || "",
     openGraph: {
-      title: seo?.title,
-      description: seo?.description,
-      images: [{ url: seo?.image?.data?.attributes?.url }],
+      title: seo?.title || "Ricambi",
+      description: seo?.description || "",
+      images: seo?.image?.data?.attributes?.url
+        ? [{ url: seo.image.data.attributes.url }]
+        : [],
     },
   };
 }
@@ -84,29 +85,32 @@ export default async function Ricambi() {
     variables: { page: "ricambi" },
   });
 
-  const page = data.pages.data[0].attributes;
-  const makes = data.makes.data.map((make) => make.attributes.name);
+  const pageData = data?.pages?.data?.[0];
+  const makesData = data?.makes?.data;
 
-  const crumbs = [
-    {
-      name: "Inizio",
-      url: "/ricambi",
-    },
-  ];
+  // Controlli difensivi
+  if (!pageData || !makesData || makesData.length === 0) {
+    return (
+      <div className="p-8">
+        <h1 className="text-xl font-bold text-red-500">Errore nel caricamento dati</h1>
+        <p>Contenuti non disponibili. Verifica i dati nel CMS o nel backend.</p>
+      </div>
+    );
+  }
 
-  const makeSerialized = data.makes.data.map((make) => {
-    return {
-      name: make.attributes.name,
-      url: `/ricambi/catalogo/${make.attributes.slug}`,
-    };
-  });
+  const page = pageData.attributes;
+  const makes = makesData.map((make) => make.attributes.name);
+  const makeSerialized = makesData.map((make) => ({
+    name: make.attributes.name,
+    url: `/ricambi/catalogo/${make.attributes.slug}`,
+  }));
+
   const alf = reduceSameInitialString(makes);
 
   return (
     <div className="w-full h-full px-4 md:px-16 py-8 flex flex-col lg:flex-row">
       <div className="w-full">
-        {/* Page title */}
-        <h1 className=" uppercase text-2xl mb-8">{page.title}</h1>
+        <h1 className="uppercase text-2xl mb-8">{page.title}</h1>
         <h2 className="-mt-4 mb-8">{page.description}</h2>
 
         <h3 className="mb-2">Scegli Marca</h3>
