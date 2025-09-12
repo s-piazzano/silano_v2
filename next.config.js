@@ -7,6 +7,7 @@ const nextConfig = {
     domains: ["silano-3r.fra1.digitaloceanspaces.com"],
     unoptimized: true,
   },
+  transpilePackages: ['next-mdx-remote'],
 };
 
 

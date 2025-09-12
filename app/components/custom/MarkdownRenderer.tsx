@@ -1,14 +1,12 @@
 "use client";
 
-import React from "react";
+import { ReactElement } from "react";
 import ClientOnly from "../ClientOnly";
 import ImageSlideshow from "../ui/ImageSlideshow";
 
-type Props = {
-  markdown?: string;
-};
+type Props = { markdown?: string };
 
-const MarkdownRenderer: React.FC<Props> = ({ markdown }) => {
+export default function MarkdownRenderer({ markdown }: Props) {
   if (!markdown || typeof markdown !== "string") {
     return (
       <p className="text-red-500 italic px-4">
@@ -17,14 +15,9 @@ const MarkdownRenderer: React.FC<Props> = ({ markdown }) => {
     );
   }
 
-  const lines = markdown.split("\n");
-  const elements: React.ReactElement[] = [];
-
   const parseInline = (text: string) => {
     const parts = text.split(/(\*\*[^\*]+\*\*|\[[^\]]+\]\([^)]+\))/g);
-
     return parts.map((part, idx) => {
-      // Bold: **text**
       if (/^\*\*[^\*]+\*\*$/.test(part)) {
         return (
           <strong key={idx} className="font-bold">
@@ -32,21 +25,16 @@ const MarkdownRenderer: React.FC<Props> = ({ markdown }) => {
           </strong>
         );
       }
-
-      // Link: [text](url)
       if (/^\[[^\]]+\]\([^)]+\)$/.test(part)) {
         const match = part.match(/\[([^\]]+)\]\(([^)]+)\)/);
         if (match) {
-          const [_, text, url] = match;
-          const isDownload = url.endsWith(".pdf");
-
+          const [, text, url] = match;
           return (
             <a
               key={idx}
               href={url}
               target="_blank"
               rel="noopener noreferrer"
-              download={isDownload}
               className="text-blue-600 underline hover:text-blue-800"
             >
               {text}
@@ -54,68 +42,99 @@ const MarkdownRenderer: React.FC<Props> = ({ markdown }) => {
           );
         }
       }
-
       return <span key={idx}>{part}</span>;
     });
   };
 
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i].trim();
+  const elements: ReactElement[] = [];
+  let lastIndex = 0;
 
-    if (line.startsWith("# ")) {
-      elements.push(
-        <h1 key={i} className="text-4xl font-bold my-4">
-          {line.slice(2)}
-        </h1>
-      );
-    } else if (line.startsWith("## ")) {
-      elements.push(
-        <h2 key={i} className="text-2xl font-semibold my-3">
-          {line.slice(3)}
-        </h2>
-      );
-    } else if (
-      line.startsWith("![") &&
-      i + 1 < lines.length &&
-      lines[i + 1].trim().startsWith("![")
-    ) {
-      const img1 = line.match(/\((.*?)\)/)?.[1];
-      const img2 = lines[i + 1].trim().match(/\((.*?)\)/)?.[1];
-      if (img1 && img2) {
-        elements.push(
-          <div key={i} className="flex justify-start my-4">
-            <ClientOnly>
-              <ImageSlideshow images={[img1, img2]} />
-            </ClientOnly>
-          </div>
-        );
+  // Match <grid> ... </grid>
+  const gridRegex = /<grid>([\s\S]*?)<\/grid>/g;
+  let match: RegExpExecArray | null;
+
+  while ((match = gridRegex.exec(markdown)) !== null) {
+    const beforeGrid = markdown.slice(lastIndex, match.index).trim();
+    if (beforeGrid) {
+      elements.push(...renderLines(beforeGrid));
+    }
+
+    const gridContent = match[1];
+    elements.push(
+      <div
+        key={`grid-${elements.length}`}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6"
+      >
+        {renderCards(gridContent)}
+      </div>
+    );
+
+    lastIndex = gridRegex.lastIndex;
+  }
+
+  const afterGrid = markdown.slice(lastIndex).trim();
+  if (afterGrid) {
+    elements.push(...renderLines(afterGrid));
+  }
+
+  return <div className="markdown-content prose max-w-none">{elements}</div>;
+
+  function renderLines(text: string) {
+    const lines = text.split("\n").map((line) => line.trim()).filter(Boolean);
+    const result: ReactElement[] = [];
+    let i = 0;
+    while (i < lines.length) {
+      const imgUrls: string[] = [];
+      while (
+        i < lines.length &&
+        lines[i].startsWith("![") &&
+        /\((.*?)\)/.test(lines[i])
+      ) {
+        const url = lines[i].match(/\((.*?)\)/)?.[1];
+        if (url) imgUrls.push(url);
         i++;
       }
-    } else if (line.startsWith("![") && /\((.*?)\)/.test(line)) {
-      const url = line.match(/\((.*?)\)/)?.[1];
-      if (url) {
-        elements.push(
+      if (imgUrls.length > 1) {
+        result.push(
+          <ClientOnly key={`slideshow-${i}`}>
+            <ImageSlideshow images={imgUrls} />
+          </ClientOnly>
+        );
+      } else if (imgUrls.length === 1) {
+        result.push(
           <img
-            key={i}
-            src={url}
-            alt="markdown image"
-            className="w-full max-w-2xl rounded-xl shadow my-4"
+            key={`img-${i}`}
+            src={imgUrls[0]}
+            alt="Markdown content"
+            className="w-full shadow my-4 mx-auto object-cover max-h-[374px]"
           />
         );
+      } else {
+        result.push(<p key={`p-${i}`}>{parseInline(lines[i])}</p>);
+        i++;
       }
-    } else if (line.length > 0) {
-      elements.push(
-        <p key={i} className="text-base my-2 text-gray-800">
-          {parseInline(line)}
-        </p>
+    }
+    return result;
+  }
+
+  function renderCards(gridContent: string) {
+    const cardRegex = /<>\s*([\s\S]*?)\s*<\/>/g;
+    const cards: ReactElement[] = [];
+    let cardMatch: RegExpExecArray | null;
+
+    while ((cardMatch = cardRegex.exec(gridContent)) !== null) {
+      const cardText = cardMatch[1].trim();
+      const cardElements = renderLines(cardText);
+      cards.push(
+        <div
+          key={`card-${cards.length}`}
+          className="bg-white shadow p-4 italic text-2xl flex flex-col justify-between"
+        >
+          {cardElements}
+        </div>
       );
     }
 
-    i++;
+    return cards;
   }
-
-  return <div className="text-left">{elements}</div>;
-};
-
-export default MarkdownRenderer;
+}

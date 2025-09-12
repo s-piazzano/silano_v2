@@ -4,7 +4,8 @@ import dynamic from "next/dynamic";
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
-import MarkdownRenderer from "@/app/components/custom/MarkdownRenderer";
+import MDXContent from "../components/custom/mdxContent";
+import { serialize } from 'next-mdx-remote/serialize'
 const Maps = dynamic(() => import("@/app/components/custom/maps"));
 
 
@@ -79,10 +80,13 @@ export default async function Contatti() {
     },
   } = data.contact;
 
+  const mdxSource = await serialize(description)
+
   return (
     <div className="w-full flex flex-col md:flex-row px-4 md:px-16 py-8">
       <div className="w-full md:w-4/12 mb-4">
-        <MarkdownRenderer markdown={description} />
+
+        <MDXContent source={mdxSource} />
       </div>
       <div className="w-full md:w-8/12">
         <Maps width={300} height={500} />

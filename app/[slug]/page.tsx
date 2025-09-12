@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { notFound } from 'next/navigation'
-
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
@@ -8,7 +7,9 @@ import Collapse from "@/app/components/ui/collapse";
 import DownloadArea from "@/app/components/custom/downloadArea";
 import Assistant from "@/app/components/custom/assistant";
 import Card from "@/app/components/ui/card";
-import MarkdownRenderer from "@/app/components/custom/MarkdownRenderer";
+
+import MDXContent from "../components/custom/mdxContent";
+import { serialize } from 'next-mdx-remote/serialize'
 
 
 interface Slug {
@@ -171,28 +172,31 @@ export default async function Page(props: Params) {
 
   const page = data.pages.data[0].attributes;
 
-  const componentPageDownload = page.layout.find(
+  const componentPageDownload = page.layout?.find(
     (x) => x.__typename === "ComponentPageDownload"
   );
 
-  const componentCommonAssistant = page.layout.find(
+  const componentCommonAssistant = page.layout?.find(
     (x) => x.__typename === "ComponentCommonAssistant"
   );
+
+  const mdxSource = await serialize(page.description)
 
   return (
     <div className="w-full h-full px-4 md:px-16 py-8 flex flex-col lg:flex-row">
       <div className="w-full">
         {/* Page title */}
         <h1 className=" uppercase text-2xl mb-8">{page.title}</h1>
+
         {/* Page description */}
         {page.description && (
           <div className="mt-8 text-xl break-words description">
-            <MarkdownRenderer markdown={page.description} />
+             <MDXContent source={mdxSource} /> 
           </div>
         )}
 
         {/* FAQ */}
-        {page.faq && (
+        {page.faq && page.faq.length > 0 && (
           <div className="w-full my-12">
             {page.faq.map((faq) => (
               <Collapse key={faq.id} title={faq.question} isRemakable={true}>
@@ -201,8 +205,9 @@ export default async function Page(props: Params) {
             ))}
           </div>
         )}
+
         {/* Activities */}
-        {page.activities && (
+        {page.activities && page.activities.length > 0 && (
           <div className="w-full flex flex-col md:flex-row space-y-8 md:space-x-4 md:space-y-0">
             {page.activities.map((activity) => {
               return (
@@ -226,15 +231,15 @@ export default async function Page(props: Params) {
           </div>
         )}
       </div>
+
       {/* Right Column */}
-      {/* if ComponentAssistant and ComponentDownload are defined show column */}
       {(componentCommonAssistant || componentPageDownload) && (
         <div className="w-full lg:w-5/12 xl:w-4/12 lg:ml-4 flex flex-col space-y-4">
           {/* Assistant */}
           {componentCommonAssistant && (
             <Assistant component={componentCommonAssistant} />
           )}
-          { }
+
           {/* Download Area */}
           {componentPageDownload && (
             <DownloadArea component={componentPageDownload} />
