@@ -35,6 +35,26 @@ export default function Menu({ layout }: MenuProps) {
               </Link>
             );
         })}
+
+      </div>
+      {/* Contatcs */}
+      <div className="flex flex-col h-full justify-center">
+        <a
+          target="_blank"
+          rel="noreferrer"
+          className="px-2"
+          href="tel:+390161930380"
+        >
+          Tel: 0161 930380
+        </a>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          className="px-2"
+          href="https://wa.me/+393929898074"
+        >
+          Whatsapp: 392 989 8074
+        </a>
       </div>
       {/* Bottone carrello - visibile solo nella sezione ricambi */}
       <ButtonCart />

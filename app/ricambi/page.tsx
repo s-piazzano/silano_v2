@@ -1,4 +1,6 @@
 import { Metadata } from "next";
+import Link from "next/link";
+import Image from "next/image";
 
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
@@ -105,6 +107,13 @@ console.log(data.makes)
         <h3 className="mb-2">Scegli Marca</h3>
         <Classifier divItems={alf} items={makeSerialized} />
       </div>
+       <Link href="https://api.whatsapp.com/send/?phone=%2B393929898074&text&type=phone_number&app_absent=0" className="fixed bottom-4 right-4">
+        <Image src="/whatsapp.svg"
+          alt="Whatsapp"
+          width={52}
+          height={52}>
+        </Image>
+      </Link>
     </div>
   );
 }

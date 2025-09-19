@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import { notFound } from 'next/navigation'
+import Link from "next/link";
+import Image from "next/image";
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
@@ -7,10 +9,10 @@ import Collapse from "@/app/components/ui/collapse";
 import DownloadArea from "@/app/components/custom/downloadArea";
 import Assistant from "@/app/components/custom/assistant";
 import Card from "@/app/components/ui/card";
+import MoreInfoButton from "../components/custom/moreInfoButton";
 
 import MDXContent from "../components/custom/mdxContent";
 import { serialize } from 'next-mdx-remote/serialize'
-
 
 interface Slug {
   slug: string;
@@ -186,14 +188,17 @@ export default async function Page(props: Params) {
     <div className="w-full h-full px-4 md:px-16 py-8 flex flex-col lg:flex-row">
       <div className="w-full">
         {/* Page title */}
-        <h1 className=" uppercase text-2xl mb-8">{page.title}</h1>
+        <h1 className=" uppercase text-2xl mb-8 text-center lg:text-left">{page.title}</h1>
+        <MoreInfoButton />
+
 
         {/* Page description */}
         {page.description && (
           <div className="mt-8 text-xl break-words description">
-             <MDXContent source={mdxSource} /> 
+            <MDXContent source={mdxSource} />
           </div>
         )}
+
 
         {/* FAQ */}
         {page.faq && page.faq.length > 0 && (
@@ -208,7 +213,7 @@ export default async function Page(props: Params) {
 
         {/* Activities */}
         {page.activities && page.activities.length > 0 && (
-          <div className="w-full flex flex-col md:flex-row space-y-8 md:space-x-4 md:space-y-0">
+          <div className="w-full flex flex-col md:flex-row space-y-8 md:space-x-4 md:space-y-0 my-8">
             {page.activities.map((activity) => {
               return (
                 <Card
@@ -230,6 +235,8 @@ export default async function Page(props: Params) {
             })}
           </div>
         )}
+
+        <MoreInfoButton />
       </div>
 
       {/* Right Column */}
@@ -246,6 +253,14 @@ export default async function Page(props: Params) {
           )}
         </div>
       )}
+
+      <Link href="https://api.whatsapp.com/send/?phone=%2B393929898074&text&type=phone_number&app_absent=0" className="fixed bottom-4 right-4">
+        <Image src="/whatsapp.svg"
+          alt="Whatsapp"
+          width={52}
+          height={52}>
+        </Image>
+      </Link>
     </div>
   );
 }

@@ -43,7 +43,7 @@ export default function Navbar({
   return (
     <div className="w-full">
       {/* BANNER */}
-      <div className=" w-full h-[32px] flex px-4 md:px-16 bg-forest justify-center md:justify-between items-center text-white text-sm">
+      {/* <div className="md:hidden w-full h-[32px] flex px-4 md:px-16 bg-forest justify-center md:justify-between items-center text-white text-sm">
         <h6 className="hidden md:block"></h6>
         <div className="flex divide-x">
           <a
@@ -63,7 +63,7 @@ export default function Navbar({
             Whatsapp: 392 989 8074
           </a>
         </div>
-      </div>
+      </div> */}
       {/* MENU */}
       <div className="relative w-full h-[124px] border-b border-gray-200 px-4 md:px-16 flex justify-between lg:justify-normal items-center ">
         {/* LOGO */}
@@ -87,10 +87,31 @@ export default function Navbar({
             silano srl
           </p>
         </Link>
-        <div className="w-full flex space-between">
+
+        <div className="w-full flex space-between justify-center">
+          {/* Contatcs */}
+          <div className="flex flex-col h-full justify-center lg:hidden text-stone-900 font-light uppercase">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              className="px-2"
+              href="tel:+390161930380"
+            >
+              Tel: 0161 930380
+            </a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              className="px-2"
+              href="https://wa.me/+393929898074"
+            >
+              Whatsapp: 392 989 8074
+            </a>
+          </div>
           <Menu layout={layout} />
         </div>
         <div className="flex space-x-4 items-center lg:hidden ">
+
           {/* Bottone carrello - visibile solo nella sezione ricambi */}
           <ButtonCart />
           <HamburgerMenu layout={layout} imageUrl={imageUrl} />

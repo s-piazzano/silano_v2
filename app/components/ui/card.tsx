@@ -43,12 +43,12 @@ export default function Card({
         />
 
         <div className={` py-4 grow ${containerClass}`}>
-          <div className={`font-normal text-xl mb-2 ${titleClass}`}>{title}</div>
+          <div className={`font-normal text-2xl mb-2 ${titleClass}`}>{title}</div>
           <p className={`text-gray-700 font-light ${descriptionClass}`}>
             {description}
           </p>
         </div>
-        <div className="`pt-4 pb-2 pl-2 ${linkClass}`">
+        <div className="`pt-4 pb-2 pl-2 ${linkClass} underline">
           Scopri di più
         </div>
       </div>
