@@ -58,7 +58,6 @@ const generateSitemap = async (): Promise<void> => {
     const { data } = await createApolloClient().query({
       query: DYNAMIC_QUERY,
     })
-    console.log(data)
     const baseUrl = 'https://www.silanosrl.it';
 
     const staticUrls = STATIC_PAGES.map((pagePath) => {

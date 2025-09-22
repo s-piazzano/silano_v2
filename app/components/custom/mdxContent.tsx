@@ -5,6 +5,7 @@ import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import Grid from '../ui/grid'
 import ImageCard from '../ui/imageCard'
 import ImageSlideshow from '../ui/ImageSlideshow'
+import MoreInfoButton from './moreInfoButton'
 
 
 
@@ -12,7 +13,8 @@ import ImageSlideshow from '../ui/ImageSlideshow'
 const components = {
   Grid,
   ImageCard,
-  ImageSlideshow
+  ImageSlideshow,
+  MoreInfoButton
 }
 
 interface MDXContentProps {

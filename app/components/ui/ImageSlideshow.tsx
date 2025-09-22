@@ -29,7 +29,7 @@ const ImageSlideshow = ({ images }) => {
             src={src}
             alt={`Slide ${i}`}
             fill
-            className="object-contain border"
+            className="object-contain"
             priority={i === 0} // la prima immagine viene precaricata
           />
         </div>

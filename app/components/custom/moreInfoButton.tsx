@@ -1,11 +1,22 @@
-"use client"
-
-import Link from "next/link";
+"use client";
 
 export default function MoreInfoButton() {
-    return (
-        < div className = "w-full flex justify-center" >
+  const handleClick = () => {
+    window.open(
+      "https://docs.google.com/forms/d/e/1FAIpQLSfCtc2ZQREvLjwbtE87UXg_v6xPS_ULhuB-GvTlCz_-nO0bqA/viewform?usp=sharing&ouid=106668016706184160188",
+      "_blank",
+      "noopener,noreferrer"
+    );
+  };
 
-            <Link href="https://docs.google.com/forms/d/e/1FAIpQLSfCtc2ZQREvLjwbtE87UXg_v6xPS_ULhuB-GvTlCz_-nO0bqA/viewform?usp=sharing&ouid=106668016706184160188" className="inline-block mt-4 px-4 py-2 bg-forest text-white transition" >Richiedi un preventivo</Link>
-        </div >)
+  return (
+    <div className="w-full flex justify-center">
+      <button
+        onClick={handleClick}
+        className="my-6 px-6 py-3 bg-forest text-white font-medium shadow-md hover:bg-forest/90 transition"
+      >
+        Richiedi un preventivo
+      </button>
+    </div>
+  );
 }

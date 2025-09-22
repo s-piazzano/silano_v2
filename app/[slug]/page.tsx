@@ -9,7 +9,6 @@ import Collapse from "@/app/components/ui/collapse";
 import DownloadArea from "@/app/components/custom/downloadArea";
 import Assistant from "@/app/components/custom/assistant";
 import Card from "@/app/components/ui/card";
-import MoreInfoButton from "../components/custom/moreInfoButton";
 
 import MDXContent from "../components/custom/mdxContent";
 import { serialize } from 'next-mdx-remote/serialize'
@@ -44,15 +43,15 @@ const querySEO = gql`
 `;
 
 const queryStaticPath = gql`
-  query {
-    pages {
-      data {
-        attributes {
-          slug
-        }
+query {
+  pages(filters: { slug: { ne: "ricambi" } }) {
+    data {
+      attributes {
+        slug
       }
     }
   }
+}
 `;
 
 const query = gql`
@@ -189,8 +188,6 @@ export default async function Page(props: Params) {
       <div className="w-full">
         {/* Page title */}
         <h1 className=" uppercase text-2xl mb-8 text-center lg:text-left">{page.title}</h1>
-        <MoreInfoButton />
-
 
         {/* Page description */}
         {page.description && (
@@ -236,12 +233,11 @@ export default async function Page(props: Params) {
           </div>
         )}
 
-        <MoreInfoButton />
       </div>
 
       {/* Right Column */}
       {(componentCommonAssistant || componentPageDownload) && (
-        <div className="w-full lg:w-5/12 xl:w-4/12 lg:ml-4 flex flex-col space-y-4">
+        <div className="w-full my-6 lg:my-0 lg:w-5/12 xl:w-4/12 lg:ml-4 flex flex-col space-y-4">
           {/* Assistant */}
           {componentCommonAssistant && (
             <Assistant component={componentCommonAssistant} />

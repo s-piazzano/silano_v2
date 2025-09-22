@@ -96,7 +96,7 @@ export default async function Ricambi() {
     };
   });
   const alf = reduceSameInitialString(makes);
-console.log(data.makes)
+
   return (
     <div className="w-full h-full px-4 md:px-16 py-8 flex flex-col lg:flex-row">
       <div className="w-full">
@@ -107,7 +107,7 @@ console.log(data.makes)
         <h3 className="mb-2">Scegli Marca</h3>
         <Classifier divItems={alf} items={makeSerialized} />
       </div>
-       <Link href="https://api.whatsapp.com/send/?phone=%2B393929898074&text&type=phone_number&app_absent=0" className="fixed bottom-4 right-4">
+      <Link href="https://api.whatsapp.com/send/?phone=%2B393929898074&text&type=phone_number&app_absent=0" className="fixed bottom-4 right-4">
         <Image src="/whatsapp.svg"
           alt="Whatsapp"
           width={52}
