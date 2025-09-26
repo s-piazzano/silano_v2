@@ -8,21 +8,28 @@ type GridProps = {
 };
 
 export default function Grid({ children, className = "" }: GridProps) {
+  const childArray = React.Children.toArray(children);
+  const count = childArray.length;
+
+  // Imposta le colonne in base al numero di figli
+  let gridCols = "grid-cols-1";
+  if (count === 2) {
+    gridCols = "sm:grid-cols-2";
+  } else if (count >= 3) {
+    gridCols = "sm:grid-cols-2 lg:grid-cols-3";
+  }
+
   return (
-    <div
-      className={`grid grid-cols-1 my-6 sm:grid-cols-2 lg:grid-cols-3 gap-6 ${className}`}
-    >
-      {React.Children.map(children, (child, i) => {
-        if (React.isValidElement(child)) {
-          return child;
-        }
-        // 🔹 Wrappa stringhe / numeri / null
-        return (
+    <div className={`grid my-6 gap-6 ${gridCols} ${className}`}>
+      {childArray.map((child, i) =>
+        React.isValidElement(child) ? (
+          child
+        ) : (
           <div key={i} className="p-4 bg-gray-100 rounded-lg">
             {child}
           </div>
-        );
-      })}
+        )
+      )}
     </div>
   );
 }

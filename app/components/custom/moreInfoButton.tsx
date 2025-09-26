@@ -10,10 +10,10 @@ export default function MoreInfoButton() {
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center my-8">
       <button
         onClick={handleClick}
-        className="my-6 px-6 py-3 bg-forest text-white font-medium shadow-md hover:bg-forest/90 transition"
+        className=" px-6 py-3 bg-forest text-white font-medium shadow-md hover:bg-forest/90 transition cursor-pointer"
       >
         Richiedi un preventivo
       </button>

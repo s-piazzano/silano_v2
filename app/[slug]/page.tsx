@@ -185,9 +185,9 @@ export default async function Page(props: Params) {
 
   return (
     <div className="w-full h-full px-4 md:px-16 py-8 flex flex-col lg:flex-row">
-      <div className="w-full">
+      <div className="w-full text-center">
         {/* Page title */}
-        <h1 className=" uppercase text-2xl mb-8 text-center lg:text-left">{page.title}</h1>
+        <h1 className=" uppercase text-2xl mb-8 text-center">{page.title}</h1>
 
         {/* Page description */}
         {page.description && (

@@ -17,7 +17,7 @@ const ImageSlideshow = ({ images }) => {
   }, [images.length]);
 
   return (
-    <div className="relative w-full max-w-3xl h-96 overflow-hidden flex justify-start my-6">
+    <div className="relative w-full h-96 overflow-hidden flex justify-center my-6">
       {images.map((src, i) => (
         <div
           key={i}
