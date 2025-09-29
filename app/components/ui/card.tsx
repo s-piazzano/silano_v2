@@ -3,56 +3,85 @@ import Link from "next/link";
 
 import { LinkInt } from "@/interfaces/common";
 
-interface CardProps {
+type GridProps = {
   id: string;
-  className: string;
-  imageUrl: string;
+  image: string;
   title: string;
-  description: string;
-  link: LinkInt;
-  containerClass: string;
+  description?: string;
+  link?: LinkInt;
+  containerClass?: string;
   titleClass?: string;
   descriptionClass?: string;
   linkClass?: string;
-}
+};
 
 export default function Card({
   id,
-  className = "",
-  imageUrl = "https://silano-3r.fra1.digitaloceanspaces.com/3r/eb7b1453f0328c5136fe884112e2b89c.jpg?updated_at=2023-02-16T10:32:29.892Z",
+  image,
   title,
   description,
   link,
-  containerClass = "",
-  titleClass = "",
-  descriptionClass = "",
-  linkClass = "",
-}: CardProps) {
+  containerClass,
+  titleClass,
+  descriptionClass,
+  linkClass,
+}: GridProps) {
+  const Wrapper: React.ElementType = link?.url ? Link : "div"; // scegli il wrapper
+
+  const wrapperProps = link?.url
+    ? { id, href: link.url, className: `group min-h-0 h-auto w-full flex-1 ${containerClass}` }
+    : { id, className: `group min-h-0 h-auto w-full flex-1 ${containerClass}` };
+
   return (
-    <Link href={link.url} className="min-h-0 h-auto md:max-w-[240px] flex-1">
-      <div
-        id={id}
-        className={`bg-neutral-100 h-full rounded-sm overflow-hidden shadow-lg flex flex-col  ${className} `}
-      >
+    <Wrapper {...wrapperProps}>
+      <div className="relative flex flex-col w-full min-h-96 overflow-hidden shadow-lg">
+        {/* Immagine */}
         <Image
-          className="w-full h-auto md:h-[240px] object-cover"
-          src={imageUrl}
-          width={600}
-          height={400}
-          alt="image-card"
+          src={image}
+          alt={title}
+          fill
+          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          priority
         />
 
-        <div className={` py-4 grow ${containerClass}`}>
-          <div className={`font-normal text-2xl mb-2 ${titleClass}`}>{title}</div>
-          <p className={`text-gray-700 font-light ${descriptionClass}`}>
-            {description}
-          </p>
-        </div>
-        <div className="`pt-4 pb-2 pl-2 ${linkClass} underline">
-          Scopri di più
+        {/* Overlay con gradiente */}
+        <div
+          className="relative mt-auto inset-x-0 bottom-0 p-4
+                     bg-gradient-to-t from-black/90 via-black/60 to-transparent
+                     transition-all duration-300
+                     group-hover:from-black/95 group-hover:via-black/70"
+        >
+          {/* Titolo */}
+          <h3
+            className={`text-white text-lg font-bold tracking-wide transition-all duration-300
+                        group-hover:text-white group-hover:text-xl uppercase ${titleClass}`}
+          >
+            {title}
+          </h3>
+
+          {/* Descrizione */}
+          {description && (
+            <p
+              className={`mt-1 text-sm text-gray-200 lg:line-clamp-2 group-hover:line-clamp-none
+                          transition-all duration-300 ${descriptionClass}`}
+            >
+              {description}
+            </p>
+          )}
+
+          {/* Pulsante “Scopri di più” */}
+          {link?.url && (
+            <span
+              className={`inline-block mt-3 px-4 py-2 text-sm font-medium text-white border border-white rounded
+                          transition-all duration-300
+                          sm:inline-block md:inline-block lg:hidden group-hover:inline-block
+                          ${linkClass}`}
+            >
+              Scopri di più
+            </span>
+          )}
         </div>
       </div>
-    </Link>
-
+    </Wrapper>
   );
 }

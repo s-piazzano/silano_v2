@@ -184,7 +184,7 @@ export default async function Page(props: Params) {
   const mdxSource = await serialize(page.description)
 
   return (
-    <div className="w-full h-full px-4 md:px-16 py-8 flex flex-col lg:flex-row">
+    <div className="w-full h-full px-4 lg:px-16 py-8 flex flex-col lg:flex-row">
       <div className="w-full text-center">
         {/* Page title */}
         <h1 className=" uppercase text-2xl mb-8 text-center">{page.title}</h1>
@@ -210,11 +210,10 @@ export default async function Page(props: Params) {
 
         {/* Activities */}
         {page.activities && page.activities.length > 0 && (
-          <div className="w-full flex flex-col md:flex-row space-y-8 md:space-x-4 md:space-y-0 my-8">
+          <div className="w-full flex flex-col justify-center md:flex-row space-y-8 md:space-x-4 md:space-y-0 my-8">
             {page.activities.map((activity) => {
               return (
                 <Card
-                  className="w-full md:w-60"
                   containerClass="px-2"
                   titleClass="text-base"
                   descriptionClass="text-sm"
@@ -224,7 +223,7 @@ export default async function Page(props: Params) {
                   title={activity.title}
                   description={activity.description}
                   link={activity.link}
-                  imageUrl={
+                  image={
                     activity.image?.data?.attributes?.formats?.medium?.url
                   }
                 ></Card>

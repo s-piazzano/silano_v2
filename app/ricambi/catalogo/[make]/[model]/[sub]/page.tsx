@@ -7,7 +7,7 @@ import { gql } from "@apollo/client";
 
 import Breadcrumbs from "@/app/components/ui/breadcrumbs";
 import SubcategoryTable from "@/app/components/custom/subcategoriesTable";
-import Card from "@/app/components/ui/card";
+import Card from "@/app/components/ui/cardOld";
 import CardProduct from "@/app/components/ui/cardProduct";
 
 export const revalidate = 60;
@@ -190,7 +190,7 @@ export default async function Subcategory(props: Params) {
   };
 
   return (
-    <div className="w-full h-full px-4 md:px-16 py-8 flex flex-col lg:flex-row">
+    <div className="w-full h-full px-4 lg:px-16 py-8 flex flex-col lg:flex-row">
       <div className="w-full">
         {/* Page title */}
         <h1 className=" uppercase text-2xl mb-4">{`${makeName} ${modelName} - ${subName}`}</h1>

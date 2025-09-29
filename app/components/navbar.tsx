@@ -43,7 +43,7 @@ export default function Navbar({
   return (
     <div className="w-full">
       {/* BANNER */}
-      {/* <div className="md:hidden w-full h-[32px] flex px-4 md:px-16 bg-forest justify-center md:justify-between items-center text-white text-sm">
+      {/* <div className="md:hidden w-full h-[32px] flex px-4 lg:px-16 bg-forest justify-center md:justify-between items-center text-white text-sm">
         <h6 className="hidden md:block"></h6>
         <div className="flex divide-x">
           <a
@@ -65,7 +65,7 @@ export default function Navbar({
         </div>
       </div> */}
       {/* MENU */}
-      <div className="relative w-full h-[124px] border-b border-gray-200 px-4 md:px-16 flex justify-between lg:justify-normal items-center ">
+      <div className="relative w-full h-[124px] border-b border-gray-200 px-4 lg:px-16 flex justify-between lg:justify-normal items-center ">
         {/* LOGO */}
         <Link
           href="/"

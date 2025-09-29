@@ -127,7 +127,7 @@ export default async function Home() {
         {/* Attività dell'azienda */}
         <Activities activities={activities} />
         {/* Mappa Google */}
-        <Maps className="px-4 md:px-16 " height={400} />
+        <Maps className="px-4 lg:px-16 " height={400} />
       </div>
     </>
   );

@@ -313,7 +313,7 @@ export default async function Ricambi(props: Params) {
   return (
     <div className="">
       {product && (
-        <div className="px-4 md:px-16 py-8 flex flex-col">
+        <div className="px-4 lg:px-16 py-8 flex flex-col">
           <Breadcrumbs crumbs={crumbs} />
           <div className="flex flex-col md:flex-row ">
             {/* Titolo del prodotto - versione mobile*/}

@@ -83,7 +83,7 @@ export default async function Contatti() {
   const mdxSource = await serialize(description)
 
   return (
-    <div className="w-full flex flex-col md:flex-row px-4 md:px-16 py-8">
+    <div className="w-full flex flex-col md:flex-row px-4 lg:px-16 py-8">
       <div className="w-full md:w-4/12 mb-4">
 
         <MDXContent source={mdxSource} />

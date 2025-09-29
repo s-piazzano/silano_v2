@@ -14,7 +14,7 @@ export interface Image {
 }
 
 export interface LinkInt {
-  url: URL;
+  url: URL | string;
   name: string;
   alt?: string;
 }

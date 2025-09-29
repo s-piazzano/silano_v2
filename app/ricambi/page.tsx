@@ -98,7 +98,7 @@ export default async function Ricambi() {
   const alf = reduceSameInitialString(makes);
 
   return (
-    <div className="w-full h-full px-4 md:px-16 py-8 flex flex-col lg:flex-row">
+    <div className="w-full h-full px-4 lg:px-16 py-8 flex flex-col lg:flex-row">
       <div className="w-full">
         {/* Page title */}
         <h1 className=" uppercase text-2xl mb-8">{page.title}</h1>

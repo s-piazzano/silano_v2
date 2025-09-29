@@ -3,7 +3,7 @@
 import { MDXRemote } from 'next-mdx-remote'
 import type { MDXRemoteSerializeResult } from 'next-mdx-remote'
 import Grid from '../ui/grid'
-import ImageCard from '../ui/imageCard'
+import ImageCard from '../ui/card'
 import ImageSlideshow from '../ui/ImageSlideshow'
 import MoreInfoButton from './moreInfoButton'
 
