@@ -7,7 +7,7 @@ import { gql } from "@apollo/client";
 
 import Breadcrumbs from "@/app/components/ui/breadcrumbs";
 import SubcategoryTable from "@/app/components/custom/subcategoriesTable";
-import Card from "@/app/components/ui/cardOld";
+
 import CardProduct from "@/app/components/ui/cardProduct";
 
 export const revalidate = 60;
