@@ -22,7 +22,7 @@ const nextConfig = {
               style-src 'self' 'unsafe-inline' https://cdn.snipcart.com https://app.snipcart.com https://fonts.bunny.net;
               img-src 'self' data: https: silano-3r.fra1.digitaloceanspaces.com https://cdn.snipcart.com https://app.snipcart.com;
               font-src 'self' https: https://cdn.snipcart.com https://fonts.bunny.net;
-              connect-src 'self' https://app.snipcart.com https://cdn.snipcart.com https://api.snipcart.com https://payment.snipcart.com/api/public/sessions;
+              connect-src 'self' https://app.snipcart.com https://cdn.snipcart.com https://api.snipcart.com https://payment.snipcart.com;
               frame-src https://www.google.com https://www.google.com/maps https://app.snipcart.com;
               object-src 'none';
             `.replace(/\s{2,}/g, ' ').trim(),
