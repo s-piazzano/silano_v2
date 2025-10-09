@@ -64,34 +64,33 @@ export default function DropdownMenu({ name, url, type, sections }: Layout) {
 
       {isOpen && sections?.length > 0 && (
         <div className="absolute left-0 right-0 w-full bg-white shadow-lg z-50">
-        <div className="mx-auto px-16 py-6 w-full">
-          <div className="flex flex-nowrap overflow-x-auto gap-2 pb-2">
-            {sections.map((section, indexSection) => (
-              <div 
-                key={`section-${indexSection}`}
-                className="flex-shrink-0"
-                style={{ width: '280px' }}
-              >
-                <h3 className="text-lg font-semibold mb-4 pb-2 border-b border-base-100">
-                  {section.title}
-                </h3>
-                <div className="flex flex-col space-y-2">
-                  {section.pages.data.map((page, indexPage) => (
-                    <Link
-                      key={`page-${indexPage}`}
-                      href={`/${page.attributes.slug}`}
-                      className="py-1 hover:text-primary normal-case text-lg"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      {page.attributes.title}
-                    </Link>
-                  ))}
+          <div className="mx-auto px-16 py-6 w-full">
+            <div className="flex flex-nowrap overflow-x-auto gap-2 pb-2">
+              {sections.map((section, indexSection) => (
+                <div
+                  key={`section-${indexSection}`}
+                  className="flex-shrink-0"
+                  style={{ width: '280px' }}
+                >
+
+                  <Link href={section.url || "#"} className="text-lg font-semibold mb-4 pb-1 border-b border-base-100"> {section.title}</Link>
+                  <div className="flex flex-col space-y-2 pt-4">
+                    {section.pages.data.map((page, indexPage) => (
+                      <Link
+                        key={`page-${indexPage}`}
+                        href={`/${page.attributes.slug}`}
+                        className="py-1 hover:text-primary normal-case text-lg"
+                        onClick={() => setIsOpen(false)}
+                      >
+                        {page.attributes.title}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
-      </div>
       )}
     </div>
   );

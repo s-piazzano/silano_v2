@@ -18,6 +18,7 @@ interface Section {
   id?: string;
   title: string;
   pages: Page;
+  url?: URL;
 }
 
 export interface Layout {
