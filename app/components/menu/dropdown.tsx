@@ -72,9 +72,10 @@ export default function DropdownMenu({ name, url, type, sections }: Layout) {
                   className="flex-shrink-0"
                   style={{ width: '280px' }}
                 >
-
-                  <Link href={section.url || "#"} className="text-lg font-semibold mb-4 pb-1 border-b border-base-100"> {section.title}</Link>
+                
+                  <Link href={section.url || '#'} className="text-lg font-semibold mb-4 pb-1 border-b border-base-100"> {section.title}</Link>
                   <div className="flex flex-col space-y-2 pt-4">
+
                     {section.pages.data.map((page, indexPage) => (
                       <Link
                         key={`page-${indexPage}`}

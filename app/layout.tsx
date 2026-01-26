@@ -43,6 +43,7 @@ const query = gql`
               type
               sections {
                 title
+                url
                 pages {
                   data {
                     attributes {
