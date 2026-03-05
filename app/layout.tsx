@@ -158,7 +158,7 @@ export default async function RootLayout({
       {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
         <>
           <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
-          <GoogleTagManager ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+          <GoogleTagManager />
         </>
       )}
 

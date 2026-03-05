@@ -18,22 +18,27 @@ export default function CookiesAlert({
     // Verifica se il cookie esiste solo dopo il mount (lato client)
     const checkCookie = () => {
       const hasAccepted = hasCookie("cookiePolicy");
-      setIsVisible(!hasAccepted); // Mostra il banner solo se NON ha accettato
+      setIsVisible(!hasAccepted); // Mostra il banner solo se NON ha espresso una preferenza
     };
 
-    // Aggiungi un piccolo delay per l'animazione/UX
-    const timer = setTimeout(checkCookie, 2000);
-    
-    // Pulizia del timeout se il componente viene smontato
-    return () => clearTimeout(timer);
+    checkCookie();
   }, []);
 
   const acceptCookie = () => {
-    setCookie("cookiePolicy", "true", {
+    setCookie("cookiePolicy", "accepted", {
       maxAge: 60 * 60 * 24 * 365, // 1 anno
       path: '/',
     });
-    setIsVisible(false); // Nascondi il banner dopo l'accettazione
+    setIsVisible(false);
+    window.location.reload(); // Riavvia per caricare gli script di tracciamento
+  };
+
+  const rejectCookie = () => {
+    setCookie("cookiePolicy", "rejected", {
+      maxAge: 60 * 60 * 24 * 365, // 1 anno
+      path: '/',
+    });
+    setIsVisible(false);
   };
 
   if (!isVisible) return null;
@@ -48,17 +53,26 @@ export default function CookiesAlert({
           Puoi dare, negare o revocare liberamente il tuo consenso in qualsiasi
           momento. Usa il pulsante Accetta per acconsentire.
         </p>
-        <div className="flex justify-between items-end mt-2">
-          <Link className="text-forest hover:underline" href="/cookie-policy">
+        <div className="flex justify-between items-center mt-4 gap-4">
+          <Link className="text-forest hover:underline text-sm" href="/cookie-policy">
             Scopri di più
           </Link>
-          <button
-            type="button" // Cambiato da "submit" a "button" poiché non è in un form
-            className="p-2 bg-forest text-white rounded-xs hover:bg-forest-dark transition-colors"
-            onClick={acceptCookie}
-          >
-            ACCETTA
-          </button>
+          <div className="flex gap-2">
+            <button
+              type="button"
+              className="px-4 py-2 border border-forest text-forest rounded-xs hover:bg-stone-100 transition-colors text-sm uppercase"
+              onClick={rejectCookie}
+            >
+              RIFIUTA
+            </button>
+            <button
+              type="button"
+              className="px-4 py-2 bg-forest text-white rounded-xs hover:bg-forest-dark transition-colors text-sm uppercase"
+              onClick={acceptCookie}
+            >
+              ACCETTA
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -77,7 +77,8 @@ const Collapse: React.FC<PropsWithChildren<CollapseProps>> = ({
           role="region" // Indica che è una regione di contenuto
         >
           {isRemarkable && typeof children === "string" ? (
-            <Remark children={children} />
+            // eslint-disable-next-line react/no-children-prop
+            <Remark children={children as string} />
           ) : (
             children
           )}

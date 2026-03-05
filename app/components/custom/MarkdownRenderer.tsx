@@ -102,12 +102,14 @@ export default function MarkdownRenderer({ markdown }: Props) {
         );
       } else if (imgUrls.length === 1) {
         result.push(
-          <img
-            key={`img-${i}`}
-            src={imgUrls[0]}
-            alt="Markdown content"
-            className="w-full shadow my-4 mx-auto object-cover max-h-[374px]"
-          />
+          <div key={`img-${i}`} className="relative w-full shadow my-4 mx-auto max-h-[374px] overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={imgUrls[0]}
+              alt="Markdown content"
+              className="w-full object-cover max-h-[374px]"
+            />
+          </div>
         );
       } else {
         result.push(<p key={`p-${i}`}>{parseInline(lines[i])}</p>);
