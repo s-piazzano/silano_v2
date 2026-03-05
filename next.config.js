@@ -17,12 +17,12 @@ const nextConfig = {
           {
             key: 'Content-Security-Policy',
             value: `
-             default-src 'self';
-              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.snipcart.com https://app.snipcart.com;
+              default-src 'self';
+              script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.snipcart.com https://app.snipcart.com https://www.googletagmanager.com https://www.google-analytics.com;
               style-src 'self' 'unsafe-inline' https://cdn.snipcart.com https://app.snipcart.com https://fonts.bunny.net;
-              img-src 'self' data: https: silano-3r.fra1.digitaloceanspaces.com https://cdn.snipcart.com https://app.snipcart.com;
+              img-src 'self' data: https: silano-3r.fra1.digitaloceanspaces.com https://cdn.snipcart.com https://app.snipcart.com https://www.google-analytics.com https://www.googletagmanager.com;
               font-src 'self' https: https://cdn.snipcart.com https://fonts.bunny.net;
-              connect-src 'self' https://app.snipcart.com https://cdn.snipcart.com https://api.snipcart.com https://payment.snipcart.com;
+              connect-src 'self' https://app.snipcart.com https://cdn.snipcart.com https://api.snipcart.com https://payment.snipcart.com https://www.google-analytics.com *.analytics.google.com *.google-analytics.com *.googletagmanager.com https://pannello.silanosrl.it;
               frame-src https://www.google.com https://www.google.com/maps https://app.snipcart.com;
               object-src 'none';
             `.replace(/\s{2,}/g, ' ').trim(),
