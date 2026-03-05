@@ -1,3 +1,4 @@
+"use client";
 import { getCookie } from "cookies-next";
 import { useState, useEffect } from "react";
 
@@ -36,7 +37,7 @@ export default function Maps({ width, height, className }: MapsProps) {
               Per visualizzare la mappa interattiva di Google Maps, è necessario accettare i cookie.
             </p>
             <p className="text-sm text-stone-400">
-              Puoi farlo cliccando su "ACCETTA" nel banner in fondo alla pagina.
+              Puoi farlo cliccando su &quot;ACCETTA&quot; nel banner in fondo alla pagina.
             </p>
           </div>
         )}
