@@ -1,14 +1,10 @@
 import Script from "next/script";
-import { getCookie } from "cookies-next";
 
 interface GoogleAnaliticsProps {
   ga_id: string;
 }
 
 export default function GoogleAnalitics({ ga_id }: GoogleAnaliticsProps) {
-  const consent = getCookie("cookiePolicy");
-  const isAccepted = consent === "accepted";
-
   return (
     <>
       <Script id="google-consent-mode" strategy="afterInteractive">
@@ -24,14 +20,12 @@ export default function GoogleAnalitics({ ga_id }: GoogleAnaliticsProps) {
               'analytics_storage': 'denied'
             });
 
-            if ('${isAccepted}' === 'true') {
-              gtag('consent', 'update', {
-                'ad_storage': 'granted',
-                'ad_user_data': 'granted',
-                'ad_personalization': 'granted',
-                'analytics_storage': 'granted'
-              });
-            }
+            gtag('consent', 'update', {
+              'ad_storage': 'granted',
+              'ad_user_data': 'granted',
+              'ad_personalization': 'granted',
+              'analytics_storage': 'granted'
+            });
           }
         `}
       </Script>
