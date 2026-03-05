@@ -7,7 +7,6 @@ import Script from "next/script";
 import { ReactNode } from 'react';
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
-import Head from 'next/head';
 
 const Navbar = dynamic(() => import("./components/navbar"));
 const Footer = dynamic(() => import("@/app/components/footer"));
@@ -105,7 +104,7 @@ const query = gql`
 
 type Props = {
   children: ReactNode;
-  params: Promise<{ locale: string }>
+  params: Promise<{ locale?: string }>
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -133,7 +132,7 @@ export default async function RootLayout({
   children,
   params
 }: Props) {
-  const { locale } = await params;
+  const { locale = 'it' } = await params;
 
   // Fetch dati da Strapi con la lingua corretta
   const { data } = await createApolloClient().query({
@@ -156,14 +155,12 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      <Head>
-        {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
-          <>
-            <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
-            <GoogleTagManager ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
-          </>
-        )}
-      </Head>
+      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
+        <>
+          <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+          <GoogleTagManager ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
+        </>
+      )}
 
 
       <body className={`relative flex flex-col min-h-screen ${inter.className}`}>

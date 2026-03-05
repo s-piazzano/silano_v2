@@ -10,7 +10,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p ${PORT:-8080}",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pages:build": "npx @cloudflare/next-on-pages",
+    "pages:deploy": "npm run pages:build && wrangler pages deploy .vercel/output/static",
+    "pages:dev": "npm run pages:build && wrangler pages dev .vercel/output/static"
   },
   "dependencies": {
     "@apollo/client": "^3.13.5",
@@ -34,6 +37,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
     "@next/bundle-analyzer": "15.2.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
@@ -44,10 +48,7 @@
     "postcss": "8.4.30",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
-  },
-  "overrides": {
-    "@types/react": "19.0.12",
-    "@types/react-dom": "19.0.4"
+    "typescript": "^5.8.3",
+    "vercel": "^50.27.1"
   }
 }

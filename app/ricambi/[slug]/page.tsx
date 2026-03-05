@@ -21,6 +21,7 @@ import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { generateTitle } from "@/utils/common";
 
 export const revalidate = 5;
+export const runtime = 'edge';
 
 interface Slug {
   slug: string;
@@ -248,21 +249,8 @@ export async function generateMetadata(props): Promise<Metadata> {
   }
 }
 
-// Genero i path per la build
-export async function generateStaticParams() {
 
-  // Fetch data
-  const { data } = await createApolloClient().query({
-    query: queryStaticPath,
-    variables: {},
-  });
-
-  const products = data.products?.data ?? [];
-  return products.map((product) => ({
-    params: { slug: product.attributes?.slug ?? "" },
-    fallback: 'blocking'
-  }));
-}
+export const dynamicParams = true;
 
 export default async function Ricambi(props: Params) {
   const params = await props.params;

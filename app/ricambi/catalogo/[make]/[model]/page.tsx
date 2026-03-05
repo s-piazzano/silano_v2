@@ -8,6 +8,7 @@ import Breadcrumbs from "@/app/components/ui/breadcrumbs";
 import SubcategoryTable from "@/app/components/custom/subcategoriesTable";
 
 export const revalidate = 3600;
+export const runtime = 'edge';
 
 const queryStaticPath = gql`
   query ($slug: String) {
@@ -76,32 +77,7 @@ const query = gql`
   }
 `;
 
-// Genero i path per la build
-export async function generateStaticParams({
-  params,
-}: {
-  params: { model: string };
-}) {
-  // Fetch data
-  const { data } = await createApolloClient().query({
-    query: queryStaticPath,
-    variables: { slug: params.model },
-  });
-  const models = data.models.data;
 
-  // Automatic generation of paths
-  const slugs = models.map(
-    (x) =>
-      new Object({
-        params: x.attributes,
-      })
-  );
-
-  return models.map((model) => ({
-    slug: model.slug,
-    fallback: true,
-  }));
-}
 
 export default async function Subcategory(
   props: {

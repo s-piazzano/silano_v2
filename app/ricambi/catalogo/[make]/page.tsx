@@ -11,12 +11,16 @@ import Breadcrumbs from "@/app/components/ui/breadcrumbs";
 
 //Ogni giorno effettua il revalidate
 export const revalidate = 3600;
+export const runtime = 'edge';
 
 interface Make {
   make: string;
 }
 interface Params {
   params: Promise<Make>;
+}
+interface StaticParams {
+  params: Make;
 }
 
 const queryStaticPath = gql`
@@ -51,30 +55,7 @@ const query = gql`
   }
 `;
 
-// Genero i path per la build
-export async function generateStaticParams({ params }: Params) {
-  const resolvedParams = await params;
-  // Fetch data
-  const { data } = await createApolloClient().query({
-    query: queryStaticPath,
-    variables: { slug: resolvedParams.make },
-  });
 
-  const makes = data.makes.data;
-
-  // Automatic generation of paths
-  const slugs = makes.map(
-    (x) =>
-      new Object({
-        params: x.attributes,
-      })
-  );
-
-  return makes.map((make) => ({
-    slug: make.slug,
-    fallback: true,
-  }));
-}
 
 export default async function Models(props: Params) {
   const params = await props.params;

@@ -11,6 +11,7 @@ import SubcategoryTable from "@/app/components/custom/subcategoriesTable";
 import CardProduct from "@/app/components/ui/cardProduct";
 
 export const revalidate = 60;
+export const runtime = 'edge';
 
 interface Props {
   sub: string;
