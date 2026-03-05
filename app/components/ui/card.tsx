@@ -4,6 +4,7 @@ import Link from "next/link";
 import { LinkInt } from "@/interfaces/common";
 
 type GridProps = {
+  key?: React.Key;
   id: string;
   image: string;
   title: string;

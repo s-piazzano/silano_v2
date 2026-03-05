@@ -1,30 +1,29 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import React, { ReactNode, useState, PropsWithChildren } from "react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/outline";
 // Remark non è rilevante per la logica di controllo, lo lascio invariato
 import { Remark } from "react-remark";
 
 interface CollapseProps {
-  // Tipi Primitivi: usare string, boolean (lowercase)
+  key?: React.Key;
   title: string;
-  isRemakable?: boolean;
-  children: ReactNode;
+  isRemarkable?: boolean; // Corrected spelling
   className?: string;
   // Props Aggiunte per il controllo esterno:
   isOpen?: boolean; // Stato di apertura controllato dal genitore (opzionale)
   onToggle?: (title: string) => void; // Callback chiamata al click sull'header (opzionale)
 }
 
-export default function Collapse({
+const Collapse: React.FC<PropsWithChildren<CollapseProps>> = ({
   title,
-  isRemakable = false,
+  isRemarkable = false,
   children,
   className,
   // Rinominiamo la prop per evitare conflitti con la variabile interna 'isOpen'
   isOpen: controlledOpen,
   onToggle,
-}: CollapseProps) {
+}) => {
   // Stato interno: usato SOLO se il componente NON è controllato (controlledOpen === undefined)
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
@@ -77,9 +76,15 @@ export default function Collapse({
           id={contentId} // ID corrispondente ad aria-controls
           role="region" // Indica che è una regione di contenuto
         >
-          {isRemakable ? <Remark>{children as string}</Remark> : children}
+          {isRemarkable && typeof children === "string" ? (
+            <Remark children={children} />
+          ) : (
+            children
+          )}
         </div>
       )}
     </div>
   );
-}
+};
+
+export default Collapse;

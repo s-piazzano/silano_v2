@@ -202,7 +202,7 @@ export default async function Page(props: Params) {
         {page.faq && page.faq.length > 0 && (
           <div className="w-full my-12">
             {page.faq.map((faq) => (
-              <Collapse key={faq.id} title={faq.question} isRemakable={true}>
+              <Collapse key={faq.id} title={faq.question} isRemarkable={true}>
                 {faq.answer}
               </Collapse>
             ))}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { generateTitle } from "@/utils/common";
 
 interface CardProps {
-  key?: string | number;
+  key?: React.Key;
   id: string;
   imageUrl: string;
   children?: React.ReactNode;
