@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+export const dynamicParams = true;
 import { notFound } from 'next/navigation'
 import Link from "next/link";
 import Image from "next/image";
@@ -44,7 +45,7 @@ const querySEO = gql`
 
 const queryStaticPath = gql`
 query {
-  pages(filters: { slug: { ne: "ricambi" } }) {
+  pages(filters: { slug: { ne: "ricambi" } }, pagination: { pageSize: 100 }) {
     data {
       attributes {
         slug
