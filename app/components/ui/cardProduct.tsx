@@ -4,55 +4,61 @@ import Link from "next/link";
 import { generateTitle } from "@/utils/common";
 
 interface CardProps {
+  key?: string | number;
   id: string;
-  key: string;
   imageUrl: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   slug: string;
   price: number;
   shippingCost?: number;
   quantity: number;
   sub_category: {
     data: {
+      id?: string;
       attributes: {
         name: string;
+        slug?: string;
         defaultShippingCost: number;
+        category?: {
+          data: {
+            attributes: {
+              name: string;
+            };
+          };
+        };
+      };
+    }[];
+  };
+  compatibilities: {
+    id: string;
+    make: {
+      data: {
+        attributes: {
+          name: string;
+        };
       };
     };
-  },
-  compatibilities: {
-    data: {
-      attributes: {
-        make: {
-          data: {
-            attributes: {
-              name: string;
-            };
-          };
-        };
-        model: {
-          data: {
-            attributes: {
-              name: string;
-            };
-          };
-        };
-        engine_capacity: {
-          data: {
-            attributes: {
-              capacity: string;
-            };
-          };
-        };
-        fuel_system: {
-          data: {
-            attributes: {
-              name: string;
-            };
-          };
+    model: {
+      data: {
+        attributes: {
+          name: string;
         };
       };
-    }
+    };
+    engine_capacity: {
+      data: {
+        attributes: {
+          capacity: string;
+        };
+      };
+    };
+    fuel_system: {
+      data: {
+        attributes: {
+          name: string;
+        };
+      };
+    };
   }[];
   OE: string;
   motorType: string;
@@ -89,7 +95,7 @@ export default function CardProduct({
       {/* Footer */}
       <div className="p-2 py-4 flex justify-between items-center">
         {" "}
-      
+
         {/* Snipchart button */}
         {price &&
           price > 0 &&

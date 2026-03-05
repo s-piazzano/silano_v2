@@ -29,7 +29,7 @@ export function zoomToArrow(element, arrow) {
   // Calcola la distanza tra la freccia e il centro dell'immagine
   const distance = Math.sqrt(
     Math.pow(arrowPosition.left - imageCenter.x, 2) +
-      Math.pow(arrowPosition.top - imageCenter.y, 2)
+    Math.pow(arrowPosition.top - imageCenter.y, 2)
   );
 
   // Calcola il fattore di zoom
@@ -40,8 +40,8 @@ export function zoomToArrow(element, arrow) {
 }
 
 export function extractDecimal(number) {
-  const decimal = parseFloat(number.toString().split(".")[1]);
-  return decimal ? "." + decimal : ".00";
+  const decimalPart = (number % 1).toFixed(2);
+  return decimalPart.slice(1); // Restituisce ".00", ".50", etc.
 }
 
 export function toInteger(decimal) {

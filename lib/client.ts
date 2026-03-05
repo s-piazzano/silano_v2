@@ -1,8 +1,13 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { ApolloClient, InMemoryCache, createHttpLink } from "@apollo/client";
 
 const createApolloClient = () => {
-  return new ApolloClient({
+  const httpLink = createHttpLink({
     uri: process.env.BASE_URL,
+  });
+
+  return new ApolloClient({
+    ssrMode: typeof window === "undefined",
+    link: httpLink,
     cache: new InMemoryCache(),
   });
 };

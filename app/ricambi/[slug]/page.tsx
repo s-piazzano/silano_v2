@@ -121,7 +121,7 @@ const query = gql`
           price
           title
           quantity
-          sub_category {
+          sub_category(sort: "name:asc") {
             data {
               attributes {
                 name
@@ -354,7 +354,7 @@ export default async function Ricambi(props: Params) {
                       {product.attributes.price &&
                         product.attributes.price > 0 && (
                           <p className=" text-2xl">
-                            € {toInteger(product.attributes.price) + product.attributes.sub_category.data[0].attributes.defaultShippingCost}
+                            € {toInteger(product.attributes.price) + (product.attributes.sub_category.data[0]?.attributes?.defaultShippingCost ?? 15)}
                             <span className="text-sm">
                               {extractDecimal(product.attributes.price)}
                             </span>
@@ -390,7 +390,7 @@ export default async function Ricambi(props: Params) {
                     (<button
                       className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white cursor-pointer"
                       data-item-id={product.id}
-                      data-item-price={product.attributes.price+product.attributes.sub_category.data[0].attributes.defaultShippingCost}
+                      data-item-price={product.attributes.price + (product.attributes.sub_category.data[0]?.attributes?.defaultShippingCost ?? 15)}
                       data-item-image={
                         product.attributes.images?.data[0]?.attributes?.formats
                           ?.thumbnail?.url
@@ -460,7 +460,7 @@ export default async function Ricambi(props: Params) {
                   product.attributes.description
                 )}
               </div>
-             
+
             </div>
           </div>
         </div>

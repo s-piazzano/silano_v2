@@ -208,7 +208,7 @@ export default async function Subcategory(props: Params) {
                 }
                 slug={prod.attributes.slug}
                 price={price}
-                shippingCost={prod.attributes.sub_category.data[0].attributes.defaultShippingCost}
+                shippingCost={prod.attributes.sub_category.data[0]?.attributes?.defaultShippingCost ?? 15}
                 quantity={prod.attributes.quantity}
                 sub_category={prod.attributes.sub_category}
                 compatibilities={prod.attributes.compatibilities}
@@ -248,7 +248,11 @@ export default async function Subcategory(props: Params) {
                       </ul>
                     ))}
                   </div>
-                  {prod.attributes.price && (<div className="mt-2">{"€ " + (price)}</div>)}
+                  {prod.attributes.price && (
+                    <div className="mt-2 font-bold">
+                      {"€ " + (prod.attributes.price + (prod.attributes.sub_category.data[0]?.attributes?.defaultShippingCost ?? 15))}
+                    </div>
+                  )}
                 </div>
               </CardProduct>
             );
