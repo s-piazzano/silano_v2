@@ -1,5 +1,4 @@
 import { Metadata } from "next";
-export const runtime = 'edge';
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 

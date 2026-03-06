@@ -1,5 +1,4 @@
 import "./globals.css";
-export const runtime = 'edge';
 
 import dynamic from "next/dynamic";
 import { Metadata } from "next";
