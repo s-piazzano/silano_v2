@@ -1,10 +1,23 @@
+"use client";
+
 import Script from "next/script";
+import { getCookie } from "cookies-next";
+import { useEffect, useState } from "react";
 
 interface GoogleAnaliticsProps {
   ga_id: string;
 }
 
 export default function GoogleAnalitics({ ga_id }: GoogleAnaliticsProps) {
+  const [isAccepted, setIsAccepted] = useState(false);
+
+  useEffect(() => {
+    const consent = getCookie("cookiePolicy");
+    setIsAccepted(consent === "accepted");
+  }, []);
+
+  if (!isAccepted) return null;
+
   return (
     <>
       <Script id="google-consent-mode" strategy="afterInteractive">

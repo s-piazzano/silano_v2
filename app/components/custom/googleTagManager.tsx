@@ -1,7 +1,19 @@
+"use client";
 
 import Script from "next/script";
+import { getCookie } from "cookies-next";
+import { useEffect, useState } from "react";
 
 export default function GoogleTagManager() {
+  const [isAccepted, setIsAccepted] = useState(false);
+
+  useEffect(() => {
+    const consent = getCookie("cookiePolicy");
+    setIsAccepted(consent === "accepted");
+  }, []);
+
+  if (!isAccepted) return null;
+
   return (
     <>
       <Script id="google-tag-manager" strategy="afterInteractive">

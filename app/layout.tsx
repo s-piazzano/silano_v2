@@ -1,4 +1,5 @@
 import "./globals.css";
+export const runtime = 'edge';
 
 import dynamic from "next/dynamic";
 import { Metadata } from "next";
@@ -7,7 +8,6 @@ import Script from "next/script";
 import { ReactNode } from 'react';
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
-import { cookies } from "next/headers";
 
 const Navbar = dynamic(() => import("./components/navbar"));
 const Footer = dynamic(() => import("@/app/components/footer"));
@@ -143,10 +143,6 @@ export default async function RootLayout({
     },
   });
 
-  const cookieStore = await cookies();
-  const consent = cookieStore.get("cookiePolicy")?.value;
-  const isAccepted = consent === "accepted";
-
   const footerLayout = data.footer?.data?.attributes?.body || [];
   const menuData = data.menus?.data[0]?.attributes;
 
@@ -160,7 +156,7 @@ export default async function RootLayout({
 
   return (
     <html lang={locale}>
-      {isAccepted && process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
+      {process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS && (
         <>
           <GoogleAnalytics ga_id={process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS} />
           <GoogleTagManager />
@@ -169,15 +165,13 @@ export default async function RootLayout({
 
 
       <body className={`relative flex flex-col min-h-screen ${inter.className}`}>
-        {isAccepted && (
-          <noscript>
-            <iframe
-              src="https://www.googletagmanager.com/ns.html?id=GTM-KC23B962"
-              height="0"
-              width="0"
-            ></iframe>
-          </noscript>
-        )}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-KC23B962"
+            height="0"
+            width="0"
+          ></iframe>
+        </noscript>
 
 
         {/* Navigation Bar */}

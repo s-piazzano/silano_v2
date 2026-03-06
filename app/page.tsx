@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+export const runtime = 'edge';
 import dynamic from "next/dynamic";
 
 import createApolloClient from "@/lib/client";

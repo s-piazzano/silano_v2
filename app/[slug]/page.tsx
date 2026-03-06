@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-export const dynamicParams = true;
+export const runtime = 'edge';
 import { notFound } from 'next/navigation'
 import Link from "next/link";
 import Image from "next/image";
@@ -148,18 +148,6 @@ export async function generateMetadata(props): Promise<Metadata> {
   };
 }
 
-// Genero i path per la build
-export async function generateStaticParams() {
-  // Fetch data
-  const { data } = await createApolloClient().query({
-    query: queryStaticPath,
-  });
-
-  const pages = data.pages.data;
-  return pages.map((page) => ({
-    slug: page.attributes.slug,
-  }));
-}
 
 export default async function Page(props: Params) {
   const params = await props.params;
