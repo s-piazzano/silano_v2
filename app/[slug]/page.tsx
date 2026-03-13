@@ -183,7 +183,15 @@ export default async function Page(props: Params) {
     (x) => x.__typename === "ComponentCommonAssistant"
   );
 
-  const mdxSource = await serialize(page.description)
+  const fixMdx = (content: string) => {
+    if (!content) return "";
+    return content
+      .replace(/<hr>/gi, "<hr />")
+      .replace(/<br>/gi, "<br />")
+      .replace(/<img>/gi, "<img />");
+  };
+
+  const mdxSource = await serialize(fixMdx(page.description))
 
   return (
     <div className="w-full h-full px-4 lg:px-16 py-8 flex flex-col lg:flex-row">
