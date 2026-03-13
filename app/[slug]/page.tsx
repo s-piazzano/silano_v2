@@ -188,7 +188,8 @@ export default async function Page(props: Params) {
     return content
       .replace(/<hr>/gi, "<hr />")
       .replace(/<br>/gi, "<br />")
-      .replace(/<img>/gi, "<img />");
+      .replace(/<img>/gi, "<img />")
+      .replace(/style="[^"]*"/gi, "");
   };
 
   const mdxSource = await serialize(fixMdx(page.description))
