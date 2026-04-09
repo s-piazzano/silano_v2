@@ -125,7 +125,7 @@ export default async function Ricambi() {
           Tutte le marche
         </h2>
         <p className="text-gray-500 mb-6 italic">
-          Sfoglia l'elenco completo in ordine alfabetico o usa la ricerca qui sotto.
+          Sfoglia l&apos;elenco completo in ordine alfabetico o usa la ricerca qui sotto.
         </p>
         <Classifier divItems={alf} items={makeSerialized} />
       </div>

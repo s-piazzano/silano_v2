@@ -217,7 +217,7 @@ export default async function Subcategory(props: {
               </div>
               <h3 className="text-xl font-bold text-gray-800 mb-2">Nessun prodotto trovato</h3>
               <p className="text-gray-500 max-w-sm mx-auto">
-                Al momento non abbiamo ricambi disponibili per questa categoria specifica. Prova a cercare un'altra categoria o contattaci.
+                Al momento non abbiamo ricambi disponibili per questa categoria specifica. Prova a cercare un&apos;altra categoria o contattaci.
               </p>
             </div>
           )}

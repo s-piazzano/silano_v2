@@ -204,8 +204,10 @@ export default function SubcategoryTable({
            })
          ) : (
            filter && <div className="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-             <p className="text-gray-500">Nessun ricambio trovato per "<span className="font-semibold">{filter}</span>".</p>
-             <p className="text-sm text-gray-400 mt-1">Prova a cercare un termine più generico.</p>
+              <p className="text-gray-500 max-w-sm mx-auto">
+                Al momento non abbiamo categorie disponibili per questo modello. Prova a cercare un&apos;altra marca o contattaci.
+              </p>
+              <p className="text-gray-500">Nessun ricambio trovato per &quot;<span className="font-semibold">{filter}</span>&quot;.</p>
            </div>
          )}
       </div>

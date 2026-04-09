@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 
 interface Brand {
@@ -56,14 +57,13 @@ export default function PopularBrands({ items }: PopularBrandsProps) {
               className="group flex flex-col items-center justify-center p-6 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:border-forest transition-all duration-300"
             >
               <div className="w-16 h-16 mb-4 relative flex items-center justify-center grayscale group-hover:grayscale-0 transition-all duration-500">
-                <img
+                <Image
                   src={logoUrl}
                   alt={`${brand.name} logo`}
+                  width={64}
+                  height={64}
                   className="max-w-full max-h-full object-contain"
-                  onError={(e) => {
-                    // Fallback in case the logo is not found
-                    (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${brand.name}&background=f3f4f6&color=15803d&bold=true`;
-                  }}
+                  unoptimized // External dynamic logos from GitHub
                 />
               </div>
               <span className="text-sm font-semibold text-gray-700 text-center group-hover:text-forest transition-colors">
