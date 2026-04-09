@@ -155,7 +155,7 @@ export default function CardProduct({
                   alt="WhatsApp" 
                   width={16} 
                   height={16} 
-                  className="brightness-0 invert"
+                  className=""
                 />
                 Magazzino
               </a>
