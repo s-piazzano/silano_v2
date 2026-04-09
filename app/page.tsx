@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { Metadata } from "next";
 import dynamic from "next/dynamic";
 
@@ -8,30 +9,7 @@ import Header from "./components/header";
 import Activities from "./components/custom/activities";
 const Maps = dynamic(() => import("./components/custom/maps"));
 
-const querySEO = gql`
-  query {
-    homepage {
-      data {
-        attributes {
-          seo {
-            title
-            description
-            image {
-              data {
-                attributes {
-                  url
-                  formats
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-const query = gql`
+const HOMEPAGE_QUERY = gql`
   query {
     homepage {
       data {
@@ -74,43 +52,61 @@ const query = gql`
     }
   }
 `;
+
+/**
+ * Memoized data fetch to prevent double network requests 
+ * between generateMetadata and the Home component.
+ */
+const getHomepageData = cache(async () => {
+  const { data } = await createApolloClient().query({
+    query: HOMEPAGE_QUERY,
+  });
+  return data;
+});
+
 // Genero i metadata per il SEO
 export async function generateMetadata(): Promise<Metadata> {
-  // Fetch data
-  const { data } = await createApolloClient().query({
-    query: querySEO,
-  });
+  const data = await getHomepageData();
+  const seo = data?.homepage?.data?.attributes?.seo;
 
-  const {
-    data: {
-      attributes: { seo },
-    },
-  } = data.homepage;
+  if (!seo) {
+    return {
+      title: "Silano",
+    };
+  }
+
+  const imageUrl = seo.image?.data?.attributes?.url || "";
 
   return {
     title: seo.title,
-    description: seo.title,
+    description: seo.description,
     openGraph: {
       title: seo.title,
       description: seo.description,
-      images: [{ url: seo.image.data.attributes.url }],
+      images: imageUrl ? [{ url: imageUrl }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: seo.title,
+      description: seo.description,
+      images: imageUrl ? [imageUrl] : [],
     },
   };
 }
 
 export default async function Home() {
+  const data = await getHomepageData();
+  const attributes = data?.homepage?.data?.attributes;
 
-  //Fetch data
-  const { data } = await createApolloClient().query({
-    query,
-    variables: { menu: "default" },
-  });
+  if (!attributes) {
+    return (
+      <div className="w-full flex justify-center items-center h-96">
+        <p className="text-gray-500">Contenuto non disponibile.</p>
+      </div>
+    );
+  }
 
-  const {
-    data: {
-      attributes: { subtitle, title, slogan, activities },
-    },
-  } = data.homepage;
+  const { subtitle, title, slogan, activities } = attributes;
 
   return (
     <>
