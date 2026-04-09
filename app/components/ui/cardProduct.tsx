@@ -110,7 +110,7 @@ export default function CardProduct({
               <div className="flex flex-col">
                 <span className="text-xs text-pink-500 font-bold italic uppercase tracking-tighter">Quotazione</span>
                 <span className="text-lg font-black text-gray-400 uppercase tracking-tight">
-                  Su Richiesta
+                  Prezzo da definire
                 </span>
               </div>
             )}
@@ -148,9 +148,16 @@ export default function CardProduct({
                 href={quoteLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-gray-800 text-white font-bold text-xs hover:bg-gray-700 transition-all shadow-sm active:scale-95"
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-forest text-white font-bold text-xs hover:bg-forest/90 transition-all shadow-sm active:scale-95"
               >
-                Quotazione
+                <Image 
+                  src="/whatsapp.svg" 
+                  alt="WhatsApp" 
+                  width={16} 
+                  height={16} 
+                  className="brightness-0 invert"
+                />
+                Magazzino
               </a>
             ) : null}
           </div>
