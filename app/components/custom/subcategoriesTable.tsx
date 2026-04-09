@@ -24,6 +24,36 @@ interface Subcategory {
   };
 }
 
+import { 
+  WrenchScrewdriverIcon, 
+  LightBulbIcon, 
+  RectangleGroupIcon, 
+  CircleStackIcon, 
+  BoltIcon, 
+  BoltSlashIcon,
+  SparklesIcon,
+  UserGroupIcon,
+  Cog6ToothIcon,
+  BeakerIcon,
+  ArchiveBoxIcon
+} from "@heroicons/react/24/outline";
+
+// --- INTERFACCE (invariate) ---
+// ... (same as before)
+
+const CATEGORY_ICONS: Record<string, any> = {
+  "Motore": WrenchScrewdriverIcon,
+  "Illuminazione": LightBulbIcon,
+  "Carrozzeria": RectangleGroupIcon,
+  "Frenante": CircleStackIcon,
+  "Elettronica": BoltIcon,
+  "Impianto elettrico": BoltSlashIcon,
+  "Sospensioni": SparklesIcon,
+  "Interni": UserGroupIcon,
+  "Trasmissione": Cog6ToothIcon,
+  "Accessori": BeakerIcon,
+};
+
 interface SubcategoriesTableProps {
   subcategories: Array<Subcategory>;
 }
@@ -37,19 +67,15 @@ interface Test {
   subs: Array<Subs>;
 }
 
-// --- FUNZIONE reduceSubs (invariata) ---
-const reduceSubs = (subs: Subcategory[]) => { // Aggiunto tipo per chiarezza
-  const results = new Map<string, Test>(); // Tipi più specifici per Map
+const reduceSubs = (subs: Subcategory[]) => {
+  const results = new Map<string, Test>();
 
   for (const sub of subs) {
-    // Gestione sicura degli attributi mancanti (opzionale ma consigliato)
     const categoryName = sub.attributes?.category?.data?.attributes?.name;
     const subName = sub.attributes?.name;
     const subSlug = sub.attributes?.slug;
 
-    // Salta se mancano dati essenziali
     if (!categoryName || !subName || !subSlug) {
-      console.warn("Skipping subcategory with missing data:", sub);
       continue;
     }
 
@@ -81,12 +107,9 @@ const reduceSubs = (subs: Subcategory[]) => { // Aggiunto tipo per chiarezza
       subs: categoryData.subs.sort((a, b) => a.name.localeCompare(b.name)),
     };
   });
-  // Ordina anche le categorie per nome
   resultsArray.sort((a, b) => a.category.localeCompare(b.category));
-
   return resultsArray;
 };
-
 
 export default function SubcategoryTable({
   subcategories,
@@ -94,89 +117,98 @@ export default function SubcategoryTable({
   const router = useRouter();
   const pathname = usePathname();
 
-  // Stato per il filtro
   const [filter, setFilter] = useState('');
-  // Stato per tenere traccia delle categorie aperte manualmente (usiamo un Set per efficienza)
   const [openCategories, setOpenCategories] = useState<Set<string>>(new Set());
 
   const handleClick = (link: string) => {
     router.push(`${pathname}/${link}`);
   };
 
-  // Filtra le sottocategorie ORIGINALI prima di raggruppare
   const filteredSubcategories = subcategories.filter(sub =>
-    sub.attributes.name.toLowerCase().includes(filter.toLowerCase())
+    sub.attributes?.name?.toLowerCase().includes(filter.toLowerCase())
   );
 
-  // Chiama reduceSubs UNA SOLA VOLTA con le sottocategorie filtrate
   const processedAndFilteredData = reduceSubs(filteredSubcategories);
 
-  // Funzione per gestire l'apertura/chiusura manuale dei collapse
   const handleToggle = (categoryTitle: string) => {
     setOpenCategories(prevOpen => {
-      const newOpen = new Set(prevOpen); // Crea una copia del Set
+      const newOpen = new Set(prevOpen);
       if (newOpen.has(categoryTitle)) {
-        newOpen.delete(categoryTitle); // Se già aperto, chiudi (rimuovi dal Set)
+        newOpen.delete(categoryTitle);
       } else {
-        newOpen.add(categoryTitle); // Se chiuso, apri (aggiungi al Set)
+        newOpen.add(categoryTitle);
       }
-      return newOpen; // Aggiorna lo stato
+      return newOpen;
     });
   };
 
-  // Determina se l'utente sta attualmente filtrando
   const isFiltering = filter.length > 0;
 
   return (
     <div className="flex flex-col">
-      {/* Input per il filtro */}
-      <div className="mb-4">
+      <div className="mb-8 relative group">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-forest transition-colors">
+          <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </div>
         <input
           type="text"
-          placeholder="Filtra sottocategorie..."
+          placeholder="Cerca un pezzo o una categoria (es. Specchietto, Fanale...)"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring focus:ring-forest"
+          className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-forest/20 focus:border-forest transition-all text-gray-700 placeholder-gray-400"
         />
       </div>
 
-      {/* Rendering dei Collapse */}
-      {processedAndFilteredData.length > 0 ? (
-         processedAndFilteredData.map((categoryData) => {
-           // Determina se questo Collapse specifico deve essere aperto
-           const isManuallyOpen = openCategories.has(categoryData.category);
-           // È aperto se stiamo filtrando OPPURE se è stato aperto manualmente
-           const isOpen = isFiltering || isManuallyOpen;
+      <div className="space-y-3">
+        {processedAndFilteredData.length > 0 ? (
+           processedAndFilteredData.map((categoryData) => {
+             const isManuallyOpen = openCategories.has(categoryData.category);
+             const isOpen = isFiltering || isManuallyOpen;
+             const CategoryIcon = CATEGORY_ICONS[categoryData.category] || ArchiveBoxIcon;
+             const count = categoryData.subs.length;
 
-           return (
-             <Collapse
-               // Usa un key stabile, il titolo della categoria se univoco va bene
-               key={categoryData.category}
-               title={categoryData.category}
-               // Passa lo stato di apertura calcolato
-               isOpen={isOpen}
-               // Passa la funzione di toggle, ma solo se NON stiamo filtrando
-               // Quando si filtra, il click sull'header non farà nulla (comportamento voluto)
-               onToggle={isFiltering ? undefined : handleToggle}
-             >
-               {/* Contenuto del Collapse (invariato) */}
-               <div className="flex flex-col items-start pl-4">
-                 {categoryData.subs.map((sub, ind) => (
-                   <button
-                     key={`sub-${categoryData.category}-${ind}`}
-                     onClick={() => handleClick(sub.link)}
-                     className="my-2 text-left hover:text-forest transition-colors duration-150"
-                   >
-                     {sub.name}
-                   </button>
-                 ))}
+             return (
+               <div key={categoryData.category} className="overflow-hidden">
+                 <Collapse
+                   identifier={categoryData.category}
+                   title={
+                    <div className="flex items-center justify-between w-full pr-4">
+                      <span className={`font-semibold text-sm md:text-base transition-colors ${isOpen ? 'text-forest' : 'text-gray-700'}`}>
+                        {categoryData.category}
+                      </span>
+                      <span className="flex-shrink-0 ml-4 bg-gray-100 text-gray-500 text-[10px] md:text-xs px-2 py-1 rounded-full border border-gray-200 font-medium whitespace-nowrap">
+                        {count} {count === 1 ? 'pezzo' : 'pezzi'}
+                      </span>
+                    </div>
+                   }
+                   isOpen={isOpen}
+                   onToggle={isFiltering ? undefined : handleToggle}
+                 >
+                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-1 py-4 px-2 border-t border-gray-50 mt-1">
+                     {categoryData.subs.map((sub, ind) => (
+                       <button
+                         key={`sub-${categoryData.category}-${ind}`}
+                         onClick={() => handleClick(sub.link)}
+                         className="flex items-center gap-2 py-2 px-3 rounded-lg hover:bg-forest/5 hover:text-forest transition-all text-sm text-gray-600 group text-left cursor-pointer"
+                       >
+                         <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-forest transition-colors"></div>
+                         {sub.name}
+                       </button>
+                     ))}
+                   </div>
+                 </Collapse>
                </div>
-             </Collapse>
-           );
-         })
-       ) : (
-         filter && <p className="text-gray-500 px-2">Nessuna sottocategoria trovata per {filter}.</p>
-       )}
+             );
+           })
+         ) : (
+           filter && <div className="text-center py-12 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+             <p className="text-gray-500">Nessun ricambio trovato per "<span className="font-semibold">{filter}</span>".</p>
+             <p className="text-sm text-gray-400 mt-1">Prova a cercare un termine più generico.</p>
+           </div>
+         )}
+      </div>
     </div>
   );
 }

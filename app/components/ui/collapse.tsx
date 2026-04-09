@@ -7,48 +7,39 @@ import { Remark } from "react-remark";
 
 interface CollapseProps {
   key?: React.Key;
-  title: string;
-  isRemarkable?: boolean; // Corrected spelling
+  title: ReactNode;
+  identifier?: string; // Nuova prop per lo stato esterno se title è un nodo
+  isRemarkable?: boolean;
   className?: string;
-  // Props Aggiunte per il controllo esterno:
-  isOpen?: boolean; // Stato di apertura controllato dal genitore (opzionale)
-  onToggle?: (title: string) => void; // Callback chiamata al click sull'header (opzionale)
+  isOpen?: boolean;
+  onToggle?: (id: string) => void;
 }
 
 const Collapse: React.FC<PropsWithChildren<CollapseProps>> = ({
   title,
+  identifier,
   isRemarkable = false,
   children,
   className,
-  // Rinominiamo la prop per evitare conflitti con la variabile interna 'isOpen'
   isOpen: controlledOpen,
   onToggle,
 }) => {
-  // Stato interno: usato SOLO se il componente NON è controllato (controlledOpen === undefined)
+  const id = React.useId();
+  const contentId = `collapse-content-${id}`;
   const [internalIsOpen, setInternalIsOpen] = useState(false);
 
-  // Determina se il componente è controllato dall'esterno
   const isControlled = controlledOpen !== undefined;
-
-  // Determina lo stato di apertura effettivo da usare per il rendering
-  // Se è controllato, usa il valore passato via prop, altrimenti usa lo stato interno
   const isOpen = isControlled ? controlledOpen : internalIsOpen;
 
-  // Gestore del click sull'header
   const handleHeaderClick = () => {
     if (isControlled) {
-      // Se controllato, chiama la funzione onToggle passata dal genitore
-      // passando il titolo per permettere al genitore di identificarlo
-      onToggle?.(title);
+      // Usa identifier se fornito, altrimenti fallback su title se è stringa
+      const idToToggle = identifier ?? (typeof title === "string" ? title : "");
+      onToggle?.(idToToggle);
     } else {
-      // Se non controllato, aggiorna semplicemente lo stato interno
       setInternalIsOpen(prev => !prev);
     }
   };
-
-  // Genera un ID univoco per l'area del contenuto per l'accessibilità (aria-controls)
-  // Sostituisce spazi nel titolo per creare un ID valido
-  const contentId = `collapse-content-${title.replace(/\s+/g, '-')}`;
 
   return (
     // Aggiunto nullish coalescing per className se non fornito
