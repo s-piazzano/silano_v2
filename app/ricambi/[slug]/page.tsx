@@ -435,7 +435,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
               <div className="space-y-3">
                 {isAvailable && hasPrice ? (
                   <button
-                    className="snipcart-add-item w-full bg-forest text-white h-16 rounded-2xl font-black text-lg uppercase tracking-wide hover:bg-forest/90 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3"
+                    className="snipcart-add-item w-full bg-forest text-white h-16 rounded-2xl font-black text-lg uppercase tracking-wide hover:bg-forest/90 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3 cursor-pointer"
                     data-item-id={product.id}
                     data-item-price={totalPrice}
                     data-item-image={attrs.images?.data?.[0]?.attributes?.formats?.thumbnail?.url || attrs.images?.data?.[0]?.attributes?.url}
@@ -451,7 +451,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
                     href={waBaseUrl + quoteMessage}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full bg-gray-800 text-white h-16 rounded-2xl font-black text-lg uppercase tracking-wide hover:bg-gray-700 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3"
+                    className="w-full bg-gray-800 text-white h-16 rounded-2xl font-black text-lg uppercase tracking-wide hover:bg-gray-700 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3 cursor-pointer"
                   >
                     <Image src="/whatsapp.svg" alt="WhatsApp" width={24} height={24} unoptimized />
                     Magazzino
@@ -534,7 +534,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
           
           {isAvailable && hasPrice ? (
             <button
-              className="snipcart-add-item bg-forest text-white px-6 py-3 rounded-xl font-bold text-sm uppercase flex-1 shadow-lg active:scale-95 transition-all text-center"
+              className="snipcart-add-item bg-forest text-white px-6 py-3 rounded-xl font-bold text-sm uppercase flex-1 shadow-lg active:scale-95 transition-all text-center cursor-pointer"
               data-item-id={product.id}
               data-item-price={totalPrice}
               data-item-name={productTitle}
@@ -547,7 +547,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
               href={waBaseUrl + quoteMessage}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-gray-800 text-white px-6 py-3 rounded-xl font-bold text-sm uppercase flex-1 shadow-lg active:scale-95 transition-all text-center flex items-center justify-center gap-2"
+              className="bg-gray-800 text-white px-6 py-3 rounded-xl font-bold text-sm uppercase flex-1 shadow-lg active:scale-95 transition-all text-center flex items-center justify-center gap-2 cursor-pointer"
             >
               <Image src="/whatsapp.svg" alt="WA" width={16} height={16} unoptimized />
               Magazzino

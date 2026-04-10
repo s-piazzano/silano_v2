@@ -132,7 +132,7 @@ export default function CardProduct({
             
             {isAvailable && hasPrice ? (
               <button
-                className="snipcart-add-item flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-forest text-white font-bold text-xs hover:bg-forest/90 transition-all shadow-sm active:scale-95"
+                className="snipcart-add-item flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-forest text-white font-bold text-xs hover:bg-forest/90 transition-all shadow-sm active:scale-95 cursor-pointer"
                 data-item-id={id}
                 data-item-price={totalPrice}
                 data-item-image={imageUrl}
@@ -148,7 +148,7 @@ export default function CardProduct({
                 href={quoteLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-forest text-white font-bold text-xs hover:bg-forest/90 transition-all shadow-sm active:scale-95"
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-forest text-white font-bold text-xs hover:bg-forest/90 transition-all shadow-sm active:scale-95 cursor-pointer"
               >
                 <Image 
                   src="/whatsapp.svg" 
