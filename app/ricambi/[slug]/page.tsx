@@ -1,115 +1,39 @@
+import { cache } from "react";
 import Link from "next/link";
 import { Metadata } from "next";
-
 import { notFound } from "next/navigation";
+import Image from "next/image";
+import { 
+  EnvelopeIcon, 
+  ShoppingBagIcon, 
+  CheckCircleIcon, 
+  XCircleIcon,
+  InformationCircleIcon,
+  WrenchScrewdriverIcon,
+  TruckIcon,
+  ShieldCheckIcon,
+  ClockIcon,
+  FireIcon,
+  SparklesIcon,
+  ListBulletIcon,
+  ArrowPathIcon,
+  CreditCardIcon
+} from "@heroicons/react/24/outline";
 
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 
-import Image from "next/image";
-
 import Breadcrumbs from "@/app/components/ui/breadcrumbs";
 import Gallery from "@/app/components/ui/gallery";
-import Collapse from "@/app/components/ui/collapse";
-
+import Tabs from "@/app/components/ui/tabs";
+import CardProduct from "@/app/components/ui/cardProduct";
 import { toInteger, extractDecimal } from "@/lib/common";
-
-/* import CartButton from "@/app/components/ui/cartButton";
- */
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
-
 import { generateTitle } from "@/utils/common";
 
-export const revalidate = 5;
+export const revalidate = 3600;
 export const runtime = 'edge';
 
-interface Slug {
-  slug: string;
-}
-
-interface Params {
-  params: Promise<Slug>;
-}
-
-const querySEO = gql`
-  query ($slug: String) {
-    products(filters: { slug: { eq: $slug } }) {
-      data {
-        id
-        attributes {
-          updatedAt
-          OE
-          motorType
-          description
-          price
-          title
-          sub_category {
-            data {
-              attributes {
-                name
-                defaultShippingCost
-              }
-            }
-          }
-          compatibilities {
-            make {
-              data {
-                attributes {
-                  name
-                }
-              }
-            }
-            model {
-              data {
-                attributes {
-                  name
-                }
-              }
-            }
-            engine_capacity {
-              data {
-                id
-                attributes {
-                  capacity
-                }
-              }
-            }
-            fuel_system {
-              data {
-                id
-                attributes {
-                  name
-                }
-              }
-            }
-          }
-          images {
-            data {
-              attributes {
-                url
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-`;
-
-const queryStaticPath = gql`
-  query {
-    products(pagination: { pageSize: 100000 }) {
-      data {
-        id
-        attributes {
-          slug
-        }
-      }
-    }
-  }
-`;
-
-const query = gql`
+const PRODUCT_QUERY = gql`
   query ($slug: String) {
     products(filters: { slug: { eq: $slug } }) {
       data {
@@ -122,6 +46,7 @@ const query = gql`
           price
           title
           quantity
+          slug
           sub_category(sort: "name:asc") {
             data {
               attributes {
@@ -132,38 +57,10 @@ const query = gql`
             }
           }
           compatibilities {
-            make {
-              data {
-                attributes {
-                  name
-                  slug
-                }
-              }
-            }
-            model {
-              data {
-                attributes {
-                  name
-                  slug
-                }
-              }
-            }
-            engine_capacity {
-              data {
-                id
-                attributes {
-                  capacity
-                }
-              }
-            }
-            fuel_system {
-              data {
-                id
-                attributes {
-                  name
-                }
-              }
-            }
+            make { data { attributes { name slug } } }
+            model { data { attributes { name slug } } }
+            engine_capacity { data { attributes { capacity } } }
+            fuel_system { data { attributes { name } } }
           }
           images {
             data {
@@ -176,283 +73,508 @@ const query = gql`
           }
         }
       }
-      meta {
-        pagination {
-          pageCount
+    }
+  }
+`;
+
+const RELATED_PRODUCTS_QUERY = gql`
+  query ($subCategorySlug: String, $currentSlug: String) {
+    products(
+      filters: { 
+        sub_category: { slug: { eq: $subCategorySlug } },
+        slug: { ne: $currentSlug }
+      },
+      pagination: { limit: 4 }
+    ) {
+      data {
+        id
+        attributes {
+          title
+          slug
+          price
+          quantity
+          OE
+          motorType
+          sub_category {
+            data {
+              attributes {
+                name
+              }
+            }
+          }
+          compatibilities {
+            make { data { attributes { name } } }
+            model { data { attributes { name } } }
+          }
+          images {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
         }
       }
     }
   }
 `;
 
-const generateDescription = (sub, comps, description) => {
-  return `${description
-    ? description
-    : `
-Offriamo come ricambio usato funzionante ${sub[0].attributes.name} per:
-      ${comps
-      .map(
-        (comp) =>
-          `- ${comp.make.data ? comp.make.data.attributes.name : ""} ${comp.model.data ? comp.model.data.attributes.name : ""
-          }`
-      )
-      .join("")}
-   `
-    }
-    `;
+/**
+ * Memoized fetch for product data
+ */
+const getProductData = cache(async (slug: string) => {
+  const { data } = await createApolloClient().query({
+    query: PRODUCT_QUERY,
+    variables: { slug },
+  });
+  return data.products.data[0];
+});
+
+/**
+ * Fetch related products
+ */
+const getRelatedProducts = async (subCategorySlug: string, currentSlug: string) => {
+  const { data } = await createApolloClient().query({
+    query: RELATED_PRODUCTS_QUERY,
+    variables: { subCategorySlug, currentSlug },
+  });
+  return data.products.data;
+};
+
+const generateDescription = (sub: any, comps: any[], customDescription: string) => {
+  if (customDescription) return customDescription;
+  
+  const subName = sub?.[0]?.attributes?.name || "Ricambio";
+  const compatibilityText = comps
+    .slice(0, 3)
+    .map((comp) => `${comp.make.data?.attributes?.name} ${comp.model.data?.attributes?.name}`)
+    .join(", ");
+
+  return `Acquista ${subName} usato e garantito per ${compatibilityText}. Qualità certificata Silano, spedizione veloce e supporto tecnico specializzato.`;
 };
 
 // Genero i metadata per il SEO
-export async function generateMetadata(props): Promise<Metadata> {
-  const params = await props.params;
-  // Leggo lo slug dai parametri di route
-  const slug = params.slug;
+export async function generateMetadata(props: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await props.params;
+  const product = await getProductData(slug);
 
-  // Fetch data
-  const { data } = await createApolloClient().query({
-    query: querySEO,
-    variables: { slug },
-  });
+  if (!product) return { title: "Ricambio non trovato | Silano" };
 
-  const product = data.products.data[0];
+  const attributes = product.attributes;
+  const title = generateTitle(
+    attributes.sub_category.data,
+    attributes.compatibilities,
+    attributes.OE,
+    attributes.motorType
+  );
+  
+  const description = generateDescription(
+    attributes.sub_category.data,
+    attributes.compatibilities,
+    attributes.description
+  );
 
-  if (product) {
-    return {
-      title: generateTitle(
-        product.attributes.sub_category.data,
-        product.attributes.compatibilities,
-        product.attributes.OE,
-        product.attributes.motorType
-      ),
-      description: generateDescription(
-        product.attributes.sub_category.data,
-        product.attributes.compatibilities,
-        product.attributes.description
-      ),
-      openGraph: {
-        title: generateTitle(
-          product.attributes.sub_category.data,
-          product.attributes.compatibilities,
-          product.attributes.OE,
-          product.attributes.motorType
-        ),
-        description: generateDescription(
-          product.attributes.sub_category.data,
-          product.attributes.compatibilities,
-          product.attributes.description
-        ),
-        images: [product.attributes.images?.data[0]?.attributes?.url],
-      },
-    };
-  } else {
-    return {};
-  }
+  return {
+    title: `${title} | Ricambi Auto Usati Silano`,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [attributes.images?.data?.[0]?.attributes?.url],
+    },
+  };
 }
 
+export default async function RicambiPage(props: { params: Promise<{ slug: string }> }) {
+  const { slug } = await props.params;
+  const product = await getProductData(slug);
 
-export const dynamicParams = true;
+  if (!product) notFound();
 
-export default async function Ricambi(props: Params) {
-  const params = await props.params;
-  const { data } = await createApolloClient().query({
-    query,
-    variables: { slug: params.slug },
-  });
-  // Se non esiste il prodotto passato dallo slug restituisco 404
-  if (data.products.data.length === 0) {
-    notFound();
-  }
+  const attrs = product.attributes;
+  const isAvailable = attrs.quantity > 0;
+  const hasPrice = attrs.price && attrs.price > 0;
+  const shippingCost = attrs.sub_category.data[0]?.attributes?.defaultShippingCost ?? 15;
+  const totalPrice = hasPrice ? (attrs.price + shippingCost) : 0;
+  const subCategorySlug = attrs.sub_category.data[0]?.attributes?.slug;
 
-  const product = data.products.data[0];
+  const relatedProducts = subCategorySlug ? await getRelatedProducts(subCategorySlug, slug) : [];
 
-  const make = {
-    name: product.attributes.compatibilities[0].make.data.attributes.name,
-    slug: product.attributes.compatibilities[0].make.data.attributes.slug,
-  };
-  const model = {
-    name: product.attributes.compatibilities[0].model.data?.attributes?.name || "",
-    slug: product.attributes.compatibilities[0].model.data?.attributes?.slug || "",
-  };
-  const sub = {
-    name: product.attributes.sub_category.data[0].attributes.name,
-    slug: product.attributes.sub_category.data[0].attributes.slug,
-  };
+  const productTitle = generateTitle(
+    attrs.sub_category.data,
+    attrs.compatibilities,
+    attrs.OE,
+    attrs.motorType
+  );
 
-  // Genero i crumbs
+  // Link WhatsApp per quotazione o info
+  const waNumber = "393929898074";
+  const waBaseUrl = `https://wa.me/${waNumber}?text=`;
+  const waMessage = encodeURIComponent(`Buongiorno Silano, sono interessato a questo ricambio: ${productTitle} (Rif: ${product.id}). Vorrei maggiori informazioni.`);
+  const quoteMessage = encodeURIComponent(`Buongiorno Silano, vorrei una quotazione per: ${productTitle} (Rif: ${product.id})`);
+
   const crumbs = [
-    {
-      label: "Inizio",
-      link: "/ricambi",
+    { label: "Inizio", link: "/ricambi" },
+    { 
+      label: attrs.compatibilities[0]?.make?.data?.attributes?.name || "Marca", 
+      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}` 
     },
-    {
-      label: make.name,
-      link: `/ricambi/catalogo/${make.slug}`,
+    { 
+      label: attrs.compatibilities[0]?.model?.data?.attributes?.name || "Modello", 
+      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}/${attrs.compatibilities[0]?.model?.data?.attributes?.slug}` 
     },
-    {
-      label: model.name,
-      link: `/ricambi/catalogo/${make.slug}/${model.slug}`,
-    },
-    {
-      label: sub.name,
-      link: `/ricambi/catalogo/${make.slug}/${model.slug}/${sub.slug}`,
+    { 
+      label: attrs.sub_category.data[0]?.attributes?.name || "Categoria", 
+      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}/${attrs.compatibilities[0]?.model?.data?.attributes?.slug}/${attrs.sub_category.data[0]?.attributes?.slug}` 
     },
   ];
 
-  return (
-    <div className="">
-      {product && (
-        <div className="px-4 lg:px-16 py-8 flex flex-col">
-          <Breadcrumbs crumbs={crumbs} />
-          <div className="flex flex-col md:flex-row ">
-            {/* Titolo del prodotto - versione mobile*/}
-            <h1 className="md:hidden text-lg font-semibold mb-4">
-              {product.attributes.title
-                ? product.attributes.title
-                : generateTitle(
-                  product.attributes.sub_category.data,
-                  product.attributes.compatibilities,
-                  product.attributes.OE,
-                  product.attributes.motorType
-                )}
-            </h1>
-            {/*Galleria immagini prodotto*/}
-            <div className="md:w-7/12 flex-none lg:pr-4">
-              <Gallery images={product.attributes.images}></Gallery>
-            </div>
+  // Tab Definitions
+  const tabs = [
+    {
+      id: "description",
+      label: "Descrizione",
+      icon: ListBulletIcon,
+      content: (
+        <div className="prose prose-forest max-w-none text-gray-600 font-medium leading-relaxed whitespace-pre-wrap py-4">
+          {generateDescription(attrs.sub_category.data, attrs.compatibilities, attrs.description)}
+        </div>
+      )
+    },
+    {
+      id: "compatibility",
+      label: "Compatibilità Auto",
+      icon: InformationCircleIcon,
+      content: (
+        <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm my-4">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-gray-50 text-gray-400 text-[10px] font-bold uppercase tracking-widest">
+                <th className="px-6 py-4">Marca & Modello</th>
+                <th className="px-6 py-4">Cilindrata</th>
+                <th className="px-6 py-4">Alimentazione</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-50">
+              {attrs.compatibilities.map((comp: any, idx: number) => (
+                <tr key={idx} className="hover:bg-gray-50/50 transition-colors">
+                  <td className="px-6 py-4 font-bold text-gray-700">
+                    {comp.make.data?.attributes?.name} {comp.model.data?.attributes?.name}
+                  </td>
+                  <td className="px-6 py-4 text-gray-600 font-medium">
+                    {comp.engine_capacity.data?.attributes?.capacity || "N/D"}
+                  </td>
+                  <td className="px-6 py-4 text-gray-600 font-medium capitalize">
+                    {comp.fuel_system.data?.attributes?.name || "N/D"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    },
+    {
+      id: "shipping",
+      label: "Spedizione e Garanzia",
+      icon: TruckIcon,
+      content: (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
+          <div className="space-y-4">
+            <h4 className="flex items-center gap-2 font-bold text-gray-900">
+              <TruckIcon className="w-5 h-5 text-forest" />
+              Spedizioni Veloci
+            </h4>
+            <p className="text-gray-600 text-sm leading-relaxed text-stone-900">
+              Il prodotto viene imballato con cura e spedito tramite corriere espresso. 
+              La consegna avviene solitamente in **24/48 ore** lavorative dall&apos;ordine. 
+              Garantiamo la tracciabilità completa del pacco.
+            </p>
+          </div>
+          <div className="space-y-4">
+            <h4 className="flex items-center gap-2 font-bold text-gray-900">
+              <ArrowPathIcon className="w-5 h-5 text-forest" />
+              Politica di Reso
+            </h4>
+            <p className="text-gray-600 text-sm leading-relaxed text-stone-900">
+              Ogni ricambio è testato e garantito. Se il pezzo non dovesse essere conforme, 
+              hai **14 giorni** per richiedere il reso. Il nostro team tecnico è a disposizione 
+              per assisterti nel processo.
+            </p>
+          </div>
+        </div>
+      )
+    }
+  ];
 
-            <div className=" flex flex-col  border-t md:border-t-0 md:pl-8 ">
-              {/* Titolo del prodotto - versione desktop*/}
-              <h1 className="hidden md:block text-lg font-semibold">
-                {product.attributes.title
-                  ? product.attributes.title
-                  : generateTitle(
-                    product.attributes.sub_category.data,
-                    product.attributes.compatibilities,
-                    product.attributes.OE,
-                    product.attributes.motorType
-                  )}
-              </h1>
-              <div className="hidden md:block border border-b-0 "></div>
-              <div className="flex flex-col space-y-4 my-4">
-                {/* Giacenza */}
-                <div className="text-lg">
-                  {" "}
-                  {product.attributes.quantity ? (
-                    <div className="flex flex-col space-y-2 font-bold">
-                      {product.attributes.price &&
-                        product.attributes.price > 0 && (
-                          <p className=" text-2xl">
-                            € {toInteger(product.attributes.price) + (product.attributes.sub_category.data[0]?.attributes?.defaultShippingCost ?? 15)}
-                            <span className="text-sm">
-                              {extractDecimal(product.attributes.price)}
-                            </span>
-                          </p>
-                        )}
-                      <p className="text-sm font-normal">
-                        Ultimi pezzi rimasti{" "}
-                      </p>
-                      <p>Spedizione gratuita</p>
-                    </div>
-                  ) : (
-                    <p className="text-red-500">Non disponibile</p>
-                  )}
+  // JSON-LD per Google
+  const jsonLd = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": productTitle,
+    "image": attrs.images?.data?.map((img: any) => img.attributes.url),
+    "description": generateDescription(attrs.sub_category.data, attrs.compatibilities, attrs.description),
+    "sku": attrs.OE || product.id,
+    "brand": {
+      "@type": "Brand",
+      "name": attrs.compatibilities[0]?.make?.data?.attributes?.name
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": `${process.env.NEXT_PUBLIC_SITE_URL}/ricambi/${slug}`,
+      "priceCurrency": "EUR",
+      "price": totalPrice,
+      "availability": isAvailable ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      "itemCondition": "https://schema.org/UsedCondition"
+    }
+  };
+
+  return (
+    <div className="bg-white min-h-screen text-stone-900">
+      {/* Script per i dati strutturati */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
+      <div className="max-w-[1440px] mx-auto px-4 lg:px-16 py-8">
+        <div className="mb-8 border-stone-900">
+          <Breadcrumbs crumbs={crumbs} />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Gallery - Left (lg:7 columns) */}
+          <div className="lg:col-span-7 space-y-6">
+            <div className="bg-gray-50 rounded-3xl overflow-hidden p-4 md:p-8">
+              <Gallery images={attrs.images} />
+            </div>
+            
+            {/* Desktop Technical Specs */}
+            <div className="hidden lg:block bg-gray-50 rounded-3xl p-8">
+              <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
+                <InformationCircleIcon className="w-6 h-6 text-forest" />
+                Dettagli Tecnici
+              </h2>
+              <div className="grid grid-cols-2 gap-8">
+                <div className="space-y-4 text-stone-900">
+                  <div>
+                    <p className="text-xs uppercase text-gray-400 font-bold tracking-widest mb-1">Codice OE</p>
+                    <p className="text-lg font-mono text-gray-700">{attrs.OE || "N/D"}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase text-gray-400 font-bold tracking-widest mb-1">Tipo Motore</p>
+                    <p className="text-lg font-semibold text-gray-700 uppercase">{attrs.motorType || "N/D"}</p>
+                  </div>
                 </div>
-                {/* Button */}
-                {/* Richiedi uan quatozione - visibile se non è definito un prezzo */}
-                {!product.attributes.price && (
-                  <Link
-                    href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${"https://www.silanosrl.it/ricambi/" + params.slug
-                      } (non modificare). Avrei bisogno di informazioni ...`}
-                    className="w-64 h-12 bg-forest text-white rounded-xs uppercase flex justify-center items-center px-4"
-                  >
-                    <span className="flex flex-col items-center">
-                      <span className="">richiedi una quotazione</span>
-                      <span className="font-light text-xs">whatsapp</span>
-                    </span>
-                  </Link>
-                )}
-                {/* Snipchart button */}
-                {product.attributes.price &&
-                  product.attributes.price > 0 &&
-                  product.attributes.quantity > 0 && (
-                    (<button
-                      className="snipcart-add-item w-full md:w-48 bg-forest shadow-md  p-4 text-white cursor-pointer"
-                      data-item-id={product.id}
-                      data-item-price={product.attributes.price + (product.attributes.sub_category.data[0]?.attributes?.defaultShippingCost ?? 15)}
-                      data-item-image={
-                        product.attributes.images?.data[0]?.attributes?.formats
-                          ?.thumbnail?.url
-                      }
-                      data-item-name={generateTitle(
-                        product.attributes.sub_category.data,
-                        product.attributes.compatibilities,
-                        product.attributes.OE,
-                        product.attributes.motorType
-                      )}
-                      data-item-max-quantity={product.attributes.quantity}
-                    >Aggiungi al carrello
-                    </button>)
-                    /*  <CartButton productID={product.id} /> */
-                  )}
-              </div>
-              {/* link per i contatti */}
-              <div className="mt-4 flex flex-col space-y-2 text-md">
-                <Link
-                  href={`https://wa.me/+393929898074?text=Ciao Silano SRL, ti contatto in merito all'annuncio ${"https://www.silanosrl.it/ricambi/" + params.slug
-                    } (non modificare). Avrei bisogno di informazioni ...`}
-                  className="flex items-center"
-                >
-                  <Image
-                    src="/whatsapp.svg"
-                    alt="Whatsapp"
-                    width={32}
-                    height={32}
-                    className="mr-2"
-                    unoptimized
-                  />{" "}
-                  Richiedi assistenza
-                </Link>
-                <Link
-                  href={`mailto:ricambisilano@gmail.com`}
-                  className="flex items-center"
-                >
-                  <EnvelopeIcon className="w-[32px] h-[32px] mr-2"></EnvelopeIcon>
-                  Scrivici: ricambisilano@gmail.com
-                </Link>
-              </div>
-              {/* metodi di pagamento */}
-              <div className="flex flex-col space-y-2 mt-8">
-                <h3>Metodi di pagamento accettati:</h3>
-                <Image
-                  src="/carte.webp"
-                  width={220}
-                  height={95}
-                  alt="metodi di pagamento"
-                  unoptimized
-                />
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-xs uppercase text-gray-400 font-bold tracking-widest mb-1">Condizione</p>
+                    <p className="text-lg font-semibold text-forest flex items-center gap-2">
+                      <ShieldCheckIcon className="w-5 h-5" />
+                      Usato Garantito
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase text-gray-400 font-bold tracking-widest mb-1">Giacenza</p>
+                    <p className="text-lg font-semibold text-gray-700">{attrs.quantity} unità disponibili</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-          <div className="mt-12">
-            <div className="">
-              <div className=" p-0">
-                <h3 className="bg-forest w-32 text-base-100 font-extralight p-1 text-center">
-                  Descrizione
-                </h3>
-                <div className="border-forest border-b"></div>
+
+          {/* Product Info - Right (lg:5 columns) */}
+          <div className="lg:col-span-5 flex flex-col space-y-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-forest font-bold text-sm tracking-widest uppercase text-stone-900">
+                <span className="w-8 h-[2px] bg-forest"></span>
+                Ricambio Verificato
               </div>
-              <div className="whitespace-pre-wrap mt-2">
-                {generateDescription(
-                  product.attributes.sub_category.data,
-                  product.attributes.compatibilities,
-                  product.attributes.description
+              <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight">
+                {productTitle}
+              </h1>
+              
+              <div className="flex flex-wrap gap-2">
+                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                  isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                }`}>
+                  {isAvailable ? <><CheckCircleIcon className="w-4 h-4" /> Disponibile</> : <><XCircleIcon className="w-4 h-4" /> Non disponibile</>}
+                </div>
+                {isAvailable && attrs.quantity <= 3 && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold uppercase tracking-wider animate-pulse">
+                    <FireIcon className="w-4 h-4" /> 
+                    Solo {attrs.quantity} {attrs.quantity === 1 ? 'disponibile' : 'disponibili'}
+                  </div>
                 )}
+                <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-wider">
+                  <SparklesIcon className="w-4 h-4" /> 
+                  Testato
+                </div>
+              </div>
+            </div>
+
+            {/* Pricing Card */}
+            <div className="bg-gray-50 border border-gray-100 rounded-[2.5rem] p-8 space-y-6 shadow-sm">
+              {hasPrice ? (
+                <div className="flex flex-col">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-4xl font-black text-forest">
+                      € {toInteger(attrs.price)}
+                    </span>
+                    <span className="text-lg font-bold text-forest -ml-1">
+                      {extractDecimal(attrs.price)}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm font-medium">
+                    <TruckIcon className="w-4 h-4" />
+                    Supporta spedizione assicurata (+ € {shippingCost})
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <p className="text-2xl font-black text-gray-400 uppercase">Prezzo da definire</p>
+                  <p className="text-sm text-gray-500">Contatta il nostro magazzino per ricevere una quotazione aggiornata e le spese di spedizione.</p>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                {isAvailable && hasPrice ? (
+                  <button
+                    className="snipcart-add-item w-full bg-forest text-white h-16 rounded-2xl font-black text-lg uppercase tracking-wide hover:bg-forest/90 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3"
+                    data-item-id={product.id}
+                    data-item-price={totalPrice}
+                    data-item-image={attrs.images?.data?.[0]?.attributes?.formats?.thumbnail?.url || attrs.images?.data?.[0]?.attributes?.url}
+                    data-item-name={productTitle}
+                    data-item-max-quantity={attrs.quantity}
+                    data-item-url={`${process.env.NEXT_PUBLIC_SITE_URL}/ricambi/${slug}`}
+                  >
+                    <ShoppingBagIcon className="w-6 h-6" />
+                    Aggiungi al carrello
+                  </button>
+                ) : isAvailable ? (
+                  <a
+                    href={waBaseUrl + quoteMessage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-gray-800 text-white h-16 rounded-2xl font-black text-lg uppercase tracking-wide hover:bg-gray-700 transition-all shadow-lg active:scale-95 flex items-center justify-center gap-3"
+                  >
+                    <Image src="/whatsapp.svg" alt="WhatsApp" width={24} height={24} unoptimized />
+                    Magazzino
+                  </a>
+                ) : null}
+
+                <a
+                  href={waBaseUrl + waMessage}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-white border-2 border-gray-100 text-gray-600 h-16 rounded-2xl font-bold text-sm uppercase flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors"
+                >
+                  <Image src="/whatsapp.svg" alt="WhatsApp" width={20} height={20} unoptimized />
+                  Richiedi assistenza tecnica
+                </a>
               </div>
 
+              {/* Badges */}
+              <div className="grid grid-cols-2 gap-4 pt-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                    <ClockIcon className="w-5 h-5 text-forest" />
+                  </div>
+                  <span className="text-[10px] font-bold text-gray-500 uppercase leading-tight">Spedizione in 24/48h</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                    <WrenchScrewdriverIcon className="w-5 h-5 text-forest" />
+                  </div>
+                  <span className="text-[10px] font-bold text-gray-500 uppercase leading-tight">Testato dai tecnici</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Payment methods */}
+            <div className="space-y-4">
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest text-center flex items-center justify-center gap-2">
+                <CreditCardIcon className="w-4 h-4" /> Pagamenti Sicuri
+              </p>
+              <div className="flex justify-center opacity-70 grayscale hover:grayscale-0 transition-all">
+                <Image src="/carte.webp" width={220} height={40} alt="metodi di pagamento" unoptimized />
+              </div>
             </div>
           </div>
         </div>
-      )}
+
+        {/* Tabbed Info Section */}
+        <div className="mt-20 lg:max-w-4xl">
+          <Tabs tabs={tabs} />
+        </div>
+
+        {/* RELATED PRODUCTS */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-24 space-y-8">
+            <h2 className="text-2xl font-black text-gray-900 flex items-center gap-3">
+              <span className="w-2 h-8 bg-forest rounded-full"></span>
+              Prodotti Recenti in {attrs.sub_category.data[0]?.attributes?.name}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedProducts.map((p: any) => (
+                <CardProduct
+                  key={p.id}
+                  id={p.id}
+                  slug={p.attributes.slug}
+                  title={p.attributes.title}
+                  imageUrl={p.attributes.images?.data?.[0]?.attributes?.url}
+                  price={p.attributes.price}
+                  quantity={p.attributes.quantity}
+                  OE={p.attributes.OE}
+                  motorType={p.attributes.motorType}
+                  sub_category={p.attributes.sub_category}
+                  compatibilities={p.attributes.compatibilities}
+                />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* MOBILE STICKY CALL TO ACTION */}
+      <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 p-4 pb-8 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] transform transition-transform duration-300">
+        <div className="flex items-center justify-between gap-4 max-w-xl mx-auto">
+          <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tighter">Totale</span>
+            {hasPrice ? (
+              <span className="text-xl font-black text-forest">€ {totalPrice.toFixed(2)}</span>
+            ) : (
+              <span className="text-sm font-black text-gray-400 uppercase tracking-tight">Cifra da definire</span>
+            )}
+          </div>
+          
+          {isAvailable && hasPrice ? (
+            <button
+              className="snipcart-add-item bg-forest text-white px-6 py-3 rounded-xl font-bold text-sm uppercase flex-1 shadow-lg active:scale-95 transition-all text-center"
+              data-item-id={product.id}
+              data-item-price={totalPrice}
+              data-item-name={productTitle}
+              data-item-url={`${process.env.NEXT_PUBLIC_SITE_URL}/ricambi/${slug}`}
+            >
+              Acquista ora
+            </button>
+          ) : isAvailable ? (
+            <a
+              href={waBaseUrl + quoteMessage}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gray-800 text-white px-6 py-3 rounded-xl font-bold text-sm uppercase flex-1 shadow-lg active:scale-95 transition-all text-center flex items-center justify-center gap-2"
+            >
+              <Image src="/whatsapp.svg" alt="WA" width={16} height={16} unoptimized />
+              Magazzino
+            </a>
+          ) : (
+            <div className="px-6 py-3 bg-gray-100 text-gray-400 rounded-xl font-bold text-sm uppercase flex-1 text-center">
+              Esaurito
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
