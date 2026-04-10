@@ -1,12 +1,23 @@
 "use client";
 
 import { useState } from "react";
+import { 
+  ListBulletIcon, 
+  InformationCircleIcon, 
+  TruckIcon 
+} from "@heroicons/react/24/outline";
+
+const IconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  description: ListBulletIcon,
+  compatibility: InformationCircleIcon,
+  shipping: TruckIcon,
+};
 
 interface Tab {
   id: string;
   label: string;
   content: React.ReactNode;
-  icon?: React.ComponentType<{ className?: string }>;
+  iconName?: string;
 }
 
 interface TabsProps {
@@ -23,7 +34,7 @@ export default function Tabs({ tabs, defaultTab }: TabsProps) {
       <div className="flex border-b border-gray-100 overflow-x-auto no-scrollbar scroll-smooth">
         {tabs.map((tab) => {
           const isActive = activeTab === tab.id;
-          const Icon = tab.icon;
+          const Icon = tab.iconName ? IconMap[tab.iconName] : null;
           
           return (
             <button

@@ -4,7 +4,6 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { 
-  EnvelopeIcon, 
   ShoppingBagIcon, 
   CheckCircleIcon, 
   XCircleIcon,
@@ -105,6 +104,8 @@ const RELATED_PRODUCTS_QUERY = gql`
           compatibilities {
             make { data { attributes { name } } }
             model { data { attributes { name } } }
+            engine_capacity { data { attributes { capacity } } }
+            fuel_system { data { attributes { name } } }
           }
           images {
             data {
@@ -146,9 +147,9 @@ const generateDescription = (sub: any, comps: any[], customDescription: string) 
   
   const subName = sub?.[0]?.attributes?.name || "Ricambio";
   const compatibilityText = comps
-    .slice(0, 3)
-    .map((comp) => `${comp.make.data?.attributes?.name} ${comp.model.data?.attributes?.name}`)
-    .join(", ");
+    ?.slice(0, 3)
+    ?.map((comp) => `${comp.make.data?.attributes?.name} ${comp.model.data?.attributes?.name}`)
+    ?.join(", ");
 
   return `Acquista ${subName} usato e garantito per ${compatibilityText}. Qualità certificata Silano, spedizione veloce e supporto tecnico specializzato.`;
 };
@@ -210,7 +211,6 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
   // Link WhatsApp per quotazione o info
   const waNumber = "393929898074";
   const waBaseUrl = `https://wa.me/${waNumber}?text=`;
-  const waMessage = encodeURIComponent(`Buongiorno Silano, sono interessato a questo ricambio: ${productTitle} (Rif: ${product.id}). Vorrei maggiori informazioni.`);
   const quoteMessage = encodeURIComponent(`Buongiorno Silano, vorrei una quotazione per: ${productTitle} (Rif: ${product.id})`);
 
   const crumbs = [
@@ -234,7 +234,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
     {
       id: "description",
       label: "Descrizione",
-      icon: ListBulletIcon,
+      iconName: "description",
       content: (
         <div className="prose prose-forest max-w-none text-gray-600 font-medium leading-relaxed whitespace-pre-wrap py-4">
           {generateDescription(attrs.sub_category.data, attrs.compatibilities, attrs.description)}
@@ -244,7 +244,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
     {
       id: "compatibility",
       label: "Compatibilità Auto",
-      icon: InformationCircleIcon,
+      iconName: "compatibility",
       content: (
         <div className="bg-white border border-gray-100 rounded-3xl overflow-hidden shadow-sm my-4">
           <table className="w-full text-left">
@@ -277,7 +277,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
     {
       id: "shipping",
       label: "Spedizione e Garanzia",
-      icon: TruckIcon,
+      iconName: "shipping",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 py-4">
           <div className="space-y-4">
@@ -334,7 +334,9 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
       {/* Script per i dati strutturati */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ 
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c").replace(/>/g, "\\u003e") 
+        }}
       />
 
       <div className="max-w-[1440px] mx-auto px-4 lg:px-16 py-8">
@@ -369,10 +371,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
                 <div className="space-y-4">
                   <div>
                     <p className="text-xs uppercase text-gray-400 font-bold tracking-widest mb-1">Condizione</p>
-                    <p className="text-lg font-semibold text-forest flex items-center gap-2">
-                      <ShieldCheckIcon className="w-5 h-5" />
-                      Usato Garantito
-                    </p>
+                    <p className="text-lg font-semibold text-gray-700">Usato</p>
                   </div>
                   <div>
                     <p className="text-xs uppercase text-gray-400 font-bold tracking-widest mb-1">Giacenza</p>
@@ -425,10 +424,6 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
                       {extractDecimal(attrs.price)}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 mt-1 text-gray-500 text-sm font-medium">
-                    <TruckIcon className="w-4 h-4" />
-                    Supporta spedizione assicurata (+ € {shippingCost})
-                  </div>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -462,16 +457,6 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
                     Magazzino
                   </a>
                 ) : null}
-
-                <a
-                  href={waBaseUrl + waMessage}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full bg-white border-2 border-gray-100 text-gray-600 h-16 rounded-2xl font-bold text-sm uppercase flex items-center justify-center gap-3 hover:bg-gray-50 transition-colors"
-                >
-                  <Image src="/whatsapp.svg" alt="WhatsApp" width={20} height={20} unoptimized />
-                  Richiedi assistenza tecnica
-                </a>
               </div>
 
               {/* Badges */}
@@ -521,7 +506,6 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
                   key={p.id}
                   id={p.id}
                   slug={p.attributes.slug}
-                  title={p.attributes.title}
                   imageUrl={p.attributes.images?.data?.[0]?.attributes?.url}
                   price={p.attributes.price}
                   quantity={p.attributes.quantity}
