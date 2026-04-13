@@ -2,6 +2,7 @@
 
 import { useCart } from "@/app/store/useCart";
 import Image from "next/image";
+import Link from "next/link";
 import { XMarkIcon, ShoppingBagIcon, TrashIcon, PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
 import { toInteger, extractDecimal } from "@/lib/common";
 import { useState } from "react";
@@ -62,20 +63,28 @@ export default function CartDrawer() {
               ) : (
                 items.map((item) => (
                   <div key={item.id} className="flex gap-4 group">
-                    <div className="relative w-24 h-24 bg-gray-50 rounded-2xl overflow-hidden shrink-0">
+                    <Link 
+                      href={`/ricambi/${item.slug}`}
+                      onClick={() => toggleCart(false)}
+                      className="relative w-24 h-24 bg-gray-50 rounded-2xl overflow-hidden shrink-0 cursor-pointer"
+                    >
                       <Image
                         src={item.image}
                         alt={item.title}
                         fill
-                        className="object-cover"
+                        className="object-cover group-hover:scale-110 transition-transform duration-500"
                       />
-                    </div>
+                    </Link>
                     <div className="flex flex-col justify-between flex-1 py-1">
                       <div>
                         <div className="flex justify-between items-start gap-2">
-                          <h3 className="text-sm font-black text-gray-900 leading-tight group-hover:text-forest transition-colors">
+                          <Link 
+                            href={`/ricambi/${item.slug}`}
+                            onClick={() => toggleCart(false)}
+                            className="text-sm font-black text-gray-900 leading-tight group-hover:text-forest transition-colors cursor-pointer"
+                          >
                             {item.title}
-                          </h3>
+                          </Link>
                           <button 
                             onClick={() => removeItem(item.id)}
                             className="text-gray-300 hover:text-red-500 transition-colors cursor-pointer"
@@ -100,8 +109,9 @@ export default function CartDrawer() {
                             {item.quantity}
                           </span>
                           <button 
+                            disabled={item.quantity >= (item.maxQuantity || Infinity)}
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-1 hover:text-forest transition-colors cursor-pointer"
+                            className="p-1 hover:text-forest transition-colors cursor-pointer disabled:opacity-30 disabled:grayscale disabled:cursor-not-allowed"
                           >
                             <PlusIcon className="w-3 h-3" />
                           </button>

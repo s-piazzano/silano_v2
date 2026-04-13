@@ -64,6 +64,11 @@ export const useCart = create<CartState>()(
           return;
         }
 
+        const item = get().items.find(i => i.id === productId);
+        if (item && item.maxQuantity && quantity > item.maxQuantity) {
+          return;
+        }
+
         set({
           items: get().items.map((item) =>
             item.id === productId ? { ...item, quantity } : item
