@@ -419,12 +419,15 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
                 <div className="flex flex-col">
                   <div className="flex items-baseline gap-2">
                     <span className="text-4xl font-black text-forest">
-                      € {toInteger(attrs.price)}
+                      € {toInteger(totalPrice)}
                     </span>
                     <span className="text-lg font-bold text-forest -ml-1">
-                      {extractDecimal(attrs.price)}
+                      {extractDecimal(totalPrice)}
                     </span>
                   </div>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                    Spedizione inclusa nel prezzo
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-2">

@@ -13,7 +13,7 @@ const generateTitle = (subs, comps, oe = "", motorType = "") => {
         return `${make} ${model} ${capacity} ${fuel}`.trim();
     }).filter(Boolean).join(" / ");
 
-    return `${mainCategory} ${compatibilityInfo} ${oe} ${motorType}`.replace(/\s+/g, ' ').trim();
+    return `${mainCategory} ${compatibilityInfo} ${oe || ""} ${motorType || ""}`.replace(/\s+/g, ' ').trim();
 };
 
 
