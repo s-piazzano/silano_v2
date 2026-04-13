@@ -4,6 +4,8 @@ import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 import { sanitize } from "@/lib/common";
 
+export const runtime = 'edge';
+
 const VERIFY_PRICES_QUERY = gql`
   query ($ids: [ID]) {
     products(filters: { id: { in: $ids } }) {

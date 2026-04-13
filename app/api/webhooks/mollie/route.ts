@@ -4,6 +4,8 @@ import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
 import { sendOrderEmail, sendAdminNotification } from "@/lib/email";
 
+export const runtime = 'edge';
+
 const CHECK_EXISTING_ORDER_QUERY = gql`
   query ($paymentId: String) {
     orders(filters: { payment_id: { eq: $paymentId } }) {
