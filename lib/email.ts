@@ -113,7 +113,7 @@ export async function sendOrderEmail({
             </p>
           </div>
           <div class="footer">
-            <p><strong>Silano SRL</strong><br>Via Example 123, Italia</p>
+            <p><strong>Silano SRL</strong><br>Cascina Fiorina, Tronzano vercellese (VC) Italia</p>
             <p>&copy; ${new Date().getFullYear()} Silano SRL. Tutti i diritti riservati.</p>
           </div>
         </div>
@@ -156,7 +156,7 @@ export async function sendAdminNotification(orderData: any) {
 
   try {
     const itemsList = orderData.items.map((item: any) => 
-      `<li>${item.qty}x ${item.title} (ID: ${item.id}) - €${item.verified_unit_price?.toFixed(2)}</li>`
+      `<li>${item.qty}x <a href="https://3r.silanosrl.it/magazzino/ricambi/modifica/${item.id}" style="color: #004d40; font-weight: bold; text-decoration: underline;">${item.title}</a> (ID: ${item.id}) - €${item.verified_unit_price?.toFixed(2)}</li>`
     ).join('');
 
     await fetch('https://api.resend.com/emails', {
@@ -168,10 +168,10 @@ export async function sendAdminNotification(orderData: any) {
       body: JSON.stringify({
         from: 'Silano SRL <ordini@silanosrl.it>',
         to: ['info@silanosrl.it'], 
-        subject: `🆕 Nuovo Ordine Ricevuto: #${orderData.order_id}`,
+        subject: `🆕 Nuovo Ordine Silano SRL`,
         html: `
           <div style="font-family: sans-serif; padding: 20px; color: #333;">
-            <h2 style="color: #004d40;">Notifica Nuovo Ordine</h2>
+            <h2 style="color: #004d40;">Nuovo Ordine Silano SRL</h2>
             <p>È stato ricevuto un nuovo ordine sul sito.</p>
             
             <div style="background: #f4f4f4; padding: 15px; border-radius: 8px; margin: 20px 0;">
@@ -181,14 +181,8 @@ export async function sendAdminNotification(orderData: any) {
               <p><strong>Importo Totale:</strong> € ${orderData.total_amount?.toFixed(2)}</p>
             </div>
 
-            <h3>Prodotti:</h3>
+            <h3>Prodotti (clicca sul titolo per modificare nel magazzino):</h3>
             <ul>${itemsList}</ul>
-
-            <div style="margin-top: 30px;">
-              <a href="https://pannello.silanosrl.it" style="background: #004d40; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">
-                Vai al Pannello Gestione
-              </a>
-            </div>
           </div>
         `
       })
