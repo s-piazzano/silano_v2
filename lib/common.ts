@@ -48,4 +48,9 @@ export function toInteger(decimal) {
   return Math.floor(decimal);
 }
 
+export function sanitize(str: string): string {
+  if (!str) return '';
+  return str.replace(/<[^>]*>?/gm, '').trim();
+}
+
 

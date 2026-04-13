@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { 
@@ -9,6 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { generateTitle } from "@/utils/common";
+import { useCart } from "@/app/store/useCart";
 
 interface CardProps {
   id: string;
@@ -35,6 +38,7 @@ export default function CardProduct({
   OE,
   motorType,
 }: CardProps) {
+  const { addItem } = useCart();
   const hasPrice = price && price > 0;
   const totalPrice = hasPrice ? (price + shippingCost) : 0;
   const isAvailable = quantity > 0;
@@ -132,13 +136,16 @@ export default function CardProduct({
             
             {isAvailable && hasPrice ? (
               <button
-                className="snipcart-add-item flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-forest text-white font-bold text-xs hover:bg-forest/90 transition-all shadow-sm active:scale-95 cursor-pointer"
-                data-item-id={id}
-                data-item-price={totalPrice}
-                data-item-image={imageUrl}
-                data-item-name={title}
-                data-item-max-quantity={quantity}
-                data-item-url={`${process.env.NEXT_PUBLIC_SITE_URL || ''}/ricambi/${slug}`}
+                onClick={() => addItem({ 
+                  id, 
+                  slug, 
+                  title, 
+                  price: totalPrice, 
+                  quantity: 1, 
+                  image: imageUrl, 
+                  maxQuantity: quantity 
+                })}
+                className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-forest text-white font-bold text-xs hover:bg-forest/90 transition-all shadow-sm active:scale-95 cursor-pointer"
               >
                 <ShoppingBagIcon className="w-4 h-4" />
                 Acquista
