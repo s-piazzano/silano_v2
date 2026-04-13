@@ -143,7 +143,7 @@ const getRelatedProducts = async (subCategorySlug: string, currentSlug: string) 
   return data.products.data;
 };
 
-const generateDescription = (sub: any, comps: any[], customDescription: string) => {
+const generateDescription = (sub: any, comps: any[], customDescription: string, oe?: string) => {
   if (customDescription) return customDescription;
   
   const subName = sub?.[0]?.attributes?.name || "Ricambio";
@@ -152,7 +152,9 @@ const generateDescription = (sub: any, comps: any[], customDescription: string) 
     ?.map((comp) => `${comp.make.data?.attributes?.name} ${comp.model.data?.attributes?.name}`)
     ?.join(", ");
 
-  return `Acquista ${subName} usato e garantito per ${compatibilityText}. Qualità certificata Silano, spedizione veloce e supporto tecnico specializzato.`;
+  const oeText = oe ? ` Codice OE: ${oe}.` : "";
+
+  return `Acquista ${subName} usato e garantito per ${compatibilityText}.${oeText} Qualità certificata Silano, spedizione veloce e supporto tecnico specializzato.`;
 };
 
 // Genero i metadata per il SEO
@@ -173,7 +175,8 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
   const description = generateDescription(
     attributes.sub_category.data,
     attributes.compatibilities,
-    attributes.description
+    attributes.description,
+    attributes.OE // Pass OE for SEO
   );
 
   return {
@@ -308,17 +311,20 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
     }
   ];
 
+  const description = generateDescription(attrs.sub_category.data, attrs.compatibilities, attrs.description, attrs.OE);
+
   // JSON-LD per Google
   const jsonLd = {
     "@context": "https://schema.org/",
     "@type": "Product",
     "name": productTitle,
     "image": attrs.images?.data?.map((img: any) => img.attributes.url),
-    "description": generateDescription(attrs.sub_category.data, attrs.compatibilities, attrs.description),
+    "description": description,
     "sku": attrs.OE || product.id,
+    "mpn": attrs.OE || undefined,
     "brand": {
       "@type": "Brand",
-      "name": attrs.compatibilities[0]?.make?.data?.attributes?.name
+      "name": attrs.compatibilities[0]?.make?.data?.attributes?.name || "Silano"
     },
     "offers": {
       "@type": "Offer",
@@ -330,6 +336,17 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
     }
   };
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": crumbs.map((crumb, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "name": crumb.label,
+      "item": `${process.env.NEXT_PUBLIC_SITE_URL}${crumb.link}`
+    }))
+  };
+
   return (
     <div className="bg-white min-h-screen text-stone-900">
       {/* Script per i dati strutturati */}
@@ -337,6 +354,12 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
         type="application/ld+json"
         dangerouslySetInnerHTML={{ 
           __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c").replace(/>/g, "\\u003e") 
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ 
+          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c").replace(/>/g, "\\u003e") 
         }}
       />
 
