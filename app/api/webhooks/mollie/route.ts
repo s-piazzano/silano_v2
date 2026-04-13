@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     const metadata = payment.metadata as any;
 
     // Logica di integrazione Strapi
-    if (payment.isPaid() || payment.isAuthorized()) {
+    if (payment.status === 'paid' || payment.status === 'authorized') {
       
       const apolloClient = createApolloClient();
       const { data: existingData } = await apolloClient.query({
