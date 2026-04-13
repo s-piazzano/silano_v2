@@ -4,12 +4,15 @@ import { useEffect } from "react";
 import { useCart } from "@/app/store/useCart";
 import Link from "next/link";
 import { CheckCircleIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-export default function CheckoutSuccessPage() {
+function SuccessContent() {
   const { clearCart } = useCart();
+  const searchParams = useSearchParams();
+  const orderId = searchParams.get("orderId");
 
   useEffect(() => {
-    // Svuotiamo il carrello non appena l'utente atterra sulla pagina di successo
     clearCart();
   }, [clearCart]);
 
@@ -24,6 +27,11 @@ export default function CheckoutSuccessPage() {
         
         <div className="space-y-4">
           <h1 className="text-4xl font-black text-gray-900 tracking-tight">Ordine Ricevuto!</h1>
+          {orderId && (
+            <p className="text-sm font-black text-forest uppercase tracking-widest bg-forest/5 py-2 px-4 rounded-full inline-block">
+              ID Ordine: {orderId}
+            </p>
+          )}
           <p className="text-gray-500 font-medium leading-relaxed">
             Grazie per aver scelto Silano. Il tuo pagamento è stato elaborato con successo e il nostro magazzino sta già preparando il tuo ricambio.
           </p>
@@ -45,5 +53,13 @@ export default function CheckoutSuccessPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense>
+      <SuccessContent />
+    </Suspense>
   );
 }

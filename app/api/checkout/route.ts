@@ -90,20 +90,22 @@ export async function POST(request: Request) {
 
     const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
 
+    const orderId = `order_${Date.now()}`;
+
     const payment = await mollieClient.payments.create({
       amount: {
         currency: 'EUR',
         value: total.toFixed(2),
       },
       description: `Ordine Silano SRL - ${items.length} articoli`,
-      redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success`,
+      redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?orderId=${orderId}`,
       cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/cancel`,
       ...(process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost') 
         ? {} 
         : { webhookUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhooks/mollie` }),
       billingEmail: sanitizedCustomer.email,
       metadata: {
-        order_id: `order_${Date.now()}`,
+        order_id: orderId,
         customer: {
           name: sanitizedCustomer.customerType === 'azienda' 
             ? sanitizedCustomer.denominazione 
