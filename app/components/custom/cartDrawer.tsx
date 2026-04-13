@@ -131,7 +131,7 @@ export default function CartDrawer() {
             {items.length > 0 && (
               <div className="p-8 bg-gray-50 border-t border-gray-100 space-y-6">
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">Sottototale</span>
+                  <span className="text-sm font-bold text-gray-500 uppercase tracking-widest">Subtotale</span>
                   <div className="flex items-baseline gap-1 text-2xl font-black text-gray-900">
                     <span>€ {toInteger(getSubtotal())}</span>
                     <span className="text-lg -ml-1">{extractDecimal(getSubtotal())}</span>

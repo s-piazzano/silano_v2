@@ -530,7 +530,7 @@ export default function CheckoutPage() {
 
                 <div className="space-y-4 pt-6 border-t border-gray-50">
                   <div className="flex justify-between items-center">
-                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Sottototale</span>
+                    <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Subtotale</span>
                     <span className="text-lg font-bold text-gray-900">€ {subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between items-center">
