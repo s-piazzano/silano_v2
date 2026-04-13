@@ -1,4 +1,3 @@
-import { createMollieClient } from '@mollie/api-client';
 import { NextResponse } from 'next/server';
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
@@ -89,63 +88,75 @@ export async function POST(request: Request) {
     }
 
     const total = verifiedSubtotal;
-
-    const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
-
     const orderId = `order_${Date.now()}`;
 
-    const payment = await mollieClient.payments.create({
-      amount: {
-        currency: 'EUR',
-        value: total.toFixed(2),
+    // --- NATIVE MOLLIE API CALL (Cloudflare Edge compatible) ---
+    const mollieResponse = await fetch('https://api.mollie.com/v2/payments', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.MOLLIE_API_KEY}`,
+        'Content-Type': 'application/json',
       },
-      description: `Ordine Silano SRL - ${items.length} articoli`,
-      redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?orderId=${orderId}`,
-      cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/cancel`,
-      ...(process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost') 
-        ? {} 
-        : { webhookUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhooks/mollie` }),
-      billingEmail: sanitizedCustomer.email,
-      metadata: {
-        order_id: orderId,
-        customer: {
-          name: sanitizedCustomer.customerType === 'azienda' 
-            ? sanitizedCustomer.denominazione 
-            : `${sanitizedCustomer.firstName} ${sanitizedCustomer.lastName}`,
-          phone: sanitizedCustomer.phone,
-          email: sanitizedCustomer.email,
-          type: sanitizedCustomer.customerType,
+      body: JSON.stringify({
+        amount: {
+          currency: 'EUR',
+          value: total.toFixed(2),
         },
-        shipping_address: {
-          streetAndNumber: `${sanitizedCustomer.address} ${sanitizedCustomer.houseNumber}`,
-          postalCode: sanitizedCustomer.zipCode,
-          city: sanitizedCustomer.city,
-          province: sanitizedCustomer.province,
-          country: sanitizedCustomer.country,
+        description: `Ordine Silano SRL - ${items.length} articoli`,
+        redirectUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/success?orderId=${orderId}`,
+        cancelUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/checkout/cancel`,
+        ...(process.env.NEXT_PUBLIC_SITE_URL?.includes('localhost') 
+          ? {} 
+          : { webhookUrl: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhooks/mollie` }),
+        billingEmail: sanitizedCustomer.email,
+        metadata: {
+          order_id: orderId,
+          customer: {
+            name: sanitizedCustomer.customerType === 'azienda' 
+              ? sanitizedCustomer.denominazione 
+              : `${sanitizedCustomer.firstName} ${sanitizedCustomer.lastName}`,
+            phone: sanitizedCustomer.phone,
+            email: sanitizedCustomer.email,
+            type: sanitizedCustomer.customerType,
+          },
+          shipping_address: {
+            streetAndNumber: `${sanitizedCustomer.address} ${sanitizedCustomer.houseNumber}`,
+            postalCode: sanitizedCustomer.zipCode,
+            city: sanitizedCustomer.city,
+            province: sanitizedCustomer.province,
+            country: sanitizedCustomer.country,
+          },
+          billing_address: {
+            streetAndNumber: `${sanitizedCustomer.billingAddress} ${sanitizedCustomer.billingHouseNumber}`,
+            postalCode: sanitizedCustomer.billingZipCode,
+            city: sanitizedCustomer.billingCity,
+            province: sanitizedCustomer.billingProvince,
+            country: sanitizedCustomer.billingCountry,
+          },
+          invoice: sanitizedCustomer.customerType === 'azienda' ? {
+            denominazione: sanitizedCustomer.denominazione,
+            vat: sanitizedCustomer.vatNumber,
+            sdi: sanitizedCustomer.sdiCode,
+            pec: sanitizedCustomer.pec
+          } : null,
+          items: items.map((i: any) => ({ 
+            id: i.id, 
+            qty: i.quantity, 
+            title: i.title,
+            verified_unit_price: realProducts.find((p: any) => p.id === i.id)?.attributes.price
+          })),
         },
-        billing_address: {
-          streetAndNumber: `${sanitizedCustomer.billingAddress} ${sanitizedCustomer.billingHouseNumber}`,
-          postalCode: sanitizedCustomer.billingZipCode,
-          city: sanitizedCustomer.billingCity,
-          province: sanitizedCustomer.billingProvince,
-          country: sanitizedCustomer.billingCountry,
-        },
-        invoice: sanitizedCustomer.customerType === 'azienda' ? {
-          denominazione: sanitizedCustomer.denominazione,
-          vat: sanitizedCustomer.vatNumber,
-          sdi: sanitizedCustomer.sdiCode,
-          pec: sanitizedCustomer.pec
-        } : null,
-        items: items.map((i: any) => ({ 
-          id: i.id, 
-          qty: i.quantity, 
-          title: i.title,
-          verified_unit_price: realProducts.find((p: any) => p.id === i.id)?.attributes.price
-        })),
-      },
+      }),
     });
 
-    return NextResponse.json({ url: payment.getCheckoutUrl() });
+    const payment = await mollieResponse.json();
+
+    if (!mollieResponse.ok) {
+      console.error('[Mollie Error]', payment);
+      throw new Error(payment.detail || 'Errore durante la creazione del pagamento');
+    }
+
+    return NextResponse.json({ url: payment._links.checkout.href });
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }

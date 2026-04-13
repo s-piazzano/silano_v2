@@ -1,4 +1,3 @@
-import { createMollieClient } from '@mollie/api-client';
 import { NextResponse } from 'next/server';
 import createApolloClient from "@/lib/client";
 import { gql } from "@apollo/client";
@@ -47,8 +46,20 @@ export async function POST(request: Request) {
       return new Response('Missing ID', { status: 400 });
     }
 
-    const mollieClient = createMollieClient({ apiKey: process.env.MOLLIE_API_KEY as string });
-    const payment = await mollieClient.payments.get(paymentId);
+    // --- NATIVE MOLLIE API CALL (Cloudflare Edge compatible) ---
+    const mollieResponse = await fetch(`https://api.mollie.com/v2/payments/${paymentId}`, {
+      headers: {
+        'Authorization': `Bearer ${process.env.MOLLIE_API_KEY}`,
+      },
+    });
+
+    const payment = await mollieResponse.json();
+
+    if (!mollieResponse.ok) {
+      console.error('[Mollie Webhook Error]', payment);
+      return new Response('Mollie API Error', { status: 500 });
+    }
+
     const metadata = payment.metadata as any;
 
     // Logica di integrazione Strapi
