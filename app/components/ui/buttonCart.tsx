@@ -15,7 +15,7 @@ export default function ButtonCart() {
     setMounted(true);
   }, []);
 
-  if (!pathname.includes("ricambi")) return null;
+  if (!pathname.includes("ricambi") && !pathname.includes("checkout")) return null;
 
   const itemCount = mounted ? getTotalItems() : 0;
 

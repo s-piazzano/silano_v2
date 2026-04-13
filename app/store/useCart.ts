@@ -33,6 +33,9 @@ export const useCart = create<CartState>()(
         const currentItems = get().items;
         const existingItem = currentItems.find((item) => item.id === product.id);
 
+        // Auto open cart when adding
+        set({ isOpen: true });
+
         if (existingItem) {
           const newQuantity = existingItem.quantity + 1;
           // Check against max available stock if provided
@@ -48,8 +51,6 @@ export const useCart = create<CartState>()(
         } else {
           set({ items: [...currentItems, { ...product, quantity: 1 }] });
         }
-        // Auto open cart when adding
-        set({ isOpen: true });
       },
 
       removeItem: (productId) => {

@@ -132,10 +132,13 @@ export default function CheckoutPage() {
       {/* Header */}
       <header className="bg-white border-b border-gray-100 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center justify-between">
-          <Link href="/ricambi" className="flex items-center gap-2 text-gray-500 hover:text-forest transition-colors font-bold text-sm uppercase tracking-widest">
+          <button 
+            onClick={() => router.back()} 
+            className="flex items-center gap-2 text-gray-500 hover:text-forest transition-colors font-bold text-sm uppercase tracking-widest cursor-pointer"
+          >
             <ChevronLeftIcon className="w-5 h-5" />
             <span>Indietro</span>
-          </Link>
+          </button>
           <div className="flex items-center gap-3">
             <ShieldCheckIcon className="w-6 h-6 text-forest" />
             <span className="font-black text-gray-900 uppercase tracking-tighter">Secure Checkout</span>
@@ -535,7 +538,7 @@ export default function CheckoutPage() {
                     <span className="text-sm font-bold text-gray-400 uppercase tracking-widest">Gratuita</span>
                   </div>
                   <div className="pt-4 border-t border-gray-100 flex justify-between items-center">
-                    <span className="text-sm font-black text-gray-900 uppercase tracking-tighter">Totale Finale</span>
+                    <span className="text-sm font-black text-gray-900 uppercase tracking-tighter">Subtotale</span>
                     <div className="flex items-baseline gap-0.5 text-forest">
                       <span className="text-3xl font-black">€ {toInteger(total)}</span>
                       <span className="text-lg font-bold">{extractDecimal(total)}</span>
