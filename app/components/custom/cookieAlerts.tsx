@@ -44,8 +44,8 @@ export default function CookiesAlert({
   if (!isVisible) return null;
 
   return (
-    <div className="fixed bottom-0 w-full flex justify-center animate-fade-in">
-      <div className={`left-0 z-50 bg-white border-forest border mb-4 mx-4 p-4 flex flex-col ${className}`}>
+    <div className="fixed bottom-0 w-full flex justify-center animate-fade-in z-[9999]">
+      <div className={`left-0 bg-white border-forest border mb-4 mx-4 p-4 flex flex-col ${className}`}>
         <p>
           Noi e terze parti selezionate utilizziamo cookie o tecnologie simili
           per scopi tecnici e, con il vostro consenso, per altri scopi. Negare
