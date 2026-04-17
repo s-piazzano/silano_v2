@@ -3,9 +3,9 @@ import Link from "next/link";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { 
-  ShoppingBagIcon, 
-  CheckCircleIcon, 
+import {
+  ShoppingBagIcon,
+  CheckCircleIcon,
   XCircleIcon,
   InformationCircleIcon,
   WrenchScrewdriverIcon,
@@ -145,7 +145,7 @@ const getRelatedProducts = async (subCategorySlug: string, currentSlug: string) 
 
 const generateDescription = (sub: any, comps: any[], customDescription: string, oe?: string) => {
   if (customDescription) return customDescription;
-  
+
   const subName = sub?.[0]?.attributes?.name || "Ricambio";
   const compatibilityText = comps
     ?.slice(0, 3)
@@ -171,7 +171,7 @@ export async function generateMetadata(props: { params: Promise<{ slug: string }
     attributes.OE,
     attributes.motorType
   );
-  
+
   const description = generateDescription(
     attributes.sub_category.data,
     attributes.compatibilities,
@@ -219,17 +219,17 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
 
   const crumbs = [
     { label: "Inizio", link: "/ricambi" },
-    { 
-      label: attrs.compatibilities[0]?.make?.data?.attributes?.name || "Marca", 
-      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}` 
+    {
+      label: attrs.compatibilities[0]?.make?.data?.attributes?.name || "Marca",
+      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}`
     },
-    { 
-      label: attrs.compatibilities[0]?.model?.data?.attributes?.name || "Modello", 
-      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}/${attrs.compatibilities[0]?.model?.data?.attributes?.slug}` 
+    {
+      label: attrs.compatibilities[0]?.model?.data?.attributes?.name || "Modello",
+      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}/${attrs.compatibilities[0]?.model?.data?.attributes?.slug}`
     },
-    { 
-      label: attrs.sub_category.data[0]?.attributes?.name || "Categoria", 
-      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}/${attrs.compatibilities[0]?.model?.data?.attributes?.slug}/${attrs.sub_category.data[0]?.attributes?.slug}` 
+    {
+      label: attrs.sub_category.data[0]?.attributes?.name || "Categoria",
+      link: `/ricambi/catalogo/${attrs.compatibilities[0]?.make?.data?.attributes?.slug}/${attrs.compatibilities[0]?.model?.data?.attributes?.slug}/${attrs.sub_category.data[0]?.attributes?.slug}`
     },
   ];
 
@@ -290,8 +290,8 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
               Spedizioni Veloci
             </h4>
             <p className="text-gray-600 text-sm leading-relaxed text-stone-900">
-              Il prodotto viene imballato con cura e spedito tramite corriere espresso. 
-              La consegna avviene solitamente in **24/48 ore** lavorative dall&apos;ordine. 
+              Il prodotto viene imballato con cura e spedito tramite corriere espresso.
+              La consegna avviene solitamente in **24/48 ore** lavorative dall&apos;ordine.
               Garantiamo la tracciabilità completa del pacco.
             </p>
           </div>
@@ -301,8 +301,8 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
               Politica di Reso
             </h4>
             <p className="text-gray-600 text-sm leading-relaxed text-stone-900">
-              Ogni ricambio è testato e garantito. Se il pezzo non dovesse essere conforme, 
-              hai **14 giorni** per richiedere il reso. Il nostro team tecnico è a disposizione 
+              Ogni ricambio è testato e garantito. Se il pezzo non dovesse essere conforme,
+              hai **14 giorni** per richiedere il reso. Il nostro team tecnico è a disposizione
               per assisterti nel processo.
             </p>
           </div>
@@ -352,14 +352,14 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
       {/* Script per i dati strutturati */}
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ 
-          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c").replace(/>/g, "\\u003e") 
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c").replace(/>/g, "\\u003e")
         }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ 
-          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c").replace(/>/g, "\\u003e") 
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd).replace(/</g, "\\u003c").replace(/>/g, "\\u003e")
         }}
       />
 
@@ -374,7 +374,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
             <div className="bg-gray-50 rounded-3xl overflow-hidden p-4 md:p-8">
               <Gallery images={attrs.images} />
             </div>
-            
+
             {/* Desktop Technical Specs */}
             <div className="hidden lg:block bg-gray-50 rounded-3xl p-8">
               <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
@@ -416,21 +416,14 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
               <h1 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight">
                 {productTitle}
               </h1>
-              
+
               <div className="flex flex-wrap gap-2">
-                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                  isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                }`}>
+                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${isAvailable ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                  }`}>
                   {isAvailable ? <><CheckCircleIcon className="w-4 h-4" /> Disponibile</> : <><XCircleIcon className="w-4 h-4" /> Non disponibile</>}
                 </div>
-                {isAvailable && attrs.quantity <= 3 && (
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-bold uppercase tracking-wider animate-pulse">
-                    <FireIcon className="w-4 h-4" /> 
-                    Solo {attrs.quantity} {attrs.quantity === 1 ? 'disponibile' : 'disponibili'}
-                  </div>
-                )}
                 <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold uppercase tracking-wider">
-                  <SparklesIcon className="w-4 h-4" /> 
+                  <SparklesIcon className="w-4 h-4" />
                   Testato
                 </div>
               </div>
@@ -459,7 +452,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
                 </div>
               )}
 
-              <CartActions 
+              <CartActions
                 product={{
                   id: product.id,
                   slug: slug,
@@ -483,11 +476,13 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
                   </div>
                   <span className="text-[10px] font-bold text-gray-500 uppercase leading-tight">Spedizione in 24/48h</span>
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm">
-                    <WrenchScrewdriverIcon className="w-5 h-5 text-forest" />
-                  </div>
-                  <span className="text-[10px] font-bold text-gray-500 uppercase leading-tight">Testato dai tecnici</span>
+                <div>
+                  <Link href={`https://api.whatsapp.com/send/?phone=%2B393929898074&text&type=phone_number&app_absent=0&text=http://www.silanosrl.it/ricambi/${slug} (non modificare). Ciao Silano, vorrei conoscere ulteriori dettagli...`} className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-sm flex-none">
+                      <Image src="/whatsapp.svg" alt="WA" width={24} height={24} unoptimized />
+                    </div>
+                    <span className="text-[10px] font-bold text-gray-500 uppercase leading-tight">Contatta il magazzino per dettagli</span>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -538,7 +533,7 @@ export default async function RicambiPage(props: { params: Promise<{ slug: strin
 
       {/* MOBILE STICKY CALL TO ACTION */}
       <div className="lg:hidden fixed bottom-0 left-0 w-full bg-white border-t border-gray-100 p-4 pb-8 z-50 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] transform transition-transform duration-300">
-        <CartActions 
+        <CartActions
           product={{
             id: product.id,
             slug: slug,
